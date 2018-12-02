@@ -7,6 +7,8 @@ package org.takeback.chat.lottery;
 import org.slf4j.LoggerFactory;
 import org.takeback.util.JSONUtils;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+
 import org.joda.time.LocalDateTime;
 import org.takeback.chat.lottery.listeners.GameException;
 import org.apache.commons.lang3.StringUtils;
@@ -65,7 +67,7 @@ public class DefaultLottery implements Lottery
         this.restNumber = new AtomicInteger(number);
         this.random = new Random();
         this.createTime = new Date();
-        this.detail = (Map<Integer, LotteryDetail>)Maps.newLinkedHashMap();
+        this.detail = new LinkedHashMap<>();//(Map<Integer, LotteryDetail>)Maps.newLinkedHashMap();
         this.monitor = GameMonitor.getInstance();
     }
     

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="牛牛下注类型">
+    <item key="1" text="牛牛"/>
+    <item key="2" text="梭哈"/>
+</dic>

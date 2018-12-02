@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="下注字典">
+    <item key="0" text="数字0" />
+    <item key="1" text="数字1" />
+    <item key="2" text="数字2" />
+    <item key="3" text="数字3" />
+    <item key="4" text="数字4" />
+    <item key="5" text="数字5" />
+    <item key="6" text="数字6" />
+    <item key="7" text="数字7" />
+    <item key="8" text="数字8" />
+    <item key="9" text="数字9" />
+    <item key="10" text="数字10" />
+    <item key="11" text="数字11" />
+    <item key="12" text="数字12" />
+    <item key="13" text="数字13" />
+    <item key="14" text="数字14" />
+    <item key="15" text="数字15" />
+    <item key="16" text="数字16" />
+    <item key="17" text="数字17" />
+    <item key="18" text="数字18" />
+    <item key="19" text="数字19" />
+    <item key="20" text="数字20" />
+    <item key="21" text="数字21" />
+    <item key="22" text="数字22" />
+    <item key="23" text="数字23" />
+    <item key="24" text="数字24" />
+    <item key="25" text="数字25" />
+    <item key="26" text="数字26" />
+    <item key="27" text="数字27" />
+
+    <item key="rd" text="红" />
+    <item key="grn" text="绿" />
+    <item key="bl" text="蓝" />
+    <item key="bz" text="豹子" />
+
+
+    <item key="da" text="大" />
+    <item key="xo" text="小" />
+    <item key="dn" text="单" />
+    <item key="sh" text="双" />
+    <item key="dd" text="大单" />
+    <item key="xd" text="小单" />
+    <item key="ds" text="大双" />
+    <item key="xs" text="小双" />
+
+    <item key="jd" text="极大" />
+    <item key="jx" text="极小" />
+
+</dic>

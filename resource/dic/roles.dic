@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="角色列表" class="CustomDictionary" bean="systemDicProcessor" method="getRoles">
+
+</dic>

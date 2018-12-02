@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="应用菜单" class="CustomDictionary" bean="appModuleLocator" method="toDic">
+
+</dic>

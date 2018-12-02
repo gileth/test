@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="用户列表" class="TableDictionary" entityName="org.takeback.chat.entity.PubUser" keyField="id" textField="userId">
+
+</dic>

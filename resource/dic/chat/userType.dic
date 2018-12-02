@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="用户类型">
+    <item key="1" text="用户"/>
+    <item key="2" text="代理"/>
+    <item key="3" text="第三方账号"/>
+    <item key="9" text="机器人"/>
+</dic>

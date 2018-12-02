@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="红包状态">
+    <item key="0" text="可拆开"/>
+    <item key="1" text="已抢完"/>
+    <item key="2" text="过期"/>
+</dic>

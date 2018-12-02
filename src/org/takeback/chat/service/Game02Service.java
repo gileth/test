@@ -1,0 +1,273 @@
+// 
+// Decompiled by Procyon v0.5.30
+// 
+
+package org.takeback.chat.service;
+
+import java.io.ObjectInputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import org.takeback.chat.lottery.listeners.G02;
+import org.takeback.chat.lottery.listeners.GameException;
+import org.takeback.chat.store.user.User;
+import org.takeback.chat.utils.MessageUtils;
+import org.takeback.chat.entity.Message;
+import org.takeback.chat.utils.NumberUtil;
+import org.takeback.util.BeanUtils;
+import java.util.Date;
+import java.math.BigDecimal;
+import org.takeback.chat.entity.GcLotteryDetail;
+import java.io.Serializable;
+import org.takeback.chat.store.room.Room;
+import org.takeback.util.exception.CodedBaseRuntimeException;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.Iterator;
+import org.takeback.chat.lottery.LotteryDetail;
+import java.util.Map;
+import com.google.common.collect.ImmutableMap;
+import org.takeback.chat.lottery.Lottery;
+import org.takeback.chat.store.user.UserStore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.takeback.chat.store.room.RoomStore;
+import org.springframework.stereotype.Service;
+
+@Service("game02Service")
+public class Game02Service extends LotteryService
+{
+    @Autowired
+    private RoomStore roomStore;
+    @Autowired
+    private UserStore userStore;
+    @Autowired
+    private GameMonitor monitor;
+    
+    @Transactional
+    public void returnMasterLoteryMoney(final Lottery lottery, final double deposit) {
+        final Map<Integer, LotteryDetail> detail = lottery.getDetail();
+        final Iterator itr = detail.keySet().iterator();
+        StringBuffer hql = new StringBuffer("update PubUser a set a.money = COALESCE(a.money,0)+:money where a.id in(");
+        StringBuilder sb = new StringBuilder();
+        while (itr.hasNext()) {
+            final Integer uid = itr.next();
+            sb.append(uid).append(",");
+            this.dao.executeUpdate("update GcLotteryDetail a set  a.addback =:addback,desc1='\u62a2\u5e84' where a.lotteryid = :lotteryid and a.uid =:uid", (Map<String, Object>)ImmutableMap.of((Object)"addback", (Object)deposit, (Object)"lotteryid", (Object)lottery.getId(), (Object)"uid", (Object)uid));
+        }
+        if (sb.length() > 0) {
+            sb = sb.deleteCharAt(sb.length() - 1);
+            hql = hql.append((CharSequence)sb).append(")");
+            this.dao.executeUpdate(hql.toString(), (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)deposit));
+        }
+    }
+    
+    @Transactional
+    public void open(final Lottery lottery, final Integer uid, final Double money) {
+        final int effected = this.dao.executeUpdate("update PubUser a set a.money = coalesce(a.money,0) - :money,a.exp=coalesce(exp,0)+:exp where a.id=:uid and a.money>=:money", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)money, (Object)"exp", (Object)money, (Object)"uid", (Object)uid));
+        if (effected == 0) {
+            throw new CodedBaseRuntimeException("\u91d1\u5e01\u4e0d\u80fd\u5c11\u4e8e" + money + ",\u8bf7\u53ca\u65f6\u5145\u503c!");
+        }
+        final Room room = this.roomStore.get(lottery.getRoomId());
+        final GcLotteryDetail gcLotteryDetail = new GcLotteryDetail();
+        gcLotteryDetail.setLotteryid(lottery.getId());
+        gcLotteryDetail.setGameType("G011");
+        gcLotteryDetail.setRoomId(room.getId());
+        gcLotteryDetail.setUid(uid);
+        gcLotteryDetail.setDeposit(money);
+        gcLotteryDetail.setAddback(0.0);
+        gcLotteryDetail.setInoutNum(0.0);
+        gcLotteryDetail.setCoin(new BigDecimal(0.0));
+        gcLotteryDetail.setCreateDate(new Date());
+        gcLotteryDetail.setMasterId(lottery.getSender());
+        this.dao.save(GcLotteryDetail.class, gcLotteryDetail);
+    }
+    
+    @Transactional(rollbackFor = { Throwable.class })
+    @Override
+    public int moneyDown(final Integer uid, final Double money) {
+        return this.dao.executeUpdate("update PubUser a set a.money = coalesce(a.money,0) - :money,a.exp=coalesce(exp,0)+:exp where a.id=:uid and a.money>=:money", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)money, (Object)"exp", (Object)money, (Object)"uid", (Object)uid));
+    }
+    
+    @Transactional(rollbackFor = { Throwable.class })
+    public void saveDetail(final Lottery lottery, final LotteryDetail detail, final double deposit, final String gameType) {
+        final GcLotteryDetail gcLotteryDetail = BeanUtils.map(detail, GcLotteryDetail.class);
+        gcLotteryDetail.setLotteryid(lottery.getId());
+        gcLotteryDetail.setGameType(gameType);
+        gcLotteryDetail.setDeposit(deposit);
+        gcLotteryDetail.setDesc1("\u725b" + NumberUtil.getPoint(detail.getCoin()));
+        gcLotteryDetail.setRoomId(lottery.getRoomId());
+        gcLotteryDetail.setMasterId(lottery.getSender());
+        this.dao.save(GcLotteryDetail.class, gcLotteryDetail);
+    }
+    
+    @Transactional(rollbackFor = { Throwable.class })
+    public void gameStop(final Lottery lottery) {
+        this.dao.executeUpdate("update GcRoom a set a.status=0 where id=:id", (Map<String, Object>)ImmutableMap.of((Object)"id", (Object)lottery.getRoomId()));
+        this.dao.executeUpdate("update GcLottery a set a.status=2 where id=:id", (Map<String, Object>)ImmutableMap.of((Object)"id", (Object)lottery.getId()));
+    }
+    
+    public void dealMaster(final Lottery lottery) throws GameException {
+        final Map<Integer, LotteryDetail> details = lottery.getDetail();
+        Integer maxMan = 0;
+        BigDecimal maxMoney = null;
+        for (final LotteryDetail ld : details.values()) {
+            if (maxMan == 0 || maxMoney.compareTo(ld.getCoin()) < 0) {
+                maxMan = ld.getUid();
+                maxMoney = ld.getCoin();
+            }
+        }
+        if (maxMan.equals(0)) {
+            final String str = "<span style='color:#B22222'>\u65e0\u4eba\u53c2\u4e0e\u62a2\u5e84,\u62a2\u5e84\u7ed3\u675f.";
+            final Message msg = new Message("TXT_SYS", 0, str);
+            final Room room = this.roomStore.get(lottery.getRoomId());
+            room.setStatus("0");
+            room.setMaster(-1);
+            MessageUtils.broadcast(room, msg);
+            return;
+        }
+        final User master = this.userStore.get(maxMan);
+        final Room room2 = this.roomStore.get(lottery.getRoomId());
+        room2.setMaster(maxMan);
+        room2.setMasterTimes(1);
+        room2.setMasterStamp(System.currentTimeMillis());
+        final String str2 = "<span style='color:#F89C4C'>" + master.getNickName() + "</span> \u5750\u4e0a\u5e84\u4e3b\u5b9d\u5ea7,\u50b2\u89c6\u7fa4\u96c4\uff01";
+        final Message msg2 = new Message("TXT_SYS", 0, str2);
+        MessageUtils.broadcast(room2, msg2);
+        final String str3 = "<span style='color:#B22222'>\u4f60\u5df2\u6210\u4e3a\u5e84\u4e3b,\u53d1\u7ea2\u5305\u5f00\u59cb\u5750\u5e84!</span>";
+        final Message msg3 = new Message("TXT_SYS", 0, str3);
+        MessageUtils.send(master.getId(), room2, msg3);
+    }
+    
+    @Transactional(rollbackFor = { Throwable.class })
+    public void dealGame(final Lottery lottery) throws GameException {
+        final Room room = this.roomStore.get(lottery.getRoomId());
+        room.setStatus("0");
+        final Integer masterId = lottery.getSender();
+        final User master = this.userStore.get(masterId);
+        final LotteryDetail masterDetail = this.getMasterDetail(lottery);
+        final Integer masterPoint = NumberUtil.getDecimalPartSum4G22(masterDetail.getCoin());
+        BigDecimal masterInout = new BigDecimal(0.0);
+        final Map<Integer, LotteryDetail> details = lottery.getDetail();
+        final StringBuilder msg = new StringBuilder("<table style='color:#0493b2'>");
+        BigDecimal water = new BigDecimal(0.0);
+        final BigDecimal rate = new BigDecimal(room.getFeeAdd());
+        for (final LotteryDetail ld : details.values()) {
+            if (ld.getUid().equals(masterId)) {
+                continue;
+            }
+            final User player = this.userStore.get(ld.getUid());
+            final Integer playerPoint = NumberUtil.getDecimalPartSum4G22(ld.getCoin());
+            final Integer losePoint = Integer.valueOf(this.getConifg(room.getId(), "conf_lose"));
+            msg.append("<tr><td>\u3016\u95f2\u3017</td><td class='g021-nick-name'>").append(player.getNickName()).append("</td><td>(").append(ld.getCoin()).append(")</td>");
+            if (masterPoint > playerPoint || playerPoint <= losePoint) {
+                final BigDecimal inout = this.getInout(room, masterPoint);
+                this.monitor.setData(lottery.getRoomId(), player.getId(), -inout.doubleValue());
+                msg.append("<td style='color:green;'>").append(G02.NAMES[playerPoint]).append(" -").append(NumberUtil.format(inout)).append("</td>");
+                masterInout = masterInout.add(inout);
+                final Double addBack = this.getDeposit(room) - inout.doubleValue() + ld.getCoin().doubleValue();
+                this.dao.executeUpdate("update PubUser a set a.money =a.money + :money,a.exp=coalesce(a.exp,0)+:exp where a.id = :uid ", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)addBack, (Object)"exp", (Object)Math.abs(inout.doubleValue()), (Object)"uid", (Object)player.getId()));
+                this.dao.executeUpdate("update GcLotteryDetail a set  a.addback =:addback,a.inoutNum = :inoutNum where a.lotteryid = :lotteryid and a.uid =:uid", (Map<String, Object>)ImmutableMap.of((Object)"addback", (Object)(double)addBack, (Object)"inoutNum", (Object)(-inout.subtract(ld.getCoin()).doubleValue()), (Object)"lotteryid", (Object)lottery.getId(), (Object)"uid", (Object)player.getId()));
+            }
+            else if (masterPoint < playerPoint) {
+                BigDecimal inout = this.getInout(room, playerPoint);
+                masterInout = masterInout.subtract(inout);
+                msg.append("<td style='color:red;'>").append(G02.NAMES[playerPoint]).append("+").append(NumberUtil.format(inout)).append("</td>");
+                if (!"9".equals(player.getUserType())) {
+                    final BigDecimal subWater = inout.multiply(rate);
+                    inout = inout.subtract(inout.multiply(rate));
+                    final BigDecimal roomWater = new BigDecimal(this.setProxyWater(player, subWater.doubleValue(), room.getId(), "G022", lottery.getId()));
+                    water = water.add(roomWater);
+                }
+                this.monitor.setData(lottery.getRoomId(), player.getId(), inout.doubleValue());
+                final Double addBack = this.getDeposit(room) + inout.add(ld.getCoin()).doubleValue();
+                this.dao.executeUpdate("update PubUser a set a.money =a.money + :money,a.exp=coalesce(a.exp,0)+:exp where a.id = :uid ", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)addBack, (Object)"exp", (Object)Math.abs(inout.doubleValue()), (Object)"uid", (Object)player.getId()));
+                this.dao.executeUpdate("update GcLotteryDetail a set  a.addback =:addback,a.inoutNum = :inoutNum where a.lotteryid = :lotteryid and a.uid =:uid", (Map<String, Object>)ImmutableMap.of((Object)"addback", (Object)(double)addBack, (Object)"inoutNum", (Object)inout.add(ld.getCoin()).doubleValue(), (Object)"lotteryid", (Object)lottery.getId(), (Object)"uid", (Object)player.getId()));
+            }
+            else if (masterDetail.getCoin().compareTo(ld.getCoin()) >= 0) {
+                final BigDecimal inout = this.getInout(room, masterPoint);
+                this.monitor.setData(lottery.getRoomId(), player.getId(), -inout.doubleValue());
+                msg.append("<td style='color:green;'>").append(G02.NAMES[playerPoint]).append(" -").append(NumberUtil.format(inout)).append("</td>");
+                masterInout = masterInout.add(inout);
+                final Double addBack = this.getDeposit(room) - inout.doubleValue() + ld.getCoin().doubleValue();
+                this.dao.executeUpdate("update PubUser a set a.money =a.money + :money,a.exp=coalesce(a.exp,0)+:exp where a.id = :uid ", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)addBack, (Object)"exp", (Object)Math.abs(inout.doubleValue()), (Object)"uid", (Object)player.getId()));
+                this.dao.executeUpdate("update GcLotteryDetail a set  a.addback =:addback,a.inoutNum = :inoutNum where a.lotteryid = :lotteryid and a.uid =:uid", (Map<String, Object>)ImmutableMap.of((Object)"addback", (Object)(double)addBack, (Object)"inoutNum", (Object)(-inout.subtract(ld.getCoin()).doubleValue()), (Object)"lotteryid", (Object)lottery.getId(), (Object)"uid", (Object)player.getId()));
+            }
+            else {
+                BigDecimal inout = this.getInout(room, playerPoint);
+                masterInout = masterInout.subtract(inout);
+                msg.append("<td style='color:red;'>").append(G02.NAMES[playerPoint]).append("+").append(NumberUtil.format(inout)).append("</td>");
+                if (!"9".equals(player.getUserType())) {
+                    final BigDecimal subWater = inout.multiply(rate);
+                    inout = inout.subtract(inout.multiply(rate));
+                    final BigDecimal roomWater = new BigDecimal(this.setProxyWater(player, subWater.doubleValue(), room.getId(), "G022", lottery.getId()));
+                    water = water.add(roomWater);
+                }
+                this.monitor.setData(lottery.getRoomId(), player.getId(), inout.doubleValue());
+                final Double addBack = this.getDeposit(room) + inout.add(ld.getCoin()).doubleValue();
+                this.dao.executeUpdate("update PubUser a set a.money =a.money + :money,a.exp=coalesce(a.exp,0)+:exp where a.id = :uid ", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)addBack, (Object)"exp", (Object)Math.abs(inout.doubleValue()), (Object)"uid", (Object)player.getId()));
+                this.dao.executeUpdate("update GcLotteryDetail a set  a.addback =:addback,a.inoutNum = :inoutNum where a.lotteryid = :lotteryid and a.uid =:uid", (Map<String, Object>)ImmutableMap.of((Object)"addback", (Object)(double)addBack, (Object)"inoutNum", (Object)inout.add(ld.getCoin()).doubleValue(), (Object)"lotteryid", (Object)lottery.getId(), (Object)"uid", (Object)player.getId()));
+            }
+            msg.append("</tr>");
+        }
+        msg.append("<tr><td  style='color:#B22222'>\u3010\u5e84\u3011</td><td class='g021-nick-name'>").append(master.getNickName()).append("</td><td>(").append(masterDetail.getCoin()).append(")</td>");
+        if (masterInout.compareTo(new BigDecimal(0)) > 0) {
+            msg.append("<td style='color:red'>").append(G02.NAMES[masterPoint]).append("+").append(NumberUtil.format(masterInout)).append("</td>");
+        }
+        else if (masterInout.compareTo(new BigDecimal(0)) < 0) {
+            msg.append("<td style='color:green'>").append(G02.NAMES[masterPoint]).append(" -").append(NumberUtil.format(Math.abs(masterInout.doubleValue()))).append("</td></tr>");
+        }
+        else {
+            msg.append("<td style='color:gray'>").append(G02.NAMES[masterPoint]).append("¡À\u5e73\u5e84</td></tr>");
+        }
+        if (masterInout.doubleValue() > 0.0 && !"9".equals(master.getUserType())) {
+            final BigDecimal subWater2 = masterInout.multiply(rate);
+            masterInout = masterInout.subtract(subWater2);
+            final BigDecimal roomWater2 = new BigDecimal(this.setProxyWater(master, subWater2.doubleValue(), room.getId(), "G022", lottery.getId()));
+            water = water.add(roomWater2);
+        }
+        masterInout = masterInout.add(masterDetail.getCoin());
+        msg.append("</table>");
+        masterInout = masterInout.add(lottery.getRestMoney());
+        this.monitor.setData(lottery.getRoomId(), master.getId(), masterInout.doubleValue());
+        final Double masterAddBack = masterInout.add(new BigDecimal(this.getDeposit(room) * lottery.getNumber())).doubleValue();
+        this.dao.executeUpdate("update PubUser a set a.money =a.money + :money,a.exp=coalesce(a.exp,0)+:exp where a.id = :uid ", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)masterAddBack, (Object)"exp", (Object)Math.abs(masterInout.doubleValue()), (Object)"uid", (Object)masterId));
+        this.dao.executeUpdate("update GcLotteryDetail a set  a.addback =:addback,a.inoutNum = :inoutNum where a.lotteryid = :lotteryid and a.uid =:uid", (Map<String, Object>)ImmutableMap.of((Object)"addback", (Object)(double)masterAddBack, (Object)"inoutNum", (Object)masterInout.doubleValue(), (Object)"lotteryid", (Object)lottery.getId(), (Object)"uid", (Object)masterId));
+        this.dao.executeUpdate("update GcRoom a set a.sumFee =COALESCE(a.sumFee,0) + :water,sumPack = COALESCE(sumPack,0)+1 where a.id = :roomId ", (Map<String, Object>)ImmutableMap.of((Object)"water", (Object)water.doubleValue(), (Object)"roomId", (Object)lottery.getRoomId()));
+        final Message rmsg = new Message("TXT_SYS", 0, msg.toString());
+        MessageUtils.broadcast(room, rmsg);
+    }
+    
+    private LotteryDetail getMasterDetail(final Lottery lottery) {
+        final LotteryDetail lastDetail = null;
+        for (final LotteryDetail ld : lottery.getDetail().values()) {
+            if (ld.getUid().equals(lottery.getSender())) {
+                return ld;
+            }
+        }
+        return null;
+    }
+    
+    public BigDecimal getInout(final Room room, final int nn) {
+        final Map<String, Object> map = room.getProperties();
+        final String key = "conf_n" + nn;
+        Double types = 1.0;
+        if (map.get(key) != null) {
+            types = Double.valueOf(map.get(key).toString());
+        }
+        final Double money = Double.valueOf(map.get("conf_money").toString());
+        return new BigDecimal(money * types);
+    }
+    
+    public double getDeposit(final Room room) throws GameException {
+        final Double conf_money = Double.valueOf(this.getConifg(room.getId(), "conf_money"));
+        final Double conf_n10 = Double.valueOf(this.getConifg(room.getId(), "conf_n15"));
+        return conf_money * conf_n10;
+    }
+    
+    public String getConifg(final String roomId, final String key) throws GameException {
+        final Room room = this.roomStore.get(roomId);
+        final Map<String, Object> properties = room.getProperties();
+        if (properties.containsKey(key)) {
+            return properties.get(key).toString();
+        }
+        throw new GameException(500, "\u7f3a\u5c11\u914d\u7f6e\u9879[" + key + "]");
+    }
+}

@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+	<!-- global setting start -->
+	<bean class="org.takeback.util.ApplicationContextHolder"/>
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="staticMethod" value="org.takeback.util.ApplicationContextHolder.setName"/>
+		<property name="arguments">
+			<list>
+				<value>gamechat</value>
+			</list>
+		</property>
+	</bean>
+	<!-- global setting end -->
+
+	<bean class="org.takeback.util.httpclient.HttpClientUtils" destroy-method="release"/>
+	<!-- paramloder setting start -->
+	<bean class="org.takeback.core.param.DBStoreParamLoader" id="dbStoreParamLoader"/>
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="staticMethod" value="org.takeback.util.params.ParamUtils.setParamLoader"/>
+		<property name="arguments">
+			<list>
+				<ref bean="dbStoreParamLoader"/>
+			</list>
+		</property>
+	</bean>
+	<!-- paramloder setting end -->
+
+	<import resource="spring-datasource.xml" />
+	<import resource="spring-mvc.xml" />
+	<import resource="spring-schedule.xml"/>
+	<bean class="org.takeback.chat.store.room.DefaultRoomStore" id="roomStore" init-method="init">
+		<property name="pageSize" value="5"/>
+	</bean>
+
+	<bean class="org.takeback.chat.store.user.DefaultUserStore" id="userStore" init-method="init">
+	</bean>
+
+	<bean class="org.springframework.beans.factory.config.ListFactoryBean" id="connectListeners">
+		<property name="sourceList">
+			<list value-type="org.takeback.chat.websocket.listener.ConnectListener">
+				<bean class="org.takeback.chat.websocket.listener.support.UserListener"/>
+			</list>
+		</property>
+	</bean>
+	<bean class="org.springframework.beans.factory.config.ListFactoryBean" id="disconnectListeners">
+		<property name="sourceList">
+			<list value-type="org.takeback.chat.websocket.listener.DisconnectListener">
+				<bean class="org.takeback.chat.websocket.listener.support.UserListener"/>
+			</list>
+		</property>
+	</bean>
+	<bean class="org.springframework.beans.factory.config.ListFactoryBean" id="messageReceiveListeners">
+		<property name="sourceList">
+			<list value-type="org.takeback.chat.websocket.listener.MessageReceiveListener">
+				<bean class="org.takeback.chat.websocket.listener.support.MessageLisnener"/>
+			</list>
+		</property>
+	</bean>
+	<bean class="org.springframework.beans.factory.config.ListFactoryBean" id="transportErrorListeners">
+		<property name="sourceList">
+			<list value-type="org.takeback.chat.websocket.listener.TransportErrorListener">
+				<bean class="org.takeback.chat.websocket.listener.support.UserListener"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean class="org.takeback.chat.utils.SmsUtil">
+		<property name="sign" value="【蚂蚁俱乐部】"/>
+		<property name="codeTpl" value="【253云通讯】欢迎体验253云通讯产品验证码是:${code}"/>
+	</bean>
+
+	<!-- 支付相关参数配置 -->
+	<bean id="abstractConfig" class="org.takeback.thirdparty.support.AbstractThirdPartyConfig" abstract="true">
+		<property name="gameServerBaseUrl" value="www.xmteck.net"/>
+	</bean>
+
+	<bean id="wxConfig" class="org.takeback.thirdparty.support.WxConfig" parent="abstractConfig">
+		<property name="wxJSAPIAppId" value="wx769161c3ac3e0818"/>
+		<property name="wxJSAPISecret" value="345a8c3e52c77a2cb35a7b34e3af9962"/>
+	</bean>
+
+	<bean id="kouDaiConfig" class="org.takeback.thirdparty.support.KouDaiConfig" parent="abstractConfig">
+		<property name="secretCode" value="bbc83105788e40eeb0e699e3acd765b0"/>
+		<property name="partnerId" value="1008238"/>
+		<property name="restApiAddress" value="https://api.duqee.com/pay/KDBank.aspx"/>
+	</bean>
+
+	<bean id="xinTongConfig" class="org.takeback.thirdparty.support.XinTongConfig" parent="abstractConfig">
+		<property name="secretCode" value="4c8b0c26af1241fd8a46fedbb0738791"/>
+		<property name="partnerId" value="1963"/>
+		<property name="restApiAddress" value="http://pay.wkwpay.com/Bank/"/>
+	</bean>
+
+	<bean id="fastPayConfig" class="org.takeback.thirdparty.support.FastPayConfig" parent="abstractConfig">
+		<property name="secretCode" value="6f0f138022dd404ab6ccbc077ea00942"/>
+		<property name="partnerId" value="987280"/>
+		<property name="restApiAddress" value="http://ttflashpay.com/interface/AutoBank/index.aspx"/>
+	</bean>
+
+	<bean id="dunxingConfig" class="org.takeback.thirdparty.support.DunxingConfig" parent="abstractConfig">
+		<property name="appId" value="B068A45A08811F7B1D42D7AD16A25E33748C95B1761730C7"/>
+		<property name="secretKey" value="0F70E802D5F43BD7BDDD6DC78CCB3CFC9EA8AC2AB27AC6982D46274B318F4328346A04C83120C5FA0CDEF77D74BE993050410EC96EB0759AAC755055BBCFACC38F93A02D5041EDBC"/>
+		<property name="restApiAddress" value="http://payment.dunxingpay.com/Pay.ashx"/>
+	</bean>
+
+	<bean id="xunhuibaoConfig" class="org.takeback.thirdparty.support.XunhuibaoConfig" parent="abstractConfig">
+		<property name="merchantId" value="770220147890002"/>
+		<property name="secretKey" value="ECDD127B6479C6F58AA7C39AA13C1576"/>
+		<property name="restApiAddress" value="http://pay.x6pay.com:8082/posp-api/passivePay"/>
+	</bean>
+	<!-- 支付相关参数配置结束 -->
+
+	<bean class="org.takeback.pay.PayOrderFactory">
+		<property name="appId" value="7189f8a0-0a03-4fd2-b93d-be92bee428ee"/>
+		<property name="appSecret" value="42c1d2de-87a8-4cbb-9438-a25464a2e49c"/>
+		<property name="masterSecret" value="6b16130a-c9ae-4a2b-9075-ee8c1e77029e"/>
+		<property name="testSecret" value="20a308c7-6bb1-4f67-9f50-c27f47151e58"/>
+		<property name="wxConfig" ref="wxConfig"/>
+	</bean>
+
+	<bean id="threadPool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+	<property name="corePoolSize" value="10" />
+	<property name="maxPoolSize" value="50" />
+	<property name="queueCapacity" value="100" />
+	<property name="keepAliveSeconds" value="60" />
+	<property name="rejectedExecutionHandler">
+		<bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
+	</property>
+</bean>
+
+	<bean id="pcEggStore" class="org.takeback.chat.store.pcegg.PcEggStore">
+		<property name="periodConfigs">
+			<list>
+				<value>9:05~23:55->5m->http://d.apiplus.net/t594c249c94d20a24k/bjkl8.json</value>
+                <value>23:55~9:05->550m->http://d.apiplus.net/t594c249c94d20a24k/bjkl8.json</value>
+			</list>
+		</property>
+		<property name="closeSeconds" value="30"/>
+		<property name="threadPool" ref="threadPool"/>
+	</bean>
+
+	<bean id="pcEggScheduler" class="org.takeback.chat.store.pcegg.PcEggScheduler" init-method="init">
+		<property name="pcEggStore" ref="pcEggStore"/>
+	</bean>
+	<!--
+        <bean id="pk10Schedule" class="org.takeback.chat.schedule.PK10Schedule" init-method="init">
+        </bean>
+
+
+        <bean class="org.takeback.pay.support.ips.IpsExecutor" id="ipsExecutor">
+            <property name="merCode" value="178248"/>
+            <property name="Account" value="1782480014"/>
+            <property name="key" value="a00t2cyuFXpjMnc8Y7HMW6sqE6PDMPRBlN0x4ZO7XlEf6l0sSGdqMc0sePNxAy9Fs7kkq90v6du4GAfwnZt2pgWGzU7hV6ZNhomex2HPx0Cu89kVMyME0wWq6oqemJef"/>
+            <property name="notify_url" value="http://madkey.vicp.net:8080/pay/ipsPayNotify"/>
+            <property name="return_url" value="http://madkey.vicp.net:8080/pay/syncCallback"/>
+        </bean>
+
+        <bean class="org.takeback.pay.support.lefu.LefuExecutor" id="lefuExecutor">
+            <property name="merId" value="8613979801"/>
+            <property name="key" value="BF9C6C67EB4CA99375A066710826165E"/>
+            <property name="notify_url" value="http://madkey.vicp.net:8080/pay/lefuPayNotify"/>
+            <property name="return_url" value="http://madkey.vicp.net:8080/pay/syncCallback"/>
+         </bean>
+
+        <bean id="payExecutors" class="org.springframework.beans.factory.config.MapFactoryBean">
+            <property name="sourceMap">
+                <map key-type="java.lang.String" value-type="org.takeback.pay.PayExecutor">
+                    <entry key="ips" value-ref="ipsExecutor"/>
+                    <entry key="lefu" value-ref="lefuExecutor"/>
+                </map>
+            </property>
+        </bean>
+        -->
+</beans>

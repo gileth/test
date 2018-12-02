@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="房间状态">
+    <item key="0" text="已申请"/>
+    <item key="1" text="已发货"/>
+    <item key="2" text="已拒绝"/>
+</dic>

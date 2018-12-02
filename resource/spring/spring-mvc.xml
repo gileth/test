@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd">
+    <!--<context:annotation-config />-->
+
+    <bean class="org.takeback.verification.message.support.DefaultMessageProcessor" id="messageProcessor"/>
+
+    <context:component-scan base-package="org.takeback">
+        <context:include-filter type="regex" expression="org.takeback.mvc.controller"/>
+        <context:include-filter type="regex" expression="org.takeback.dao"/>
+        <context:include-filter type="regex" expression="org.takeback.service"/>
+        <context:include-filter type="regex" expression="org.takeback.core.service"/>
+        <context:include-filter type="regex" expression="org.takeback.chat.service"/>
+        <context:include-filter type="regex" expression="org.takeback.chat.controller"/>
+        <context:include-filter type="regex" expression="org.takeback.chat.lottery.listeners"/>
+        <context:include-filter type="regex" expression="org.takeback.chat.websocket.core"/>
+    </context:component-scan>
+    <!--<context:component-scan base-package="org.takeback.mvc.controller,org.takeback.dao,org.takeback.service,org.takeback.core.service,-->
+        <!--org.takeback.chat.service,org.takeback.chat.controller,org.takeback.chat.lottery.listeners,org.takeback.chat.websocket.core"/>-->
+
+    <bean class="org.takeback.util.MyObjectMapper" id="myObjectMapper"/>
+
+    <mvc:annotation-driven validator="validator">
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <constructor-arg name="objectMapper" ref="myObjectMapper"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- static resources -->
+    <mvc:default-servlet-handler/>
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/WEB-INF/views/"
+          p:suffix=".jsp"/>
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="defaultErrorView" value="500"/>
+        <!--<property name="exceptionAttribute" value="exception"/>-->
+        <property name="exceptionMappings">
+            <props>
+                <prop key="nw.util.exception.CodedBaseRuntimeException">500</prop>
+            </props>
+        </property>
+    </bean>
+
+    <mvc:interceptors>
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>
+        <bean class="org.takeback.mvc.interceptor.LimitOneClientOnlineInterceptor"/>
+        <bean class="org.takeback.mvc.interceptor.AuthInterceptor"/>
+    </mvc:interceptors>
+
+    <!-- <mvc:annotation-driven validator="validator" /> -->
+    <!-- <mvc:view-controller path="/" view-name="forward:index" /> -->
+    <!-- <mvc:view-controller path="/" view-name="redirect:index.html"/> -->
+
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
+    </bean>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="maxUploadSize" value="5242880"/>
+    </bean>
+
+    <bean id="dateBean" class="org.takeback.util.context.beans.DateBean" />
+    <bean id="jvmStatBean" class="org.takeback.util.context.beans.JVMStatBean" />
+    <bean id="topContext" class="org.takeback.util.context.Context">
+        <constructor-arg>
+            <map>
+                <entry>
+                    <key>
+                        <value>date</value>
+                    </key>
+                    <ref bean="dateBean" />
+                </entry>
+                <entry>
+                    <key>
+                        <value>jvm</value>
+                    </key>
+                    <ref bean="jvmStatBean" />
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
+    <bean id="staticInitContext" class="org.takeback.util.context.Context">
+        <constructor-arg type="java.lang.String" value="server" />
+        <constructor-arg ref="topContext" />
+    </bean>
+
+    <bean id="expr_set_base" class="org.takeback.util.exp.ExpressionSet">
+        <property name="name" value="base" />
+        <property name="expressions">
+            <list>
+                <bean class="org.takeback.util.exp.standard.AND" />
+                <bean class="org.takeback.util.exp.standard.CONCAT" />
+                <bean class="org.takeback.util.exp.standard.DEC" />
+                <bean class="org.takeback.util.exp.standard.DIV" />
+                <bean class="org.takeback.util.exp.standard.EQ" />
+                <bean class="org.takeback.util.exp.standard.GE" />
+                <bean class="org.takeback.util.exp.standard.GT" />
+                <bean class="org.takeback.util.exp.standard.IF" />
+                <bean class="org.takeback.util.exp.standard.IN" />
+                <bean class="org.takeback.util.exp.standard.LE" />
+                <bean class="org.takeback.util.exp.standard.LEN" />
+                <bean class="org.takeback.util.exp.standard.LIKE" />
+                <bean class="org.takeback.util.exp.standard.LT" />
+                <bean class="org.takeback.util.exp.standard.MUL" />
+                <bean class="org.takeback.util.exp.standard.NE" />
+                <bean class="org.takeback.util.exp.standard.NUM" />
+                <bean class="org.takeback.util.exp.standard.OR" />
+                <bean class="org.takeback.util.exp.standard.PY" />
+                <bean class="org.takeback.util.exp.standard.REF" />
+                <bean class="org.takeback.util.exp.standard.STR" />
+                <bean class="org.takeback.util.exp.standard.SUBSTR" />
+                <bean class="org.takeback.util.exp.standard.SUM" />
+                <bean class="org.takeback.util.exp.standard.DATE" />
+                <bean class="org.takeback.util.exp.standard.ISNULL" />
+                <bean class="org.takeback.util.exp.standard.NOTNULL" />
+                <bean class="org.takeback.util.exp.standard.BETWEEN" />
+            </list>
+        </property>
+    </bean>
+    <bean id="exprProcessor" class="org.takeback.util.exp.ExpressionProcessor">
+        <property name="expressionSets">
+            <list>
+                <ref bean="expr_set_base" />
+            </list>
+        </property>
+    </bean>
+
+</beans>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="帐号状态">
+	<item key="1" text="正常"/>
+	<item key="2" text="锁定"/>
+	<item key="3" text="注销"/>
+</dic>

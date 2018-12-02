@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="机构列表" class="CustomDictionary" bean="systemDicProcessor" method="getUnits">
+
+</dic>

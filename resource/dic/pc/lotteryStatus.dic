@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="下注状态">
+    <item key="0" text="已下注"/>
+    <item key="1" text="中奖"/>
+    <item key="2" text="未中奖"/>
+    <item key="3" text="已取消"/>
+</dic>

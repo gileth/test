@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+	<bean id="expr_set_base" class="org.takeback.util.exp.ExpressionSet">
+		<property name="name" value="base" />
+		<property name="expressions">
+			<list>
+				<bean class="org.takeback.util.exp.standard.AND" />
+				<bean class="org.takeback.util.exp.standard.CONCAT" />
+				<bean class="org.takeback.util.exp.standard.DEC" />
+				<bean class="org.takeback.util.exp.standard.DIV" />
+				<bean class="org.takeback.util.exp.standard.EQ" />
+				<bean class="org.takeback.util.exp.standard.GE" />
+				<bean class="org.takeback.util.exp.standard.GT" />
+				<bean class="org.takeback.util.exp.standard.IF" />
+				<bean class="org.takeback.util.exp.standard.IN" />
+				<bean class="org.takeback.util.exp.standard.LE" />
+				<bean class="org.takeback.util.exp.standard.LEN" />
+				<bean class="org.takeback.util.exp.standard.LIKE" />
+				<bean class="org.takeback.util.exp.standard.LT" />
+				<bean class="org.takeback.util.exp.standard.MUL" />
+				<bean class="org.takeback.util.exp.standard.NE" />
+				<bean class="org.takeback.util.exp.standard.NUM" />
+				<bean class="org.takeback.util.exp.standard.OR" />
+				<bean class="org.takeback.util.exp.standard.PY" />
+				<bean class="org.takeback.util.exp.standard.REF" />
+				<bean class="org.takeback.util.exp.standard.STR" />
+				<bean class="org.takeback.util.exp.standard.SUBSTR" />
+				<bean class="org.takeback.util.exp.standard.SUM" />
+				<bean class="org.takeback.util.exp.standard.DATE" />
+				<bean class="org.takeback.util.exp.standard.ISNULL" />
+				<bean class="org.takeback.util.exp.standard.NOTNULL" />
+				<bean class="org.takeback.util.exp.standard.BETWEEN" />
+			</list>
+		</property>
+	</bean>
+	<bean id="exprProcessor" class="org.takeback.util.exp.ExpressionProcessor">
+		<property name="expressionSets">
+			<list>
+				<ref bean="expr_set_base" />
+			</list>
+		</property>
+	</bean>
+</beans>

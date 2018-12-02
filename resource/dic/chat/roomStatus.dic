@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="房间状态">
+    <item key="0" text="已停止"/>
+    <item key="1" text="游戏中"/>
+    <item key="9" text="房间已锁定"/>
+</dic>

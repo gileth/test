@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="充值方式">
+    <item key="1" text="自动充值"/>
+    <item key="2" text="代理上分"/>
+    <item key="3" text="代理下分"/>
+</dic>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="红包状态">
+    <item key="room/red01.png" text="抢红包图1"/>
+    <item key="room/nn01.jpg" text="牛牛图1"/>
+    <item key="room/ssc01.png" text="时时彩图1"/>
+    <item key="room/ssc02.jpg" text="时时彩图2"/>
+    <item key="room/pk01.png" text="时时彩单挑图1"/>
+    <item key="room/pcegg01.jpg" text="PC蛋蛋图1"/>
+    <item key="room/gp01.jpg" text="股票图1"/>
+    <item key="room/cute.jpg" text="心形治愈图1"/>
+</dic>

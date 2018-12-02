@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="消息类型">
+    <item key="TXT" text="普通文本消息"/>
+    <item key="RED" text="红包消息"/>
+    <item key="IMG" text="图片消息"/>
+    <item key="VOC" text="语音消息"/>
+    <item key="ORD" text="指令消息"/>
+    <item key="TXT_SYS" text="系统文本消息"/>
+    <item key="RED_SYS" text="系统红包消息"/>
+</dic>

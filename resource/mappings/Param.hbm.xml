@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.takeback.util.params.Param" table="sys_params" dynamic-insert="true" dynamic-update="true">
+        <id name="id" type="java.lang.Long">
+            <column name="id" />
+            <generator class="identity"></generator>
+        </id>
+        <property name="paramname" type="java.lang.String">
+            <column name="paramname" length="50" not-null="true" unique="true" />
+        </property>
+        <property name="paramvalue" type="java.lang.String">
+            <column name="paramvalue" length="50" not-null="true" />
+        </property>
+        <property name="paramalias" type="java.lang.String">
+            <column name="paramalias" length="50" />
+        </property>
+        <property name="remark" type="java.lang.String">
+            <column name="remark" length="50" />
+        </property>
+    </class>
+</hibernate-mapping>

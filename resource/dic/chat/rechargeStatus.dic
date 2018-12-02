@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="充值状态">
+    <item key="1" text="待支付"/>
+    <item key="2" text="支付成功"/>
+    <item key="9" text="关闭"/>
+</dic>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="房间分类">
+    <item key="C01" text="系统"/>
+    <item key="C02" text="私人"/>
+</dic>

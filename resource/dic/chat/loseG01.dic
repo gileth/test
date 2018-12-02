@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="抢包比大小惩罚规则">
+    <item key="max" text="金额最大"/>
+    <item key="min" text="金额最小"/>
+    <item key="tail_max" text="小数部分最大"/>
+    <item key="tail_min" text="小数部分最小"/>
+    <item key="tail_sum_max" text="小数和值最大"/>
+    <item key="tail_sum_min" text="小数和值最小"/>
+    <item key="sum_mux" text="各位和值最大"/>
+    <item key="sum_min" text="各位和值最小"/>
+</dic>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="下注字典">
+    <item key="num" text="数字" />
+    <item key="spc" text="特殊玩法" />
+    <item key="bs" text="大小" />
+</dic>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.takeback.core.user.User" table="sys_user" dynamic-insert="true" dynamic-update="true">
+        <id name="id" type="java.lang.String">
+            <column name="id" length="50" />
+            <generator class="assigned"></generator>
+        </id>
+        <property name="password" type="java.lang.String">
+            <column name="password" length="50" not-null="true" />
+        </property>
+        <property name="name" type="java.lang.String">
+            <column name="name" length="50" />
+        </property>
+        <property name="phonenumb" type="java.lang.String">
+            <column name="phonenumb" length="50" unique="true" />
+        </property>
+        <property name="email" type="java.lang.String">
+            <column name="email" length="50" unique="true" />
+        </property>
+        <property name="avatar" type="java.lang.String">
+            <column name="avatar" length="50" />
+        </property>
+        <property name="registertime" type="java.sql.Timestamp">
+            <column name="registertime" length="19" />
+        </property>
+        <property name="lastsignintime" type="java.sql.Timestamp">
+            <column name="lastsignintime" length="19" />
+        </property>
+        <property name="lastsigninip" type="java.lang.String">
+            <column name="lastsigninip" length="50" />
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="status" length="1" />
+        </property>
+    </class>
+</hibernate-mapping>

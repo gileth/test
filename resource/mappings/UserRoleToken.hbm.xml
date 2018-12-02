@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.takeback.core.user.UserRoleToken" table="sys_userroletoken" dynamic-insert="true" dynamic-update="true">
+        <id name="id" type="java.lang.Long">
+            <column name="id" />
+            <generator class="identity"></generator>
+        </id>
+        <property name="userid" type="java.lang.String">
+            <column name="userid" length="50" not-null="true" />
+        </property>
+        <property name="roleid" type="java.lang.String">
+            <column name="roleid" length="50" not-null="true" />
+        </property>
+        <property name="organid" type="java.lang.String">
+            <column name="organid" length="50" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

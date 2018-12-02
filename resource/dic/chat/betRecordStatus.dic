@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dic name="牛下注记录状态">
+    <item key="0" text="正常"/>
+    <item key="1" text="已经结算"/>
+    <item key="9" text="作废"/>
+</dic>

@@ -26,9 +26,9 @@ public class NoticeService extends MyListServiceInt
     @Override
     public void save(final Map<String, Object> req) {
         super.save(req);
-        final Map<String, Object> data = req.get("data");
+        final Map<String, Object> data = (Map<String, Object>) req.get("data");
         System.out.println(data);
-        final String content = data.get("content");
+        final String content = (String) data.get("content");
         final String meg = "<span style='color:#B22222'>\u7cfb\u7edf\u6d88\u606f\uff1a" + content + " </span>";
         final List<Room> rms = this.roomStore.getByCatalog(null);
         for (final Room r : rms) {

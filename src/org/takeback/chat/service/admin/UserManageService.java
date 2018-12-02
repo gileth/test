@@ -19,12 +19,12 @@ public class UserManageService extends MyListServiceInt
     @Transactional
     @Override
     public void save(final Map<String, Object> req) {
-        final Map<String, Object> data = req.get("data");
-        final String cmd = req.get(UserManageService.CMD);
+        final Map<String, Object> data = (Map<String, Object>) req.get("data");
+        final String cmd = (String) req.get(UserManageService.CMD);
         if ("create".equals(cmd)) {
             try {
                 final String salt = CryptoUtils.getSalt();
-                final String psw = data.get("pwd");
+                final String psw = (String) data.get("pwd");
                 data.put("salt", salt);
                 final String pwd = CryptoUtils.getHash(psw, StringUtils.reverse(salt));
                 data.put("pwd", pwd);
@@ -39,7 +39,7 @@ public class UserManageService extends MyListServiceInt
             final String oldPwd = user.getPwd();
             if (!oldPwd.equals(data.get("pwd"))) {
                 final String salt2 = CryptoUtils.getSalt();
-                final String psw2 = data.get("pwd");
+                final String psw2 = (String) data.get("pwd");
                 data.put("salt", salt2);
                 final String pwd2 = CryptoUtils.getHash(psw2, StringUtils.reverse(salt2));
                 data.put("pwd", pwd2);

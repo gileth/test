@@ -28,8 +28,8 @@ public class RoomFeeService extends MyListServiceInt
     @Transactional
     @Override
     public void save(final Map<String, Object> req) {
-        final Map<String, Object> data = req.get("data");
-        final String roomId = data.get("roomId");
+        final Map<String, Object> data = (Map<String, Object>) req.get("data");
+        final String roomId = (String) data.get("roomId");
         if (roomId == null) {
             throw new CodedBaseRuntimeException("\u623f\u95f4\u53f7\u4e0d\u80fd\u4e3a\u7a7a");
         }
@@ -39,13 +39,13 @@ public class RoomFeeService extends MyListServiceInt
         }
         Double fee = 0.0;
         try {
-            fee = Double.valueOf(data.get("val"));
+            fee = Double.valueOf((String) data.get("val"));
         }
         catch (Exception e) {
             throw new CodedBaseRuntimeException("\u9519\u8bef\u7684\u6570\u503c");
         }
         final String hql = "update GcRoom set sumfee = COALESCE(sumfee,0) - :val where sumfee>:val and  id=:roomId";
-        final int effected = this.dao.executeUpdate(hql, (Map<String, Object>)ImmutableMap.of((Object)"val", (Object)fee, (Object)"roomId", (Object)roomId));
+        final int effected = this.dao.executeUpdate(hql, ImmutableMap.of("val", fee, "roomId", roomId));
         if (effected == 0) {
             throw new CodedBaseRuntimeException("\u8d85\u51fa\u53ef\u7528\u989d\u5ea6\uff1a" + rm.getSumFee());
         }

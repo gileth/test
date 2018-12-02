@@ -21,8 +21,8 @@ public class MessageService extends MyListServiceInt
     @Transactional
     @Override
     public void save(final Map<String, Object> req) {
-        final Map<String, Object> data = req.get("data");
-        final String userName = data.get("userIdText");
+        final Map<String, Object> data = (Map<String, Object>) req.get("data");
+        final String userName = (String) data.get("userIdText");
         String status = (data.get("status") == null) ? "0" : data.get("status").toString();
         if ("".equals(status)) {
             status = "0";

@@ -18,9 +18,9 @@ public class ChangePasswordService extends MyListServiceInt
     @Transactional
     @Override
     public void save(final Map<String, Object> req) {
-        final Map<String, Object> data = req.get("data");
+        final Map<String, Object> data = (Map<String, Object>) req.get("data");
         final Integer id = Integer.valueOf(data.get("id").toString());
-        final String pwd = data.get("pwd");
+        final String pwd = (String) data.get("pwd");
         req.put("id", id);
         final PubUser prev = (PubUser)this.load(req);
         final String prevPwd = prev.getPwd();

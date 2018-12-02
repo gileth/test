@@ -22,8 +22,8 @@ public class RoomPropAdminService extends MyListServiceInt
     @Override
     public void save(final Map<String, Object> req) {
         super.save(req);
-        final Map<String, Object> data = req.get("data");
-        final String roomId = data.get("roomId");
+        final Map<String, Object> data = (Map<String, Object>) req.get("data");
+        final String roomId = (String) data.get("roomId");
         this.roomStore.reload(roomId);
     }
 }

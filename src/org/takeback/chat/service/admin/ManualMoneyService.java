@@ -22,8 +22,8 @@ public class ManualMoneyService extends MyListServiceInt
     @Transactional
     @Override
     public void save(final Map<String, Object> req) {
-        final Map<String, Object> data = req.get("data");
-        final String userIdText = data.get("userIdText");
+        final Map<String, Object> data = (Map<String, Object>) req.get("data");
+        final String userIdText = (String) data.get("userIdText");
         final PubUser user = this.dao.getUnique(PubUser.class, "userId", userIdText);
         if (user == null) {
             throw new CodedBaseRuntimeException("\u7528\u6237\u4e0d\u5b58\u5728!");

@@ -21,18 +21,18 @@ public class InoutReportService extends MyListService
     @Transactional(readOnly = true)
     @Override
     public Map<String, Object> list(final Map<String, Object> req) {
-        final String entityName = req.get(InoutReportService.ENTITYNAME);
+        final String entityName = (String) req.get(InoutReportService.ENTITYNAME);
         if (StringUtils.isEmpty((CharSequence)entityName)) {
             throw new CodedBaseRuntimeException(404, "missing entityName");
         }
-        final int limit = req.get(InoutReportService.LIMIT);
-        final int page = req.get(InoutReportService.PAGE);
-        final List<?> cnd = ConversionUtils.convert(req.get(InoutReportService.CND), (Class<List<?>>)List.class);
+        final int limit = (Integer)req.get(InoutReportService.LIMIT);
+        final int page = (Integer)req.get(InoutReportService.PAGE);
+        final List<?> cnd = ConversionUtils.convert(req.get(InoutReportService.CND),List.class);
         String filter = null;
         if (cnd != null) {
             filter = ExpressionProcessor.instance().toString(cnd);
         }
-        final String orderInfo = req.get(InoutReportService.ORDERINFO);
+        final String orderInfo = (String) req.get(InoutReportService.ORDERINFO);
         final List<?> ls = this.dao.query(entityName, filter, limit, page, orderInfo);
         this.afterList(ls);
         final long count = this.dao.totalSize(entityName, filter);

@@ -57,14 +57,14 @@ public class RobotService extends MyListService
         if (StringUtils.isEmpty((CharSequence)entityName)) {
             throw new CodedBaseRuntimeException(404, "missing entityName");
         }
-        final int limit = req.get(RobotService.LIMIT);
-        final int page = req.get(RobotService.PAGE);
-        final List<?> cnd = ConversionUtils.convert(req.get(RobotService.CND), (Class<List<?>>)List.class);
+        final int limit = (Integer) req.get(RobotService.LIMIT);
+        final int page =  (Integer)req.get(RobotService.PAGE);
+        final List<?> cnd = ConversionUtils.convert(req.get(RobotService.CND),  List.class);
         String filter = null;
         if (cnd != null) {
             filter = ExpressionProcessor.instance().toString(cnd);
         }
-        final String orderInfo = req.get("id");
+        final String orderInfo = (String)req.get("id");
         final List<GcRoom> ls = this.dao.query(entityName, filter, limit, page, orderInfo);
         this.afterList(ls);
         final List<Map> list = new ArrayList<Map>();
@@ -122,9 +122,9 @@ public class RobotService extends MyListService
     @Transactional
     @Override
     public void save(final Map<String, Object> req) {
-        final Map<String, Object> data = req.get("data");
-        final String id = data.get("id");
-        final int num = Integer.valueOf(data.get("robotNum"));
+        final Map<String, Object> data = (Map<String, Object>) req.get("data");
+        final String id = (String) data.get("id");
+        final int num = Integer.valueOf((String) data.get("robotNum"));
         final Room rm = this.roomStore.get(id);
         final int curNum = this.getRobotSize(rm);
         int change = num - curNum;

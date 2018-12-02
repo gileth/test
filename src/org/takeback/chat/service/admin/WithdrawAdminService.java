@@ -20,14 +20,14 @@ public class WithdrawAdminService extends MyListService
     @Transactional
     @Override
     public void save(final Map<String, Object> req) {
-        final Map<String, Object> data = req.get("data");
-        final Integer id = Integer.valueOf(data.get("id"));
+        final Map<String, Object> data = (Map<String, Object>) req.get("data");
+        final Integer id = Integer.valueOf((String) data.get("id"));
         final String hql1 = new StringBuffer("select status from PubWithdraw where id=").append(id).toString();
         final String preStatus = this.dao.getUnique(hql1, new Object[0]);
         if (!"1".equals(preStatus)) {
             throw new CodedBaseRuntimeException("\u7533\u8bf7\u5904\u7406\u5df2\u7ecf\u5b8c\u6210,\u65e0\u6cd5\u4fee\u6539\u4fdd\u5b58\uff01");
         }
-        final String status = data.get("status");
+        final String status = (String) data.get("status");
         final Integer uid = Integer.valueOf(data.get("uid").toString());
         final PubUser user = this.dao.get(PubUser.class, uid);
         final Double fee = Double.valueOf(data.get("fee").toString());

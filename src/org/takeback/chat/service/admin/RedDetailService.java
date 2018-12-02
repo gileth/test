@@ -18,8 +18,9 @@ public class RedDetailService extends MyListService
 {
     @Transactional(rollbackFor = { Throwable.class })
     public void clear(final Map<String, Object> req) {
-        this.dao.executeUpdate("delete from GcLottery", (Map<String, Object>)ImmutableMap.of());
-        this.dao.executeUpdate("delete from GcLotteryDetail", (Map<String, Object>)ImmutableMap.of());
+    	
+        this.dao.executeUpdate("delete from GcLottery", ImmutableMap.of());
+        this.dao.executeUpdate("delete from GcLotteryDetail", ImmutableMap.of());
     }
     
     @Transactional(rollbackFor = { Throwable.class })
@@ -28,8 +29,8 @@ public class RedDetailService extends MyListService
         c.setTime(DateUtil.getStartOfToday());
         c.add(5, -2);
         final Date d = c.getTime();
-        this.dao.executeUpdate("delete from GcLottery where createTime <=:time", (Map<String, Object>)ImmutableMap.of((Object)"time", (Object)c.getTime()));
-        this.dao.executeUpdate("delete from GcLotteryDetail where createDate<=:time", (Map<String, Object>)ImmutableMap.of((Object)"time", (Object)c.getTime()));
+        this.dao.executeUpdate("delete from GcLottery where createTime <=:time", ImmutableMap.of( "time", (Object)c.getTime()));
+        this.dao.executeUpdate("delete from GcLotteryDetail where createDate<=:time",  ImmutableMap.of( "time", (Object)c.getTime()));
     }
     
     @Transactional(rollbackFor = { Throwable.class })
@@ -37,7 +38,7 @@ public class RedDetailService extends MyListService
         final Calendar c = Calendar.getInstance();
         c.setTime(DateUtil.getStartOfToday());
         c.add(5, -5);
-        this.dao.executeUpdate("delete from GcLottery where createTime <=:time", (Map<String, Object>)ImmutableMap.of((Object)"time", (Object)c.getTime()));
-        this.dao.executeUpdate("delete from GcLotteryDetail where createDate<=:time", (Map<String, Object>)ImmutableMap.of((Object)"time", (Object)c.getTime()));
+        this.dao.executeUpdate("delete from GcLottery where createTime <=:time", ImmutableMap.of("time", (Object)c.getTime()));
+        this.dao.executeUpdate("delete from GcLotteryDetail where createDate<=:time", ImmutableMap.of("time", (Object)c.getTime()));
     }
 }

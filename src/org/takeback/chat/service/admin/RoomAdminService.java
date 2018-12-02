@@ -27,8 +27,8 @@ public class RoomAdminService extends MyListService
     @Override
     public void save(final Map<String, Object> req) {
         super.save(req);
-        final Map<String, Object> data = req.get("data");
-        final String id = data.get("id");
+        final Map<String, Object> data = (Map<String, Object>) req.get("data");
+        final String id = (String) data.get("id");
         if ("create".equals(req.get("cmd"))) {
             final List<GcRoomProperty> defaults = RoomTemplate.get(data.get("type").toString());
             if (defaults != null) {
@@ -46,7 +46,7 @@ public class RoomAdminService extends MyListService
     public void delete(final Map<String, Object> req) {
         super.delete(req);
         final Object pkey = req.get("id");
-        this.dao.executeUpdate("delete from GcRoomProperty where roomId =:roomId", (Map<String, Object>)ImmutableMap.of((Object)"roomId", pkey));
+        this.dao.executeUpdate("delete from GcRoomProperty where roomId =:roomId",  ImmutableMap.of("roomId", pkey));
         this.roomStore.delete(pkey.toString());
     }
 }

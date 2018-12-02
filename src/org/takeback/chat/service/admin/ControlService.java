@@ -36,8 +36,8 @@ public class ControlService extends MyListServiceInt
     @Transactional(rollbackFor = { Throwable.class })
     @Override
     public void save(final Map<String, Object> req) {
-        final Map<String, Object> data = req.get("data");
-        final String roomId = data.get("roomId");
+        final Map<String, Object> data = (Map<String, Object>) req.get("data");
+        final String roomId = (String) data.get("roomId");
         final GcRoom r = this.dao.get(GcRoom.class, roomId);
         if (r == null) {
             throw new CodedBaseRuntimeException("\u9519\u8bef\u7684\u623f\u95f4\u53f7!");
@@ -63,8 +63,8 @@ public class ControlService extends MyListServiceInt
     
     @Override
     public Map<String, Object> list(final Map<String, Object> req) {
-        final int limit = req.get(ControlService.LIMIT);
-        final int page = req.get(ControlService.PAGE);
+        final int limit = (Integer) req.get(ControlService.LIMIT);
+        final int page = (Integer) req.get(ControlService.PAGE);
         final List<?> ls = ValueControl.query();
         final Map<String, Object> result = new HashMap<String, Object>();
         result.put("totalSize", ls.size());

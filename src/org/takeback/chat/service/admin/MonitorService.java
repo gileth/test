@@ -26,7 +26,7 @@ public class MonitorService extends MyListServiceInt
     
     @Override
     public Map<String, Object> list(final Map<String, Object> req) {
-        final List<?> cnd = ConversionUtils.convert(req.get(MonitorService.CND), (Class<List<?>>)List.class);
+        final List<?> cnd = ConversionUtils.convert(req.get(MonitorService.CND), List.class);
         String filter = null;
         List<?> ls = null;
         if (cnd != null) {
@@ -73,7 +73,7 @@ public class MonitorService extends MyListServiceInt
     @Transactional
     @Override
     public void save(final Map<String, Object> req) {
-        final Map<String, Object> data = req.get("data");
+        final Map<String, Object> data = (Map<String, Object>) req.get("data");
         final Long id = Long.valueOf(data.get("id").toString());
         final Double targetRate = Double.valueOf(data.get("targetRateText").toString());
         final String suggests = (data.get("suggests") == null) ? "" : data.get("suggests").toString();

@@ -24,12 +24,12 @@ public class OnlineUserService extends MyListServiceInt
     @Transactional(readOnly = true)
     @Override
     public Map<String, Object> list(final Map<String, Object> req) {
-        final String entityName = req.get(OnlineUserService.ENTITYNAME);
+        final String entityName = (String) req.get(OnlineUserService.ENTITYNAME);
         if (StringUtils.isEmpty((CharSequence)entityName)) {
             throw new CodedBaseRuntimeException(404, "missing entityName");
         }
-        final int limit = req.get(OnlineUserService.LIMIT);
-        final int page = req.get(OnlineUserService.PAGE);
+        final int limit = (Integer) req.get(OnlineUserService.LIMIT);
+        final int page = (Integer) req.get(OnlineUserService.PAGE);
         final Map<Integer, List<String>> users = SessionListener.getUsers();
         final Set<Integer> keyset = users.keySet();
         final Integer start = (page - 1) * limit;

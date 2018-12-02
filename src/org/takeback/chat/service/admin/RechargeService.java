@@ -23,14 +23,14 @@ public class RechargeService extends MyListService
     @Transactional(readOnly = true)
     @Override
     public Map<String, Object> list(final Map<String, Object> req) {
-        final String entityName = req.get(RechargeService.ENTITYNAME);
+        final String entityName = (String) req.get(RechargeService.ENTITYNAME);
         if (StringUtils.isEmpty((CharSequence)entityName)) {
             throw new CodedBaseRuntimeException(404, "missing entityName");
         }
-        final int limit = req.get(RechargeService.LIMIT);
-        final int page = req.get(RechargeService.PAGE);
-        final Map<String, Object> myQuires = req.get("myQuires");
-        final String orderInfo = req.get(RechargeService.ORDERINFO);
+        final int limit = (int) req.get(RechargeService.LIMIT);
+        final int page = (int) req.get(RechargeService.PAGE);
+        final Map<String, Object> myQuires = (Map<String, Object>) req.get("myQuires");
+        final String orderInfo = (String) req.get(RechargeService.ORDERINFO);
         final StringBuffer hql = new StringBuffer(" from PubRecharge where status =2 ");
         final StringBuffer countHql = new StringBuffer("select count(*) from PubRecharge where status =2 ");
         final Map<String, Object> param = new HashMap<String, Object>();
@@ -56,7 +56,7 @@ public class RechargeService extends MyListService
             fee2 = Double.valueOf(fees[1]);
         }
         if (myQuires.containsKey("uid") && !"".equals(myQuires.get("uid"))) {
-            queryUser = myQuires.get("uid");
+            queryUser = (Integer) myQuires.get("uid");
         }
         String idlimit = null;
         if (queryUser != null && !"".equals(queryUser)) {

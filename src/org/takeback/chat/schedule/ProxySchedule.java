@@ -50,12 +50,12 @@ public class ProxySchedule
                 if (grm.getRestMoney() > 0.0) {
                     final GcRoom rm = this.dao.get(GcRoom.class, grm.getRoomId());
                     final Integer uid = rm.getOwner();
-                    this.dao.executeUpdate("update PubUser set money = money +:money  where id =:uid", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)grm.getRestMoney(), (Object)"uid", (Object)uid));
+                    this.dao.executeUpdate("update PubUser set money = money +:money  where id =:uid", new HashMap<String,Object>() /*(Map<String, Object>)ImmutableMap.of((Object)"money", (Object)grm.getRestMoney(), (Object)"uid", (Object)uid)*/);
                 }
-                this.dao.executeUpdate("delete from GcRoom where id=:roomId", (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)grm.getRoomId()));
-                this.dao.executeUpdate("delete from GcRoomProperty where roomId=:roomId", (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)grm.getRoomId()));
-                this.dao.executeUpdate("delete from GcRoomMember where roomId=:roomId", (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)grm.getRoomId()));
-                this.dao.executeUpdate("delete from GcRoomMoney where roomId=:roomId", (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)grm.getRoomId()));
+                this.dao.executeUpdate("delete from GcRoom where id=:roomId",new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)grm.getRoomId())*/);
+                this.dao.executeUpdate("delete from GcRoomProperty where roomId=:roomId",new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)grm.getRoomId())*/);
+                this.dao.executeUpdate("delete from GcRoomMember where roomId=:roomId",new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)grm.getRoomId())*/);
+                this.dao.executeUpdate("delete from GcRoomMoney where roomId=:roomId", new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)grm.getRoomId())*/);
             }
             if (grm.getRestMoney() <= UserService.ROOM_FEE * 4.0) {
                 final Integer uid2 = this.dao.get(GcRoom.class, grm.getRoomId()).getOwner();
@@ -75,15 +75,15 @@ public class ProxySchedule
         for (final PubUser u2 : users) {
             if (u2.getId() == 156) {}
             if (u2.getParent() != null) {
-                final List<Double> winSum = this.dao.findByHql("select coalesce(sum(inoutNum),0) from GcLotteryDetail where uid=:uid and createDate>:startDate and createDate<:endDate and inoutNum>0", (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)u2.getId(), (Object)"startDate", (Object)startDate, (Object)"endDate", (Object)endDate));
+                final List<Double> winSum = this.dao.findByHql("select coalesce(sum(inoutNum),0) from GcLotteryDetail where uid=:uid and createDate>:startDate and createDate<:endDate and inoutNum>0", new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)u2.getId(), (Object)"startDate", (Object)startDate, (Object)"endDate", (Object)endDate)*/);
                 final Double sum1 = winSum.get(0);
-                final List<Double> loseSum = this.dao.findByHql("select coalesce(sum(inoutNum),0) from GcLotteryDetail where uid=:uid and createDate>:startDate and createDate<:endDate and inoutNum<0", (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)u2.getId(), (Object)"startDate", (Object)startDate, (Object)"endDate", (Object)endDate));
+                final List<Double> loseSum = this.dao.findByHql("select coalesce(sum(inoutNum),0) from GcLotteryDetail where uid=:uid and createDate>:startDate and createDate<:endDate and inoutNum<0", new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)u2.getId(), (Object)"startDate", (Object)startDate, (Object)"endDate", (Object)endDate)*/);
                 final Double sum2 = loseSum.get(0);
                 final Double sum3 = sum1 + Math.abs(sum2);
                 final Double handRate = Double.valueOf(SystemConfigService.getInstance().getValue("conf_invit_rate"));
                 if (handRate > 0.0) {
                     System.out.println(u2.getId() + "->" + u2.getParent() + ":" + sum3 + ">>" + sum3 * handRate);
-                    this.dao.executeUpdate("update PubUser set money = money +:water where id =:uid", (Map<String, Object>)ImmutableMap.of((Object)"water", (Object)(sum3 * handRate), (Object)"uid", (Object)u2.getParent()));
+                    this.dao.executeUpdate("update PubUser set money = money +:water where id =:uid", new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"water", (Object)(sum3 * handRate), (Object)"uid", (Object)u2.getParent())*/);
                 }
             }
             final PubConfig pc = this.dao.getUnique(PubConfig.class, "param", "water");
@@ -93,10 +93,10 @@ public class ProxySchedule
                     continue;
                 }
                 final String pcCountHql = "select coalesce(sum(userInout),0) from PcGameLog where uid=:uid and openTime>:startDate and openTime<:endDate";
-                final List<Object> pcCounts = this.dao.findByHql(pcCountHql, (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)u2.getId(), (Object)"startDate", (Object)startDate, (Object)"endDate", (Object)endDate));
+                final List<Object> pcCounts = this.dao.findByHql(pcCountHql, new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)u2.getId(), (Object)"startDate", (Object)startDate, (Object)"endDate", (Object)endDate)*/);
                 final Double pcWater = Double.valueOf(pcCounts.get(0).toString());
                 if (pcWater < 0.0) {
-                    final Long count = this.dao.count("select count(*) from PcGameLog where uid =:uid and status <>0", (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)u2.getId()));
+                    final Long count = this.dao.count("select count(*) from PcGameLog where uid =:uid and status <>0",new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)u2.getId())*/);
                     final Double waterMin = waterConfigs.get("w_min").get(0);
                     if (count >= waterMin) {
                         final Double water = this.getWater(waterConfigs, pcWater);
@@ -108,7 +108,7 @@ public class ProxySchedule
                             backRecord.setBackDate(new Date());
                             backRecord.setUserId(u2.getUserId());
                             this.dao.save(PcBackRecord.class, backRecord);
-                            this.dao.executeUpdate("update PubUser set money = money +:water where id =:uid", (Map<String, Object>)ImmutableMap.of((Object)"water", (Object)water, (Object)"uid", (Object)u2.getId()));
+                            this.dao.executeUpdate("update PubUser set money = money +:water where id =:uid", /*(Map<String, Object>)ImmutableMap.of((Object)"water", (Object)water, (Object)"uid", (Object)u2.getId())*/new HashMap<String,Object>());
                         }
                     }
                 }
@@ -117,7 +117,7 @@ public class ProxySchedule
                 }
                 final String proxyHql = "select coalesce(sum(freeze),0) from PcGameLog where parentId=:uid and (status='1' or status='2') and  betTime>:startDate and betTime<:endDate";
                 if (u2.getId() == 156) {}
-                final List<Object> proxySum = this.dao.findByHql(proxyHql, (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)u2.getId(), (Object)"startDate", (Object)startDate, (Object)"endDate", (Object)endDate));
+                final List<Object> proxySum = this.dao.findByHql(proxyHql, /*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)u2.getId(), (Object)"startDate", (Object)startDate, (Object)"endDate", (Object)endDate)*/new HashMap<String,Object>());
                 final Double teamWater = Double.valueOf(proxySum.get(0).toString());
                 if (teamWater <= 0.0) {
                     continue;
@@ -131,7 +131,7 @@ public class ProxySchedule
                 v.setVote(backNum);
                 v.setTotal(teamWater);
                 final String addHql = "update PubUser set money=coalesce(money,0) + :vote where id =:uid";
-                this.dao.executeUpdate(addHql, (Map<String, Object>)ImmutableMap.of((Object)"vote", (Object)backNum, (Object)"uid", (Object)u2.getId()));
+                this.dao.executeUpdate(addHql, new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"vote", (Object)backNum, (Object)"uid", (Object)u2.getId())*/);
                 this.dao.save(ProxyVote.class, v);
             }
         }

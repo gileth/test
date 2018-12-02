@@ -11,6 +11,8 @@ import org.dom4j.Element;
 import org.takeback.util.xml.XMLHelper;
 import org.takeback.core.resource.ResourceCenter;
 import com.google.common.collect.Maps;
+
+import java.util.HashMap;
 import java.util.Iterator;
 import org.takeback.util.params.ParamUtils;
 import java.util.Map;
@@ -40,7 +42,7 @@ public class SmsTemplates
     }
     
     public static void reload() {
-        SmsTemplates.smsStore = (Map<String, String>)Maps.newHashMap();
+        SmsTemplates.smsStore = new HashMap<String,String>();
         try {
             final Resource resource = ResourceCenter.load("sms.xml");
             final Document doc = XMLHelper.getDocument(resource.getInputStream());

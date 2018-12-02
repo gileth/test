@@ -31,7 +31,7 @@ public class DefaultMessageProcessor implements MessageProcessor
     @Override
     public String sendCode(final String phoneNumber, final String tpl) {
         final String code = this.generateCode();
-        this.sendSMS(phoneNumber, tpl, (Map<String, String>)ImmutableMap.of((Object)"code", (Object)code));
+        this.sendSMS(phoneNumber, tpl, (Map<String, String>)ImmutableMap.of("code",code));
         return code;
     }
     

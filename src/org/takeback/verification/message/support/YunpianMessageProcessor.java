@@ -36,8 +36,8 @@ public class YunpianMessageProcessor extends DefaultMessageProcessor
         ps.put("text", content);
         ps.put("mobile", phoneNumber);
         final String result = HttpClientUtils.post(this.URI_SEND_SMS, ps);
-        final Map<String, Object> map = ConversionUtils.convert(result, (Class<Map<String, Object>>)Map.class);
-        if (0 != map.get("code")) {
+        final Map<String, Object> map = ConversionUtils.convert(result,Map.class);
+        if (0 != (int)map.get("code")) {
             YunpianMessageProcessor.log.error("send content {} to {} failed, responseCode is {}", new Object[] { content, phoneNumber, result });
         }
         return content;

@@ -39,12 +39,12 @@ public class Context extends HashMap<String, Object>
     public Context(final String name, final Context ctx) {
         Context.topCtxName = name;
         Context.topCtx = ctx;
-        ((HashMap<String, Context>)this).put(Context.topCtxName, Context.topCtx);
+        this.put(Context.topCtxName, Context.topCtx);
     }
     
     public Context() {
         if (Context.topCtx != null) {
-            ((HashMap<String, Context>)this).put(Context.topCtxName, Context.topCtx);
+            this.put(Context.topCtxName, Context.topCtx);
         }
     }
     

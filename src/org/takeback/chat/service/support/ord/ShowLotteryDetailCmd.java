@@ -13,6 +13,8 @@ import java.util.Objects;
 import com.google.common.collect.Maps;
 import java.util.Collections;
 import org.joda.time.DateTime;
+import org.joda.time.base.AbstractInstant;
+
 import java.util.HashMap;
 import org.takeback.chat.lottery.LotteryDetail;
 import java.math.BigDecimal;
@@ -39,7 +41,7 @@ public class ShowLotteryDetailCmd implements Command
     
     @Override
     public void exec(final Map<String, Object> data, final Message message, final WebSocketSession session, final Room room, final User user) {
-        final String lotteryId = data.get("lotteryId");
+        final String lotteryId = (String) data.get("lotteryId");
         if (StringUtils.isEmpty((CharSequence)lotteryId)) {
             return;
         }
@@ -51,7 +53,7 @@ public class ShowLotteryDetailCmd implements Command
             return;
         }
         final Map<Integer, LotteryDetail> detailMap = lottery.getDetail();
-        final List<Map<String, Object>> detail = (List<Map<String, Object>>)Lists.newArrayList();
+        final List<Map<String, Object>> detail =  Lists.newArrayList();
         final User sender = this.userStore.get(lottery.getSender());
         LotteryDetail masterDetail = null;
         BigDecimal mine = null;
@@ -95,12 +97,8 @@ public class ShowLotteryDetailCmd implements Command
         }
         final String t1;
         final String t2;
-        Collections.sort(detail, (o1, o2) -> {
-            t1 = o1.get("time");
-            t2 = o2.get("time");
-            return t2.compareTo(t1);
-        });
-        final Map<String, Object> result = (Map<String, Object>)Maps.newHashMap();
+        Collections.sort(detail, (o1, o2) ->((String) o1.get("time")).compareTo((String)o2.get("time")));
+        final Map<String, Object> result =  Maps.newHashMap();
         result.put("body", detail);
         String sendNickName = null;
         String headImg = null;

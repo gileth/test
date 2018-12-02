@@ -24,7 +24,7 @@ public class CheckLotteryStatusCmd implements Command
     
     @Override
     public void exec(final Map<String, Object> data, final Message message, final WebSocketSession session, final Room room, final User user) {
-        final String lotteryId = data.get("lotteryId");
+        final String lotteryId = (String) data.get("lotteryId");
         if (StringUtils.isEmpty((CharSequence)lotteryId)) {
             return;
         }

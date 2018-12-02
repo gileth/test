@@ -85,7 +85,7 @@ public class RedMessageProcessor extends TxtMessageProcessor
             final BigDecimal money = ConversionUtils.convert(body.get("money"), BigDecimal.class);
             final Integer number = ConversionUtils.convert(body.get("number"), Integer.class);
             final LotteryFactory.DefaultLotteryBuilder builder = LotteryFactory.getDefaultBuilder(money, number).setType("1").setExpiredSeconds(40).setSender(user.getId()).setRoomId(room.getId());
-            final String description = body.get("description");
+            final String description = (String) body.get("description");
             if (!StringUtils.isEmpty((CharSequence)description)) {
                 builder.setDescription(description);
             }

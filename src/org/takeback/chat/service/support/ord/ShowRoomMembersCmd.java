@@ -22,10 +22,10 @@ public class ShowRoomMembersCmd implements Command
 {
     @Override
     public void exec(final Map<String, Object> data, final Message message, final WebSocketSession session, final Room room, final User user) {
-        final List<Map<String, Object>> members = (List<Map<String, Object>>)Lists.newArrayList();
+        final List<Map<String, Object>> members = Lists.newArrayList();
         final Collection<User> users = room.getUsers().values();
         for (final User u : users) {
-            final Map<String, Object> d = (Map<String, Object>)Maps.newHashMap();
+            final Map<String, Object> d = Maps.newHashMap();
             d.put("id", u.getId());
             d.put("nickName", u.getNickName());
             d.put("headImg", u.getHeadImg());

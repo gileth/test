@@ -56,12 +56,12 @@ public class RoomService extends BaseService
     
     @Transactional(readOnly = true)
     public int getUserRoomCount(final Integer userId) {
-        return (int)this.dao.count(GcRoom.class, (Map<String, Object>)ImmutableMap.of((Object)"owner", (Object)userId));
+        return (int)this.dao.count(GcRoom.class, ImmutableMap.of( "owner",  userId));
     }
     
     @Transactional(readOnly = true)
     public List<GcRoom> getUserRooms(final Integer userId, final int pageSize, final int pageNo) {
-        return this.dao.findByHqlPaging("from GcRoom where owner=:owner", (Map<String, Object>)ImmutableMap.of((Object)"owner", (Object)userId), pageSize, pageNo);
+        return this.dao.findByHqlPaging("from GcRoom where owner=:owner", ImmutableMap.of( "owner", userId), pageSize, pageNo);
     }
     
     @Transactional
@@ -75,14 +75,14 @@ public class RoomService extends BaseService
     
     @Transactional(readOnly = true)
     public List<Map<String, String>> getRoomProps(final String roomId) {
-        final List<GcRoomProperty> list = this.dao.findByHql("from GcRoomProperty where roomId=:roomId order by id", (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)roomId));
+        final List<GcRoomProperty> list = this.dao.findByHql("from GcRoomProperty where roomId=:roomId order by id",  ImmutableMap.of( "roomId", roomId));
         if (list == null || list.isEmpty()) {
             return new ArrayList<Map<String, String>>();
         }
         final List<Map<String, String>> props = new ArrayList<Map<String, String>>(list.size());
         for (final GcRoomProperty gcRoomProperty : list) {
             final String alias = StringUtils.isEmpty(gcRoomProperty.getAlias()) ? gcRoomProperty.getConfigKey() : gcRoomProperty.getAlias();
-            final Map<String, String> map = (Map<String, String>)ImmutableMap.of((Object)"key", (Object)gcRoomProperty.getConfigKey(), (Object)"value", (Object)gcRoomProperty.getConfigValue(), (Object)"alias", (Object)alias);
+            final Map<String, String> map = ImmutableMap.of( "key",  gcRoomProperty.getConfigKey(),  "value",  gcRoomProperty.getConfigValue(), "alias", alias);
             props.add(map);
         }
         return props;
@@ -105,11 +105,11 @@ public class RoomService extends BaseService
         if (ls.size() <= 0) {
             throw new CodedBaseRuntimeException("\u623f\u95f4\u4e0d\u5b58\u5728!");
         }
-        final int effected = this.dao.executeUpdate("update PubUser set money =money -:money where id = :uid and  money > :money", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)(money + 0.0), (Object)"uid", (Object)uid));
+        final int effected = this.dao.executeUpdate("update PubUser set money =money -:money where id = :uid and  money > :money",  ImmutableMap.of( "money",  (money + 0.0),  "uid", uid));
         if (effected == 0) {
             throw new CodedBaseRuntimeException("\u8d26\u6237\u91d1\u5e01\u4e0d\u8db3,\u8bf7\u53ca\u65f6\u5145\u503c!");
         }
-        this.dao.executeUpdate("update GcRoomMoney set totalMoney=totalMoney+:money , restMoney = restMoney+:money where roomId = :roomId", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)(money + 0.0), (Object)"roomId", (Object)roomId));
+        this.dao.executeUpdate("update GcRoomMoney set totalMoney=totalMoney+:money , restMoney = restMoney+:money where roomId = :roomId",  ImmutableMap.of( "money",  (money + 0.0),  "roomId", roomId));
     }
     
     @Transactional
@@ -126,12 +126,12 @@ public class RoomService extends BaseService
         if (ls.size() > 0) {
             final GcRoomMoney rec = ls.get(0);
             if (rec.getRestMoney() > 0.0) {
-                this.dao.executeUpdate("update PubUser set money =money +:money where id = :uid", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)rec.getRestMoney(), (Object)"uid", (Object)uid));
+                this.dao.executeUpdate("update PubUser set money =money +:money where id = :uid",  ImmutableMap.of( "money", rec.getRestMoney(),  "uid",  uid));
             }
-            this.dao.executeUpdate("delete from GcRoom where id=:roomId", (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)roomId));
-            this.dao.executeUpdate("delete from GcRoomProperty where roomId=:roomId", (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)roomId));
-            this.dao.executeUpdate("delete from GcRoomMember where roomId=:roomId", (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)roomId));
-            this.dao.executeUpdate("delete from GcRoomMoney where roomId=:roomId", (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)roomId));
+            this.dao.executeUpdate("delete from GcRoom where id=:roomId", ImmutableMap.of( "roomId",  roomId));
+            this.dao.executeUpdate("delete from GcRoomProperty where roomId=:roomId", ImmutableMap.of( "roomId",  roomId));
+            this.dao.executeUpdate("delete from GcRoomMember where roomId=:roomId", ImmutableMap.of( "roomId",  roomId));
+            this.dao.executeUpdate("delete from GcRoomMoney where roomId=:roomId", ImmutableMap.of( "roomId",  roomId));
             restMoney = rec.getRestMoney();
         }
         return restMoney;
@@ -147,7 +147,7 @@ public class RoomService extends BaseService
             if (ls.size() > 0 && !ls.get(0).getId().equals(roomId)) {
                 throw new CodedBaseRuntimeException("\u623f\u95f4\u540d\u5df2\u7ecf\u5b58\u5728!");
             }
-            this.dao.executeUpdate("update GcRoom set name = :name where id=:id", (Map<String, Object>)ImmutableMap.of((Object)"name", (Object)value, (Object)"id", (Object)roomId));
+            this.dao.executeUpdate("update GcRoom set name = :name where id=:id",  ImmutableMap.of( "name",  value,  "id", roomId));
             this.roomStore.reload(roomId);
         }
         else if (key.equals("id")) {
@@ -158,10 +158,10 @@ public class RoomService extends BaseService
             if (r != null && !r.getId().equals(roomId)) {
                 throw new CodedBaseRuntimeException("\u623f\u95f4ID\u5df2\u7ecf\u5b58\u5728!");
             }
-            this.dao.executeUpdate("update GcRoom set id = :newId where id=:id", (Map<String, Object>)ImmutableMap.of((Object)"newId", (Object)value, (Object)"id", (Object)roomId));
-            this.dao.executeUpdate("update GcRoomProperty set roomId = :newId where roomId=:id", (Map<String, Object>)ImmutableMap.of((Object)"newId", (Object)value, (Object)"id", (Object)roomId));
-            this.dao.executeUpdate("update GcRoomMember set roomId = :newId where roomId=:id", (Map<String, Object>)ImmutableMap.of((Object)"newId", (Object)value, (Object)"id", (Object)roomId));
-            this.dao.executeUpdate("update GcRoomMoney set roomId = :newId where roomId=:id", (Map<String, Object>)ImmutableMap.of((Object)"newId", (Object)value, (Object)"id", (Object)roomId));
+            this.dao.executeUpdate("update GcRoom set id = :newId where id=:id", ImmutableMap.of( "newId", value,  "id",  roomId));
+            this.dao.executeUpdate("update GcRoomProperty set roomId = :newId where roomId=:id",  ImmutableMap.of( "newId",  value, "id", roomId));
+            this.dao.executeUpdate("update GcRoomMember set roomId = :newId where roomId=:id",  ImmutableMap.of( "newId", value,  "id",  roomId));
+            this.dao.executeUpdate("update GcRoomMoney set roomId = :newId where roomId=:id",  ImmutableMap.of( "newId", value,  "id", roomId));
             this.roomStore.reload(roomId);
             this.roomStore.reload(value);
         }
@@ -169,7 +169,7 @@ public class RoomService extends BaseService
             if (value.length() > 6) {
                 throw new CodedBaseRuntimeException("\u5bc6\u7801\u4e0d\u80fd\u8d85\u8fc76\u4e2a\u5b57\u7b26!");
             }
-            this.dao.executeUpdate("update GcRoom set psw = :psw where id=:id", (Map<String, Object>)ImmutableMap.of((Object)"psw", (Object)value, (Object)"id", (Object)roomId));
+            this.dao.executeUpdate("update GcRoom set psw = :psw where id=:id",  ImmutableMap.of( "psw",  value,  "id", roomId));
             this.roomStore.reload(roomId);
         }
         else {
@@ -198,7 +198,7 @@ public class RoomService extends BaseService
                     }
                 }
             }
-            this.dao.executeUpdate("update GcRoomProperty set configValue=:value where roomId=:roomId and configKey=:key", (Map<String, Object>)ImmutableMap.of((Object)"value", (Object)v.toString(), (Object)"roomId", (Object)roomId, (Object)"key", (Object)key));
+            this.dao.executeUpdate("update GcRoomProperty set configValue=:value where roomId=:roomId and configKey=:key",  ImmutableMap.of( "value", v.toString(),  "roomId",  roomId,  "key", key));
             this.roomStore.reload(roomId);
         }
     }

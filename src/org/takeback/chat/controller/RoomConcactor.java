@@ -64,6 +64,7 @@ public class RoomConcactor
         if (room == null) {
             return ResponseUtils.jsonView(404, "\u623f\u95f4" + id + "\u4e0d\u5b58\u5728.");
         }
+        System.out.println("");
         return ResponseUtils.jsonView(200, "success", room);
     }
     

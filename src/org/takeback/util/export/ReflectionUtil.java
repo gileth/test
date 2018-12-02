@@ -100,7 +100,6 @@ public class ReflectionUtil
                 superClass = superClass.getSuperclass();
                 continue;
             }
-            break;
         }
         return null;
     }
@@ -122,7 +121,6 @@ public class ReflectionUtil
                 superClass = superClass.getSuperclass();
                 continue;
             }
-            break;
         }
         return null;
     }

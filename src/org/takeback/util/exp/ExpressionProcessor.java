@@ -87,7 +87,7 @@ public class ExpressionProcessor
     
     private List<?> parseStr(final String exp) throws ExprException {
         try {
-            final List<?> ls = JSONUtils.parse(exp, (Class<List<?>>)List.class);
+            final List<?> ls = JSONUtils.parse(exp,List.class);
             return ls;
         }
         catch (Exception e) {

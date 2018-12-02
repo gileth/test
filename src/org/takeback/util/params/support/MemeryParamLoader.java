@@ -7,6 +7,8 @@ package org.takeback.util.params.support;
 import com.google.common.collect.Maps;
 import org.takeback.util.params.Param;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.takeback.util.params.ParamLoader;
 
 public class MemeryParamLoader implements ParamLoader
@@ -14,7 +16,7 @@ public class MemeryParamLoader implements ParamLoader
     protected Map<String, Param> params;
     
     public MemeryParamLoader() {
-        this.params = (Map<String, Param>)Maps.newConcurrentMap();
+        this.params = new ConcurrentHashMap<String,Param>();
     }
     
     @Override

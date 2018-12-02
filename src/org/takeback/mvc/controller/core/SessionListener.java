@@ -9,6 +9,8 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionListener;
 
@@ -47,6 +49,6 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
     }
     
     static {
-        SessionListener.users = (Map<String, Object>)Maps.newConcurrentMap();
+        SessionListener.users = new ConcurrentHashMap<String, Object>();
     }
 }

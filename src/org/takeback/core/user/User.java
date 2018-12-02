@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.common.collect.Maps;
 import java.sql.Timestamp;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.takeback.core.controller.support.AbstractConfigurable;
 
 public class User extends AbstractConfigurable
@@ -29,7 +31,7 @@ public class User extends AbstractConfigurable
     private String status;
     
     public User() {
-        this.roles = (Map<Long, UserRoleToken>)Maps.newConcurrentMap();
+        this.roles = new ConcurrentHashMap<Long, UserRoleToken>();
     }
     
     public String getPhonenumb() {

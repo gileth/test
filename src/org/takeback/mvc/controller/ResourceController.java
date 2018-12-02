@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.RequestMethod;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Map.Entry;
+
 import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
 import java.io.File;
@@ -76,7 +78,7 @@ public class ResourceController
         try {
             final File deskFile = new File(directory.getAbsolutePath() + "/" + deskName);
             file.transferTo(deskFile);
-            return ResponseUtils.jsonView((Map<String, Object>)ImmutableMap.of((Object)"code", (Object)200, (Object)"success", (Object)true, (Object)"body", (Object)map));
+            return ResponseUtils.jsonView((Map<String, Object>)ImmutableMap.of("code", 200, "success",true,"body", (Object)map));
         }
         catch (IOException e) {
             return ResponseUtils.jsonView(500, "failure", deskName);
@@ -155,8 +157,8 @@ public class ResourceController
         String name = "";
         String value = "";
         while (entries.hasNext()) {
-            final Map.Entry entry = entries.next();
-            name = entry.getKey();
+            final Map.Entry entry = (Entry) entries.next();
+            name = (String) entry.getKey();
             final Object valueObj = entry.getValue();
             if (null == valueObj) {
                 value = "";

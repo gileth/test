@@ -6,6 +6,9 @@ package org.takeback.core.organ;
 
 import org.takeback.util.context.ContextUtils;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
 import org.apache.commons.lang3.StringUtils;
@@ -29,9 +32,9 @@ public class Organization extends AbstractConfigurable
     private String pyCode;
     
     public Organization() {
-        this.children = (Map<String, Organization>)Maps.newLinkedHashMap();
-        this.installedApps = (Set<String>)Sets.newLinkedHashSet();
-        this.roles = (Set<String>)Sets.newHashSet();
+        this.children = new LinkedHashMap<String, Organization>();
+        this.installedApps = new LinkedHashSet<String>();
+        this.roles = new LinkedHashSet<String>();
     }
     
     public void appendChild(final Organization unit) {

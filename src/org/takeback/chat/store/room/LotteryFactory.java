@@ -193,10 +193,10 @@ public class LotteryFactory
     {
         @Override
         public void run() {
-            final long now;
-            Set<String> list1;
-            Set<String> list2;
             LotteryFactory.executor.execute(() -> {
+                long now;
+                Set<String> list1;
+                Set<String> list2;
                 now = System.currentTimeMillis() / 1000L;
                 LotteryFactory.lock.writeLock().lock();
                 try {

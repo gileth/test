@@ -44,7 +44,7 @@ public class REF extends Expression
             final boolean forPreparedStatement = ContextUtils.get("$exp.forPreparedStatement", Boolean.TYPE);
             final Object o = this.run(ls, processor);
             if (forPreparedStatement) {
-                final Map<String, Object> parameters = ContextUtils.get("$exp.statementParameters", (Class<Map<String, Object>>)HashMap.class);
+                final Map<String, Object> parameters = ContextUtils.get("$exp.statementParameters", HashMap.class);
                 final String key = "arg" + parameters.size();
                 parameters.put(key, o);
                 return ":" + key;

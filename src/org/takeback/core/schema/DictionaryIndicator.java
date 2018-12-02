@@ -58,7 +58,7 @@ public class DictionaryIndicator implements Serializable
     }
     
     public void setFilter(final String sFilter) {
-        this.filter = JSONUtils.parse(sFilter, (Class<List<?>>)List.class);
+        this.filter = JSONUtils.parse(sFilter,List.class);
     }
     
     public boolean isInternal() {

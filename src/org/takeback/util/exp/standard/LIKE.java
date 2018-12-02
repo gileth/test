@@ -71,7 +71,7 @@ public class LIKE extends Expression
             final Boolean forPreparedStatement = ctx.get("$exp.forPreparedStatement", Boolean.class);
             if (forPreparedStatement != null && forPreparedStatement && str2.startsWith(":")) {
                 sb.append(str2);
-                final HashMap<String, Object> parameters = ctx.get("$exp.statementParameters", (Class<HashMap<String, Object>>)HashMap.class);
+                final HashMap<String, Object> parameters = ctx.get("$exp.statementParameters",HashMap.class);
                 final String key = str2.substring(1);
                 final String val = ConversionUtils.convert(parameters.get(key), String.class);
                 if (!StringUtils.endsWith((CharSequence)val, (CharSequence)"%")) {

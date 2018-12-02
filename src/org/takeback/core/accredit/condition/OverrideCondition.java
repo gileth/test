@@ -55,7 +55,7 @@ public class OverrideCondition implements Condition
         final Set<String> keys = this.overrides.keySet();
         for (final String target : keys) {
             final String v = StringValueParser.parse(this.overrides.get(target), String.class);
-            ((HashMap<String, String>)ctx).put("cfg." + target, v);
+            ctx.put("cfg." + target, v);
         }
         return null;
     }

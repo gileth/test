@@ -28,13 +28,12 @@ public class StringValueParser
             case '[': {
                 str = str.trim();
                 try {
-                    final List<Object> exp = JSONUtils.parse(str, (Class<List<Object>>)List.class);
+                    final List<Object> exp = JSONUtils.parse(str, List.class);
                     return ConversionUtils.convert(ExpressionProcessor.instance().run(exp), type);
                 }
                 catch (Exception e) {
                     throw new IllegalStateException("error config args:" + str);
                 }
-                break;
             }
         }
         return ConversionUtils.convert(str, type);

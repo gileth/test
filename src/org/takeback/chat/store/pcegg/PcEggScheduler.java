@@ -23,9 +23,8 @@ public class PcEggScheduler
     private PcEggStore pcEggStore;
     
     public void init() throws IOException {
-        int i;
         final Callable<Void> callable = (Callable<Void>)(() -> {
-            for (i = 0; i < 5 && !this.pcEggStore.initData(); ++i) {
+            for (int i = 0; i < 5 && !this.pcEggStore.initData(); ++i) {
                 try {
                     TimeUnit.SECONDS.sleep(i * 2);
                 }

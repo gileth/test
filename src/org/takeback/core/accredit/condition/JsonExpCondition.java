@@ -36,7 +36,7 @@ public class JsonExpCondition implements Condition
         }
         try {
             expText = expText.trim().replaceAll("'", "\"");
-            final List<?> lsExp = JSONUtils.parse(expText, (Class<List<?>>)List.class);
+            final List<?> lsExp = JSONUtils.parse(expText,List.class);
             (this.data = new HashMap<String, Object>()).put("exp", lsExp);
             if (msg != null) {
                 this.data.put("errMsg", msg.getText());
@@ -54,13 +54,13 @@ public class JsonExpCondition implements Condition
     
     @Override
     public String getMessage() {
-        return this.data.get("errMsg");
+        return (String) this.data.get("errMsg");
     }
     
     @Override
     public Object run(final Context ctx) {
         try {
-            return ExpressionProcessor.instance().run(this.data.get("exp"));
+            return ExpressionProcessor.instance().run((String)this.data.get("exp"));
         }
         catch (ExprException e) {
             return null;

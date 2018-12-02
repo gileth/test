@@ -47,7 +47,7 @@ public class ValueControl
     public static void setValue(final String roomId, final Integer uid, final BigDecimal value) {
         Map<Integer, Vector<BigDecimal>> room = ValueControl.store.get(roomId);
         if (room == null) {
-            room = (Map<Integer, Vector<BigDecimal>>)Maps.newConcurrentMap();
+            room = new HashMap<Integer, Vector<BigDecimal>>();
             ValueControl.store.put(roomId, room);
         }
         Vector<BigDecimal> userQueue = room.get(uid);
@@ -95,6 +95,6 @@ public class ValueControl
     }
     
     static {
-        ValueControl.store = (Map<String, Map<Integer, Vector<BigDecimal>>>)Maps.newConcurrentMap();
+        ValueControl.store = new HashMap<String, Map<Integer, Vector<BigDecimal>>>();
     }
 }

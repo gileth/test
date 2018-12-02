@@ -24,7 +24,7 @@ public class SystemParamsService extends MyListService
     
     @Override
     public void delete(final Map<String, Object> req) {
-        final String entityName = req.get(SystemParamsService.ENTITYNAME);
+        final String entityName = (String) req.get(SystemParamsService.ENTITYNAME);
         if (StringUtils.isEmpty((CharSequence)entityName)) {
             throw new CodedBaseRuntimeException(404, "missing entityName");
         }

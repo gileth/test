@@ -9,20 +9,29 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.io.IOException;
+
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.TextMessage;
 import org.takeback.util.JSONUtils;
 import org.springframework.web.socket.WebSocketSession;
 import org.takeback.chat.store.user.RobotUser;
+
 import com.google.common.collect.Lists;
+
 import org.takeback.chat.store.user.AnonymousUser;
+
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Collection;
+
 import org.takeback.chat.store.user.User;
+
 import java.util.Iterator;
 import java.util.List;
+
 import org.takeback.chat.entity.Message;
 import org.takeback.chat.store.room.Room;
+
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class MessageUtils
@@ -59,7 +68,7 @@ public class MessageUtils
     }
     
     private static List<FailedResult> broadcast(final Iterator<? extends User> iterator, final Message message) {
-        final List<FailedResult> results = (List<FailedResult>)Lists.newArrayList();
+        final List<FailedResult> results = new ArrayList<FailedResult>();
         while (iterator.hasNext()) {
             final User user = (User)iterator.next();
             if (user instanceof RobotUser) {

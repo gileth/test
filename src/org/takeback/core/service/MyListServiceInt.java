@@ -35,18 +35,18 @@ public class MyListServiceInt
     
     @Transactional(readOnly = true)
     public Map<String, Object> list(final Map<String, Object> req) {
-        final String entityName = req.get(MyListServiceInt.ENTITYNAME);
+        final String entityName = (String) req.get(MyListServiceInt.ENTITYNAME);
         if (StringUtils.isEmpty((CharSequence)entityName)) {
             throw new CodedBaseRuntimeException(404, "missing entityName");
         }
-        final int limit = req.get(MyListServiceInt.LIMIT);
-        final int page = req.get(MyListServiceInt.PAGE);
-        final List<?> cnd = ConversionUtils.convert(req.get(MyListServiceInt.CND), (Class<List<?>>)List.class);
+        final int limit = (int) req.get(MyListServiceInt.LIMIT);
+        final int page = (int) req.get(MyListServiceInt.PAGE);
+        final List<?> cnd = ConversionUtils.convert(req.get(MyListServiceInt.CND),List.class);
         String filter = null;
         if (cnd != null) {
             filter = ExpressionProcessor.instance().toString(cnd);
         }
-        final String orderInfo = req.get(MyListServiceInt.ORDERINFO);
+        final String orderInfo = (String) req.get(MyListServiceInt.ORDERINFO);
         final List<?> ls = this.dao.query(entityName, filter, limit, page, orderInfo);
         this.afterList(ls);
         final long count = this.dao.totalSize(entityName, filter);
@@ -58,7 +58,7 @@ public class MyListServiceInt
     
     @Transactional(readOnly = true)
     public Object load(final Map<String, Object> req) {
-        final String entityName = req.get(MyListServiceInt.ENTITYNAME);
+        final String entityName = (String) req.get(MyListServiceInt.ENTITYNAME);
         if (StringUtils.isEmpty((CharSequence)entityName)) {
             throw new CodedBaseRuntimeException(404, "missing entityName");
         }
@@ -77,7 +77,7 @@ public class MyListServiceInt
     
     @Transactional
     public void delete(final Map<String, Object> req) {
-        final String entityName = req.get(MyListServiceInt.ENTITYNAME);
+        final String entityName = (String) req.get(MyListServiceInt.ENTITYNAME);
         if (StringUtils.isEmpty((CharSequence)entityName)) {
             throw new CodedBaseRuntimeException(404, "missing entityName");
         }
@@ -94,14 +94,14 @@ public class MyListServiceInt
     
     @Transactional
     public void save(final Map<String, Object> req) {
-        final String entityName = req.get(MyListServiceInt.ENTITYNAME);
+        final String entityName = (String) req.get(MyListServiceInt.ENTITYNAME);
         if (StringUtils.isEmpty((CharSequence)entityName)) {
             throw new CodedBaseRuntimeException(404, "missing entityName");
         }
-        final Map<String, Object> data = req.get("data");
+        final Map<String, Object> data = (Map<String, Object>) req.get("data");
         this.beforeProcessSaveData(data);
         try {
-            final String cmd = req.get(MyListServiceInt.CMD);
+            final String cmd = (String) req.get(MyListServiceInt.CMD);
             final Class<?> cls = Class.forName(entityName);
             final Object obj = ConversionUtils.convert(data, cls);
             this.beforeSave(obj);

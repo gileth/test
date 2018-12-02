@@ -20,7 +20,7 @@ public class ObjectToElement implements GenericConverter
 {
     public Object convert(final Object source, final TypeDescriptor sourceType, final TypeDescriptor targetType) {
         try {
-            final Map<String, Object> map = BeanUtils.map(source, (Class<Map<String, Object>>)HashMap.class);
+            final Map<String, Object> map = BeanUtils.map(source,HashMap.class);
             final Element beanEl = DocumentHelper.createElement(source.getClass().getSimpleName());
             final Set<String> fields = map.keySet();
             for (final String field : fields) {

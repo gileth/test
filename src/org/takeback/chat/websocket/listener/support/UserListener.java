@@ -73,7 +73,7 @@ public class UserListener implements ConnectListener, DisconnectListener, Transp
             user.setHandsUp(false);
             room.join(user);
             if ("G022".equals(room.getType())) {
-                final List<GcRoomMember> ls = this.lotteryService.findByProperties(GcRoomMember.class, (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)roomId, (Object)"uid", (Object)uid));
+                final List<GcRoomMember> ls = this.lotteryService.findByProperties(GcRoomMember.class, (Map<String, Object>)ImmutableMap.of("roomId",(Object)roomId, "uid", (Object)uid));
                 if (ls.size() == 0) {
                     final GcRoomMember grm = new GcRoomMember();
                     grm.setIsPartner("0");
@@ -177,7 +177,7 @@ public class UserListener implements ConnectListener, DisconnectListener, Transp
     }
     
     protected static Integer getUid(final WebSocketSession session) {
-        final HttpSession httpSession = session.getAttributes().get("HTTP.SESSION");
+        final HttpSession httpSession = (HttpSession) session.getAttributes().get("HTTP.SESSION");
         if (httpSession == null) {
             return null;
         }
@@ -196,7 +196,7 @@ public class UserListener implements ConnectListener, DisconnectListener, Transp
     protected static Object getSessionAttribute(final WebSocketSession session, final String name) {
         Object value = session.getAttributes().get(name);
         if (value == null) {
-            final HttpSession httpSession = session.getAttributes().get("HTTP.SESSION");
+            final HttpSession httpSession = (HttpSession) session.getAttributes().get("HTTP.SESSION");
             try {
                 if (httpSession != null) {
                     value = httpSession.getAttribute(name);
@@ -209,7 +209,7 @@ public class UserListener implements ConnectListener, DisconnectListener, Transp
     
     protected static void removeAttribute(final WebSocketSession session, final String name) {
         session.getAttributes().remove(name);
-        final HttpSession httpSession = session.getAttributes().get("HTTP.SESSION");
+        final HttpSession httpSession = (HttpSession) session.getAttributes().get("HTTP.SESSION");
         try {
             if (httpSession != null) {
                 httpSession.removeAttribute(name);

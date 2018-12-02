@@ -82,7 +82,7 @@ public class Game01Service extends LotteryService
     
     @Transactional
     public void open(final Lottery lottery, final User user, final Double money) {
-        final int effected = this.dao.executeUpdate("update PubUser a set a.money = coalesce(a.money,0) - :money,a.exp=coalesce(exp,0)+:exp where a.id=:uid and a.money>=:money", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)money, (Object)"exp", (Object)money, (Object)"uid", (Object)user.getId()));
+        final int effected = this.dao.executeUpdate("update PubUser a set a.money = coalesce(a.money,0) - :money,a.exp=coalesce(exp,0)+:exp where a.id=:uid and a.money>=:money",  ImmutableMap.of("money", money, "exp", money, "uid", user.getId()));
         if (effected == 0) {
             throw new CodedBaseRuntimeException("\u91d1\u5e01\u4e0d\u80fd\u5c11\u4e8e" + money + ",\u8bf7\u53ca\u65f6\u5145\u503c!");
         }
@@ -142,20 +142,20 @@ public class Game01Service extends LotteryService
         StringBuffer hql = new StringBuffer("update PubUser a set a.money = COALESCE(a.money,0)+:money where a.id in(");
         StringBuilder sb = new StringBuilder();
         while (itr.hasNext()) {
-            final Integer uid = itr.next();
+            final Integer uid = (Integer) itr.next();
             sb.append(uid).append(",");
         }
         if (sb.length() > 0) {
             sb = sb.deleteCharAt(sb.length() - 1);
             hql = hql.append((CharSequence)sb).append(")");
-            this.dao.executeUpdate(hql.toString(), (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)redMoney.doubleValue()));
+            this.dao.executeUpdate(hql.toString(),  ImmutableMap.of("money", redMoney.doubleValue()));
         }
         if (!lottery.getSender().equals(0)) {
             final BigDecimal retn = redMoney.subtract(new BigDecimal(1));
-            this.dao.executeUpdate("update PubUser a set a.money = COALESCE(a.money,0)+:money where a.id=:id", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)retn.doubleValue(), (Object)"id", (Object)lottery.getSender()));
+            this.dao.executeUpdate("update PubUser a set a.money = COALESCE(a.money,0)+:money where a.id=:id", ImmutableMap.of("money", retn.doubleValue(),"id",lottery.getSender()));
         }
-        this.dao.executeUpdate("update GcLottery a set a.status = '2' where a.id = :id and a.status = '0'", (Map<String, Object>)ImmutableMap.of((Object)"id", (Object)lottery.getId()));
-        this.dao.executeUpdate("update GcRoom a set a.status=0 where id =:id ", (Map<String, Object>)ImmutableMap.of((Object)"id", (Object)lottery.getRoomId()));
+        this.dao.executeUpdate("update GcLottery a set a.status = '2' where a.id = :id and a.status = '0'", ImmutableMap.of("id", lottery.getId()));
+        this.dao.executeUpdate("update GcRoom a set a.status=0 where id =:id ",ImmutableMap.of("id", lottery.getRoomId()));
     }
     
     @Transactional(rollbackFor = { Throwable.class })
@@ -165,7 +165,7 @@ public class Game01Service extends LotteryService
         final Map<String, Object> romProps = room.getProperties();
         final BigDecimal redMoney = new BigDecimal(Double.valueOf(romProps.get("conf_money").toString()));
         while (itr.hasNext()) {
-            final Integer uid = itr.next();
+            final Integer uid = (Integer) itr.next();
             final User user = this.userStore.get(uid);
             final LotteryDetail d = detail.get(uid);
             BigDecimal money = d.getCoin();
@@ -175,7 +175,7 @@ public class Game01Service extends LotteryService
             final String key = new StringBuffer("b_").append(money.toString()).toString();
             if (romProps.containsKey(key)) {
                 final Double value = Double.valueOf(romProps.get(key).toString());
-                this.dao.executeUpdate("update GcRoom set sumPool = COALESCE(sumPool,0)-:bonus where id =:roomId ", (Map<String, Object>)ImmutableMap.of((Object)"bonus", (Object)value, (Object)"roomId", (Object)room.getId()));
+                this.dao.executeUpdate("update GcRoom set sumPool = COALESCE(sumPool,0)-:bonus where id =:roomId ",  ImmutableMap.of( "bonus", value, "roomId", room.getId()));
                 money = money.add(new BigDecimal(value));
                 final String msg = new StringBuffer("<span style='color:#B22222'>").append(user.getNickName()).append(" \u624b\u6c14\u8d85\u597d,\u83b7\u5f97\u5956\u91d1</span><span style='font-size:16;color:red'>\uffe5").append(value).append("</span>").toString();
                 MessageUtils.broadcast(room, new Message("TXT_SYS", uid, msg));
@@ -195,7 +195,7 @@ public class Game01Service extends LotteryService
             param.put("uid", user.getId());
             final int effected = this.dao.executeUpdate("update GcLotteryDetail set coin =:coin , desc1 =:desc1,addBack =:addBack,inoutNum=:inoutNum where lotteryId=:lotteryId and uid =:uid", param);
             if (effected == 1) {
-                this.dao.executeUpdate("update PubUser set money = COALESCE(money,0)+:money ,exp = coalesce(exp,0)+:exp where id=:uid ", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)money.doubleValue(), (Object)"exp", (Object)redMoney.doubleValue(), (Object)"uid", (Object)uid));
+                this.dao.executeUpdate("update PubUser set money = COALESCE(money,0)+:money ,exp = coalesce(exp,0)+:exp where id=:uid ",  ImmutableMap.of( "money", money.doubleValue(), "exp",  redMoney.doubleValue(),  "uid",  uid));
                 this.monitor.setData(room.getId(), user.getId(), inout);
             }
         }
@@ -223,7 +223,7 @@ public class Game01Service extends LotteryService
         }
         feeAdd = this.setProxyWater(sender, feeAdd, room.getId(), "G011", lottery.getId());
         final String hql = "update GcRoom set sumPool = COALESCE(sumPool,0) + :poolAdd , sumFee = COALESCE(sumFee,0) + :feeAdd ,sumPack = COALESCE(sumPack,0)+1 where id =:roomId";
-        this.dao.executeUpdate(hql, (Map<String, Object>)ImmutableMap.of((Object)"poolAdd", (Object)poolAdd, (Object)"feeAdd", (Object)feeAdd, (Object)"roomId", (Object)room.getId()));
+        this.dao.executeUpdate(hql, ImmutableMap.of( "poolAdd",  poolAdd,  "feeAdd",  feeAdd,  "roomId",  room.getId()));
     }
     
     private Integer whoLucky(final Lottery lottery) {
@@ -232,7 +232,7 @@ public class Game01Service extends LotteryService
         Integer luckyId = null;
         BigDecimal num = null;
         while (itr.hasNext()) {
-            final Integer uid = itr.next();
+            final Integer uid = (Integer) itr.next();
             final LotteryDetail d = detail.get(uid);
             if (num == null) {
                 num = d.getCoin();
@@ -262,7 +262,7 @@ public class Game01Service extends LotteryService
         BigDecimal mem = null;
         if ("max".equals(rule)) {
             while (itr.hasNext()) {
-                final Integer uid = itr.next();
+                final Integer uid = (Integer) itr.next();
                 if (uid.equals(unDead)) {
                     continue;
                 }
@@ -282,7 +282,7 @@ public class Game01Service extends LotteryService
         }
         else if ("min".equals(rule)) {
             while (itr.hasNext()) {
-                final Integer uid = itr.next();
+                final Integer uid = (Integer) itr.next();
                 if (uid.equals(unDead)) {
                     continue;
                 }
@@ -302,7 +302,7 @@ public class Game01Service extends LotteryService
         }
         else if ("tail_max".equals(rule)) {
             while (itr.hasNext()) {
-                final Integer uid = itr.next();
+                final Integer uid = (Integer) itr.next();
                 if (uid.equals(unDead)) {
                     continue;
                 }
@@ -322,7 +322,7 @@ public class Game01Service extends LotteryService
         }
         else if ("tail_min".equals(rule)) {
             while (itr.hasNext()) {
-                final Integer uid = itr.next();
+                final Integer uid = (Integer) itr.next();
                 if (uid.equals(unDead)) {
                     continue;
                 }

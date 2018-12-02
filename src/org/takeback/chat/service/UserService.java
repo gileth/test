@@ -48,7 +48,7 @@ public class UserService extends BaseService
             throw new CodedBaseRuntimeException("\u8d2d\u4e70\u914d\u7f6e\u51fa\u9519!");
         }
         final String hql = "update PubUser set money=money - :price where money>:price and  id=:uid";
-        if (0 == this.dao.executeUpdate(hql, (Map<String, Object>)ImmutableMap.of((Object)"price", (Object)price, (Object)"uid", (Object)uid))) {
+        if (0 == this.dao.executeUpdate(hql,  ImmutableMap.of( "price", price,  "uid", uid))) {
             throw new CodedBaseRuntimeException("\u91d1\u5e01\u4e0d\u8db3,\u65e0\u6cd5\u521b\u5efa\u623f\u95f4!");
         }
         final GcRoom rm = new GcRoom();
@@ -111,11 +111,11 @@ public class UserService extends BaseService
         if (target.getId().equals(uid)) {
             throw new CodedBaseRuntimeException("\u4e0d\u5141\u8bb8\u7ed9\u81ea\u5df1\u8f6c\u8d26!");
         }
-        final int effected = this.dao.executeUpdate("update PubUser set money=money -:money where money >:money and  id=:uid", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)(money + 0.0), (Object)"uid", (Object)uid));
+        final int effected = this.dao.executeUpdate("update PubUser set money=money -:money where money >:money and  id=:uid", ImmutableMap.of( "money", (money + 0.0),  "uid",  uid));
         if (effected == 0) {
             throw new CodedBaseRuntimeException("\u91d1\u989d\u4e0d\u8db3!");
         }
-        this.dao.executeUpdate("update PubUser set money=money +:money where id=:uid", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)(money + 0.0), (Object)"uid", (Object)target.getId()));
+        this.dao.executeUpdate("update PubUser set money=money +:money where id=:uid",  ImmutableMap.of( "money",  (money + 0.0),  "uid",  target.getId()));
         final PubUser fromUser = this.dao.get(PubUser.class, uid);
         final TransferLog tl = new TransferLog();
         tl.setFromUid(uid);
@@ -145,11 +145,11 @@ public class UserService extends BaseService
         if (money <= 0) {
             throw new CodedBaseRuntimeException("\u8bf7\u8f93\u5165\u5927\u4e8e0\u7684\u91d1\u989d!");
         }
-        final int effected = this.dao.executeUpdate("update PubUser set money=money -:money where money >:money and  id=:uid", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)(money + 0.0), (Object)"uid", (Object)uid));
+        final int effected = this.dao.executeUpdate("update PubUser set money=money -:money where money >:money and  id=:uid",  ImmutableMap.of( "money",  (money + 0.0), "uid",  uid));
         if (effected == 0) {
             throw new CodedBaseRuntimeException("\u91d1\u989d\u4e0d\u8db3!");
         }
-        this.dao.executeUpdate("update PubUser set money=money +:money where  id=:uid", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)(money + 0.0), (Object)"uid", (Object)target.getId()));
+        this.dao.executeUpdate("update PubUser set money=money +:money where  id=:uid", ImmutableMap.of( "money",  (money + 0.0),  "uid", target.getId()));
         final PubRecharge pubRecharge = new PubRecharge();
         pubRecharge.setStatus("1");
         pubRecharge.setDescpt("\u4e0a\u5206");
@@ -183,11 +183,11 @@ public class UserService extends BaseService
         if (money <= 0) {
             throw new CodedBaseRuntimeException("\u8bf7\u8f93\u5165\u5927\u4e8e0\u7684\u91d1\u989d!");
         }
-        final int effected = this.dao.executeUpdate("update PubUser set money=money -:money where  id=:uid  and  money >:money", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)(money + 0.0), (Object)"uid", (Object)target.getId()));
+        final int effected = this.dao.executeUpdate("update PubUser set money=money -:money where  id=:uid  and  money >:money",  ImmutableMap.of( "money",  (money + 0.0),  "uid",  target.getId()));
         if (effected == 0) {
             throw new CodedBaseRuntimeException("\u91d1\u989d\u4e0d\u8db3!");
         }
-        this.dao.executeUpdate("update PubUser set money=money+:money where  id=:uid", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)(money + 0.0), (Object)"uid", (Object)uid));
+        this.dao.executeUpdate("update PubUser set money=money+:money where  id=:uid", ImmutableMap.of( "money",  (money + 0.0), "uid",  uid));
         final PubRecharge pubRecharge = new PubRecharge();
         pubRecharge.setStatus("1");
         pubRecharge.setDescpt("\u4e0b\u5206");
@@ -210,7 +210,7 @@ public class UserService extends BaseService
         if (s.getStorage() < 1) {
             throw new CodedBaseRuntimeException("\u5e93\u5b58\u5546\u54c1!");
         }
-        final int effected = this.dao.executeUpdate("update PubUser set money = coalesce(money,0) - :money where money>:money  and uid = :uid", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)s.getMoney(), (Object)"uid", (Object)uid));
+        final int effected = this.dao.executeUpdate("update PubUser set money = coalesce(money,0) - :money where money>:money  and uid = :uid", ImmutableMap.of("money", s.getMoney(), "uid", uid));
         if (effected < 1) {
             throw new CodedBaseRuntimeException("\u8d26\u6237\u91d1\u5e01\u4e0d\u8db3!");
         }

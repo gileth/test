@@ -58,8 +58,8 @@ public class Game04Service extends LotteryService
     
     @Transactional(rollbackFor = { Throwable.class })
     public void gameStop(final Lottery lottery) {
-        this.dao.executeUpdate("update GcRoom a set a.status=0 where id=:id", (Map<String, Object>)ImmutableMap.of((Object)"id", (Object)lottery.getRoomId()));
-        this.dao.executeUpdate("update GcLottery a set a.status=2 where id=:id", (Map<String, Object>)ImmutableMap.of((Object)"id", (Object)lottery.getId()));
+        this.dao.executeUpdate("update GcRoom a set a.status=0 where id=:id",  ImmutableMap.of( "id", lottery.getRoomId()));
+        this.dao.executeUpdate("update GcLottery a set a.status=2 where id=:id",  ImmutableMap.of( "id",  lottery.getId()));
     }
     
     @Transactional
@@ -81,7 +81,7 @@ public class Game04Service extends LotteryService
             masterInout = 0.0;
         }
         while (itr.hasNext()) {
-            final Integer uid = itr.next();
+            final Integer uid = (Integer) itr.next();
             final LotteryDetail d = detail.get(uid);
             final Integer tailPoint = NumberUtil.getTailPoint(d.getCoin());
             if (d.getUid().equals(lottery.getSender())) {

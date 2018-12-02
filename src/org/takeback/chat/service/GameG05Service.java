@@ -72,9 +72,9 @@ public class GameG05Service extends BaseService
     @Transactional
     public void restoreMasterMoney(final Integer masterRecordId) {
         final GcMasterRecord gmr = this.dao.get(GcMasterRecord.class, masterRecordId);
-        final int effected = this.dao.executeUpdate("update GcMasterRecord set status = '3',restBetable=0 where id =:id and status = '1' ", (Map<String, Object>)ImmutableMap.of((Object)"id", (Object)masterRecordId));
+        final int effected = this.dao.executeUpdate("update GcMasterRecord set status = '3',restBetable=0 where id =:id and status = '1' ",  ImmutableMap.of( "id",  masterRecordId));
         if (effected == 1) {
-            this.dao.executeUpdate("update PubUser set money =coalesce(money,0)+:freeze where id=:id", (Map<String, Object>)ImmutableMap.of((Object)"freeze", (Object)gmr.getFreeze(), (Object)"id", (Object)gmr.getUid()));
+            this.dao.executeUpdate("update PubUser set money =coalesce(money,0)+:freeze where id=:id",  ImmutableMap.of( "freeze",  gmr.getFreeze(), "id", gmr.getUid()));
         }
     }
     
@@ -135,9 +135,9 @@ public class GameG05Service extends BaseService
             r.setStatus("1");
             this.dao.save(GcBetRecord.class, r);
             if (playerAddBack > 0.0) {
-                this.dao.executeUpdate("update PubUser set money = coalesce(money,0) + :addBack where id = :uid", (Map<String, Object>)ImmutableMap.of((Object)"addBack", (Object)playerAddBack, (Object)"uid", (Object)playerId));
+                this.dao.executeUpdate("update PubUser set money = coalesce(money,0) + :addBack where id = :uid",  ImmutableMap.of( "addBack", playerAddBack,  "uid",  playerId));
             }
-            this.dao.executeUpdate("update GcLotteryDetail a set  a.addback =:addback,a.inoutNum = :inoutNum where a.lotteryid = :lotteryid and a.uid =:uid", (Map<String, Object>)ImmutableMap.of((Object)"addback", (Object)playerAddBack, (Object)"inoutNum", (Object)playerInout, (Object)"lotteryid", (Object)lottery.getId(), (Object)"uid", (Object)playerId));
+            this.dao.executeUpdate("update GcLotteryDetail a set  a.addback =:addback,a.inoutNum = :inoutNum where a.lotteryid = :lotteryid and a.uid =:uid", ImmutableMap.of( "addback",  playerAddBack,  "inoutNum",  playerInout, "lotteryid",  lottery.getId(),  "uid",  playerId));
         }
         msg = msg + "<tr><td  style='color:#B22222'>\u3010\u5e84\u3011</td><td class='g021-nick-name'>" + master.getNickName() + "</td><td>(" + masterDetail.getCoin() + ")</td>";
         if (masterInout > 0.0) {
@@ -147,12 +147,12 @@ public class GameG05Service extends BaseService
             msg = msg + "<td style='color:green'>" + GameG05Service.NAMES[masterPoint] + " -" + NumberUtil.format(Math.abs(masterInout)) + "</td></tr></table>";
         }
         else {
-            msg = msg + "<td style='color:gray'>" + GameG05Service.NAMES[masterPoint] + "¡À\u5e73\u5e84</td></tr></table>";
+            msg = msg + "<td style='color:gray'>" + GameG05Service.NAMES[masterPoint] + "ï¿½ï¿½\u5e73\u5e84</td></tr></table>";
         }
         if (masterInout != 0.0) {
-            this.dao.executeUpdate("update GcMasterRecord set freeze = coalesce(freeze,0) + :freeze , restBetable = coalesce(restBetable,0) + :freeze where id = :id", (Map<String, Object>)ImmutableMap.of((Object)"freeze", (Object)masterInout, (Object)"id", (Object)masterRecordId));
+            this.dao.executeUpdate("update GcMasterRecord set freeze = coalesce(freeze,0) + :freeze , restBetable = coalesce(restBetable,0) + :freeze where id = :id",  ImmutableMap.of( "freeze",  masterInout,  "id",  masterRecordId));
         }
-        this.dao.executeUpdate("update GcLotteryDetail a set  a.inoutNum = :inoutNum where a.lotteryid = :lotteryid and a.uid =:uid", (Map<String, Object>)ImmutableMap.of((Object)"inoutNum", (Object)masterInout, (Object)"lotteryid", (Object)lottery.getId(), (Object)"uid", (Object)room.getMaster()));
+        this.dao.executeUpdate("update GcLotteryDetail a set  a.inoutNum = :inoutNum where a.lotteryid = :lotteryid and a.uid =:uid", ImmutableMap.of("inoutNum",  masterInout,  "lotteryid", lottery.getId(), "uid", room.getMaster()));
         final Message roundMsg = new Message("TXT_SYS", room.getManager(), msg);
         MessageUtils.broadcastDelay(room, roundMsg, 1L);
         final String masterTxt = this.buildMasterMoney(room);
@@ -186,11 +186,11 @@ public class GameG05Service extends BaseService
     
     @Transactional(rollbackFor = { Throwable.class })
     public void bet(final Room room, final User user, final Double money, final Double freeze, final Integer masterRecordId, final String betType) {
-        final int effected = this.dao.executeUpdate("update GcMasterRecord  set restBetable = coalesce(restBetable,0) - :freeze where id=:id and restBetable>=:freeze", (Map<String, Object>)ImmutableMap.of((Object)"freeze", (Object)freeze, (Object)"id", (Object)masterRecordId));
+        final int effected = this.dao.executeUpdate("update GcMasterRecord  set restBetable = coalesce(restBetable,0) - :freeze where id=:id and restBetable>=:freeze", ImmutableMap.of( "freeze",  freeze,  "id",  masterRecordId));
         if (effected == 0) {
             throw new CodedBaseRuntimeException("\u53ef\u4e0b\u91d1\u989d\u4e0d\u8db3!");
         }
-        final int userEffeted = this.dao.executeUpdate("update PubUser a set money = coalesce(money,0) - :money where id=:uid and money>=:money", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)freeze, (Object)"uid", (Object)user.getId()));
+        final int userEffeted = this.dao.executeUpdate("update PubUser a set money = coalesce(money,0) - :money where id=:uid and money>=:money",  ImmutableMap.of( "money", freeze, "uid", user.getId()));
         if (userEffeted == 0) {
             throw new CodedBaseRuntimeException("\u8d26\u6237\u4f59\u989d\u4e0d\u8db3!");
         }
@@ -208,7 +208,7 @@ public class GameG05Service extends BaseService
     
     @Transactional
     public List<GcBetRecord> getBetRecords(final Integer masterRecordId) {
-        final List l = this.dao.findByHql(" from GcBetRecord where masterRecordId = :masterRecordId and status='0' ", (Map<String, Object>)ImmutableMap.of((Object)"masterRecordId", (Object)masterRecordId));
+        final List l = this.dao.findByHql(" from GcBetRecord where masterRecordId = :masterRecordId and status='0' ",  ImmutableMap.of( "masterRecordId",  masterRecordId));
         return (List<GcBetRecord>)l;
     }
     
@@ -222,7 +222,7 @@ public class GameG05Service extends BaseService
     
     @Transactional
     public boolean checkBet(final Integer masterRecordId, final Integer uid) {
-        final List<Long> l = this.dao.findByHql("select count(*) from GcBetRecord where masterRecordId = :masterRecordId and  uid = :uid ", (Map<String, Object>)ImmutableMap.of((Object)"masterRecordId", (Object)masterRecordId, (Object)"uid", (Object)uid));
+        final List<Long> l = this.dao.findByHql("select count(*) from GcBetRecord where masterRecordId = :masterRecordId and  uid = :uid ", ImmutableMap.of( "masterRecordId",  masterRecordId,  "uid", uid));
         return l.get(0) > 0L;
     }
     
@@ -234,7 +234,7 @@ public class GameG05Service extends BaseService
         }
         for (int i = 1; i < list.size(); ++i) {
             final GcMasterRecord r = list.get(i);
-            this.dao.executeUpdate("update PubUser a set a.money = coalesce(a.money,0) + :money where a.id=:uid and status = '0' ", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)r.getFreeze(), (Object)"uid", (Object)r.getUid()));
+            this.dao.executeUpdate("update PubUser a set a.money = coalesce(a.money,0) + :money where a.id=:uid and status = '0' ", ImmutableMap.of( "money", r.getFreeze(),  "uid",  r.getUid()));
             r.setStatus("3");
             r.setAddBack(r.getFreeze());
             r.setRestBetable(0.0);
@@ -247,16 +247,16 @@ public class GameG05Service extends BaseService
     
     @Transactional
     public void addMasterFreeze(final User user, final Integer masterRecordId, final Double addedFreeze) {
-        final int userEffeted = this.dao.executeUpdate("update PubUser a set a.money = coalesce(a.money,0) - :money where a.id=:uid and a.money>=:money", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)addedFreeze, (Object)"uid", (Object)user.getId()));
+        final int userEffeted = this.dao.executeUpdate("update PubUser a set a.money = coalesce(a.money,0) - :money where a.id=:uid and a.money>=:money",  ImmutableMap.of( "money",  addedFreeze,  "uid",  user.getId()));
         if (userEffeted == 0) {
             throw new CodedBaseRuntimeException("\u8d26\u6237\u4f59\u989d\u4e0d\u8db3!");
         }
-        this.dao.executeUpdate("update GcMasterRecord  set freeze = coalesce(freeze,0) + :freeze, restBetable = coalesce(restBetable,0) + :freeze where id=:id", (Map<String, Object>)ImmutableMap.of((Object)"freeze", (Object)addedFreeze, (Object)"id", (Object)masterRecordId));
+        this.dao.executeUpdate("update GcMasterRecord  set freeze = coalesce(freeze,0) + :freeze, restBetable = coalesce(restBetable,0) + :freeze where id=:id",  ImmutableMap.of( "freeze", addedFreeze, "id", masterRecordId));
     }
     
     @Transactional
     public GcMasterRecord newMasterRecord(final User user, final Room room, final Double freeze) {
-        final int userEffeted = this.dao.executeUpdate("update PubUser  set money = coalesce(money,0) - :money,exp=coalesce(exp,0)+:exp where id=:uid and money>=:money", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)freeze, (Object)"exp", (Object)freeze, (Object)"uid", (Object)user.getId()));
+        final int userEffeted = this.dao.executeUpdate("update PubUser  set money = coalesce(money,0) - :money,exp=coalesce(exp,0)+:exp where id=:uid and money>=:money",  ImmutableMap.of( "money",  freeze,  "exp", freeze,  "uid",  user.getId()));
         if (userEffeted == 0) {
             throw new CodedBaseRuntimeException("\u8d26\u6237\u4f59\u989d\u4e0d\u8db3!");
         }
@@ -275,7 +275,7 @@ public class GameG05Service extends BaseService
     
     @Transactional
     public List<GcMasterRecord> getMasterRecrods(final String roomId) {
-        return this.dao.findByHql("from GcMasterRecord where roomId =:roomId and  status = '0' order by freeze desc", (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)roomId));
+        return this.dao.findByHql("from GcMasterRecord where roomId =:roomId and  status = '0' order by freeze desc", ImmutableMap.of( "roomId",  roomId));
     }
     
     static {

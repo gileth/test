@@ -23,7 +23,7 @@ public class StorgeWhiteList extends WhiteList
         }
         AuthorizeResult r = null;
         if (this.list.containsKey(id)) {
-            final AccreditStore acs = this.list.get(id);
+            final AccreditStore acs = (AccreditStore) this.list.get(id);
             if (itemId.length() == 0) {
                 r = acs.getResult();
             }
@@ -33,7 +33,7 @@ public class StorgeWhiteList extends WhiteList
         }
         else if (this.list.containsKey("$others$")) {
             final ConditionResult cdr = new ConditionResult();
-            final Element el = this.list.get("$others$");
+            final Element el = (Element) this.list.get("$others$");
             cdr.setAuthorizeValue(el.attributeValue("acValue", "1111"));
             cdr.setContextList(this);
             r = cdr;

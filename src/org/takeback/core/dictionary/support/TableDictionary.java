@@ -755,7 +755,7 @@ public class TableDictionary extends Dictionary
     public void setFilter(final String filter) throws ExprException {
         if (!StringUtils.isEmpty((CharSequence)filter)) {
             this.filter = filter;
-            final List<?> exp = JSONUtils.parse(filter, (Class<List<?>>)List.class);
+            final List<?> exp = JSONUtils.parse(filter,List.class);
             this.where = " where " + ExpressionProcessor.instance().toString(exp);
         }
     }

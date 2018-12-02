@@ -33,7 +33,7 @@ public class DicLocator
         }
         final List<DictionaryItem> items = dic.getSlice(node, sliceType, query);
         if (!StringUtils.isEmpty((CharSequence)filter)) {
-            final Map<String, String> map = JSONUtils.parse(filter, (Class<Map<String, String>>)Map.class);
+            final Map<String, String> map = JSONUtils.parse(filter,Map.class);
             final List<DictionaryItem> filterItems = new ArrayList<DictionaryItem>();
             for (final DictionaryItem item : items) {
                 boolean fit = true;

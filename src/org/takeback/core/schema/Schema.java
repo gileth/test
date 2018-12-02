@@ -5,6 +5,7 @@
 package org.takeback.core.schema;
 
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.ArrayList;
 import java.util.List;
 import com.google.common.collect.Maps;
@@ -23,11 +24,11 @@ public class Schema extends AbstractConfigurable
     private Map<String, SchemaItem> items;
     
     public Schema() {
-        this.items = (Map<String, SchemaItem>)Maps.newLinkedHashMap();
+        this.items = new LinkedHashMap<String, SchemaItem>();
     }
     
     public Schema(final String id) {
-        this.items = (Map<String, SchemaItem>)Maps.newLinkedHashMap();
+        this.items = new LinkedHashMap<String, SchemaItem>();
         this.id = id;
     }
     

@@ -5,13 +5,16 @@
 package org.takeback.chat.utils;
 
 import java.io.InputStream;
+
 import org.takeback.util.JSONUtils;
+
 import java.io.Reader;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 public class IPUtil
@@ -53,9 +56,9 @@ public class IPUtil
             }
             reader.close();
             result = sbf.toString();
-            final Map<String, Object> res = JSONUtils.parse(result, (Class<Map<String, Object>>)Map.class);
+            final Map<String, Object> res = JSONUtils.parse(result, Map.class);
             if (res.containsKey("data")) {
-                return res.get("data");
+                return (Map<String, String>) res.get("data");
             }
         }
         catch (Exception e) {

@@ -126,7 +126,7 @@ public class LogonManager
             if (result != null && result.getResult() == 0) {
                 continue;
             }
-            final Map<String, Object> levelApp = (Map<String, Object>)Maps.newHashMap();
+            final Map<String, Object> levelApp = new HashMap<String, Object>();
             levelApp.put("id", application.getFullId());
             levelApp.put("text", application.getName());
             levelApp.put("iconCls", application.getIconCls());
@@ -146,7 +146,7 @@ public class LogonManager
             if (result != null && result.getResult() == 0) {
                 continue;
             }
-            final Map<String, Object> levelCata = (Map<String, Object>)Maps.newHashMap();
+            final Map<String, Object> levelCata = new HashMap<String, Object>();
             levelCata.put("id", c.getFullId());
             levelCata.put("text", c.getName());
             levelCata.put("iconCls", c.getIconCls());
@@ -165,7 +165,7 @@ public class LogonManager
             if (result != null && result.getResult() == 0) {
                 continue;
             }
-            final Map<String, Object> levelModule = (Map<String, Object>)Maps.newHashMap();
+            final Map<String, Object> levelModule = new HashMap<String, Object>();
             levelModule.put("id", c.getFullId());
             levelModule.put("text", c.getName());
             levelModule.put("iconCls", c.getIconCls());

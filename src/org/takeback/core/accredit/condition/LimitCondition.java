@@ -52,7 +52,7 @@ public class LimitCondition implements Condition
         else {
             try {
                 final String s = define.attributeValue("exp", define.getText());
-                this.exp = JSONUtils.parse(s, (Class<List<?>>)List.class);
+                this.exp = JSONUtils.parse(s,List.class);
             }
             catch (Exception ex) {}
         }

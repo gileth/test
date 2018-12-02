@@ -35,8 +35,8 @@ public class JsonRequester
     
     @RequestMapping(value = { "/**/*.jsonRequest" }, method = { RequestMethod.POST }, headers = { "content-type=application/json" })
     public Map<String, Object> handle(@RequestBody final Map<String, Object> request, final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse) {
-        final String service = request.get("service");
-        final String method = request.get("method");
+        final String service = (String) request.get("service");
+        final String method = (String) request.get("method");
         if (StringUtils.isEmpty((CharSequence)service) || StringUtils.isEmpty((CharSequence)method)) {
             return ResponseUtils.createBody(400, "missing service or method.");
         }

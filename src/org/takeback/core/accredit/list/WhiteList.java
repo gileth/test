@@ -31,7 +31,7 @@ public class WhiteList implements AccreditList, Serializable
             r = AuthorizeResult.PositiveResult;
         }
         else if (this.list.containsKey("$others$")) {
-            final Element el = this.list.get("$others$");
+            final Element el = (Element) this.list.get("$others$");
             final String acValue = el.attributeValue("acValue", "");
             if (acValue.length() > 0) {
                 final ConditionResult cr = new ConditionResult();

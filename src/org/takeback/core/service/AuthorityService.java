@@ -25,16 +25,16 @@ public class AuthorityService extends MyListService
     @Transactional
     @Override
     public void save(final Map<String, Object> req) {
-        final String entityName = req.get(AuthorityService.ENTITYNAME);
+        final String entityName = (String) req.get(AuthorityService.ENTITYNAME);
         if (StringUtils.isEmpty((CharSequence)entityName)) {
             throw new CodedBaseRuntimeException(404, "missing entityName");
         }
-        final Map<String, Object> data = req.get("data");
-        final String cmd = req.get(AuthorityService.CMD);
+        final Map<String, Object> data = (Map<String, Object>) req.get("data");
+        final String cmd = (String) req.get(AuthorityService.CMD);
         this.beforeProcessSaveData(data);
         try {
             final Class<?> cls = Class.forName(entityName);
-            final User user = ConversionUtils.convert(data, cls);
+            final User user = (User) ConversionUtils.convert(data, cls);
             final String id = user.getId();
             final String password = user.getPassword();
             if (!"******".equals(password)) {

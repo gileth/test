@@ -22,11 +22,11 @@ public class BannerService extends MyListService
     
     @Transactional
     public Object save1(final Map<String, Object> req) {
-        final String entityName = req.get(BannerService.ENTITYNAME);
+        final String entityName = (String) req.get(BannerService.ENTITYNAME);
         if (StringUtils.isEmpty((CharSequence)entityName)) {
             throw new CodedBaseRuntimeException(404, "missing entityName");
         }
-        final Map<String, Object> data = req.get("data");
+        final Map<String, Object> data = (Map<String, Object>) req.get("data");
         this.beforeProcessSaveData(data);
         try {
             final Class<?> cls = Class.forName(entityName);

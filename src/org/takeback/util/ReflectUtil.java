@@ -23,8 +23,11 @@ import org.springframework.core.ParameterNameDiscoverer;
 
 public class ReflectUtil
 {
-    private static final ParameterNameDiscoverer localVarDiscoverer;
-    private static final ImmutableSet<Class<?>> PrimitiveBigTypes;
+    private static final ParameterNameDiscoverer localVarDiscoverer = new DefaultParameterNameDiscoverer();
+    
+    private static final ImmutableSet<Class<?>> PrimitiveBigTypes = ImmutableSet.<Class<?>>builder()
+    	    .add(new Class[] { Integer.class, Character.class, Boolean.class, Long.class, Float.class, Double.class, Character.class, Byte.class, Short.class, String.class, java.util.Date.class, Timestamp.class, BigDecimal.class, java.sql.Date.class, Time.class })
+    	    .build();
     
     public static boolean isSimpleType(final Class<?> c) {
         return c.isPrimitive() || ReflectUtil.PrimitiveBigTypes.contains((Object)c);
@@ -199,8 +202,4 @@ public class ReflectUtil
         return ReflectUtil.localVarDiscoverer.getParameterNames(m);
     }
     
-    static {
-        localVarDiscoverer = (ParameterNameDiscoverer)new DefaultParameterNameDiscoverer();
-        PrimitiveBigTypes = ImmutableSet.builder().add((Object[])new Class[] { Integer.class, Character.class, Boolean.class, Long.class, Float.class, Double.class, Character.class, Byte.class, Short.class, String.class, Date.class, Timestamp.class, BigDecimal.class, java.sql.Date.class, Time.class }).build();
-    }
 }

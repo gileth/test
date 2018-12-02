@@ -4,6 +4,7 @@
 
 package org.takeback.core.controller.support;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -21,7 +22,7 @@ public abstract class AbstractController<T extends Configurable> implements Cont
     private final Lock lock;
     
     public AbstractController() {
-        this.store = (Map<String, T>)Maps.newHashMap();
+        this.store = new HashMap<String, T>();
         this.lock = new ReentrantLock();
     }
     

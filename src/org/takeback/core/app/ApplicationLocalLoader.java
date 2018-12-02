@@ -115,7 +115,8 @@ public class ApplicationLocalLoader extends AbstractConfigurableLoader<Applicati
         if (node == null) {
             return null;
         }
-        for (final Attribute att : el.attributes()) {
+        for(int i=0;i< el.attributes().size();i++) {
+        	Attribute att = (Attribute) el.attributes().get(i);
             node.addAttribute(att.getName(), att.getValue());
         }
         return node;

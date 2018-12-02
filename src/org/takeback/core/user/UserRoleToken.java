@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.takeback.core.organ.Organization;
 import org.takeback.core.role.Role;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Map;
 import java.io.Serializable;
 
@@ -129,7 +130,7 @@ public class UserRoleToken implements Serializable
     
     public void setProperty(final String nm, final Object v) {
         if (this.properties == null) {
-            this.properties = (Map<String, Object>)Maps.newHashMap();
+            this.properties = new HashMap<String,Object>();
         }
         this.properties.put(nm, v);
     }

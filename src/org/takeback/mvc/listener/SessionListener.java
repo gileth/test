@@ -13,6 +13,9 @@ import java.util.Iterator;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.slf4j.Logger;
 import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionListener;
@@ -45,7 +48,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
     private void login(final int uid, final String sid) {
         List<String> sids = SessionListener.users.get(uid);
         if (sids == null) {
-            sids = (List<String>)Lists.newCopyOnWriteArrayList();
+            sids = new CopyOnWriteArrayList<String>();
             SessionListener.users.put(uid, sids);
         }
         if (!sids.contains(sid)) {
@@ -93,6 +96,6 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
     
     static {
         log = LoggerFactory.getLogger((Class)SessionListener.class);
-        SessionListener.users = (Map<Integer, List<String>>)Maps.newConcurrentMap();
+        SessionListener.users = new ConcurrentHashMap<Integer, List<String>>();
     }
 }

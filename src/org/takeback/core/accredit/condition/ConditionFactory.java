@@ -31,8 +31,8 @@ public class ConditionFactory
     }
     
     static {
-        LOGGER = LoggerFactory.getLogger((Class)ConditionFactory.class);
-        (ConditionFactory.cls = (HashMap<String, String>)Maps.newHashMap()).put("exp", "org.takeback.core.accredit.condition.JsonExpCondition");
+        LOGGER = LoggerFactory.getLogger(ConditionFactory.class);
+        ConditionFactory.cls.put("exp", "org.takeback.core.accredit.condition.JsonExpCondition");
         ConditionFactory.cls.put("filter", "org.takeback.core.accredit.condition.JsonExpCondition");
         ConditionFactory.cls.put("notify", "org.takeback.core.accredit.condition.JsonExpCondition");
         ConditionFactory.cls.put("override", "org.takeback.core.accredit.condition.OverrideCondition");

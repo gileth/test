@@ -57,12 +57,12 @@ public class CodeController
         if (!ValidateUtil.instance().validatePhone(phonenumb)) {
             return ResponseUtils.jsonView(502, "\u624b\u673a\u53f7\u7801\u4e0d\u6b63\u786e");
         }
-        int c = (int)this.cache.getUnchecked((Object)phonenumb);
+        int c = (int)this.cache.getUnchecked(phonenumb);
         if (c >= 10) {
             return ResponseUtils.jsonView(501, "\u5bf9\u4e0d\u8d77\uff0c\u4e3a\u4e86\u5b89\u5168\u8d77\u89c1\uff0c\u60a8\u7684\u624b\u673a\u53f7\u780112\u5c0f\u65f6\u5185\u53ea\u80fd\u83b7\u5f9710\u6b21\u77ed\u4fe1\u9a8c\u8bc1\u7801\u3002");
         }
         ++c;
-        this.cache.put((Object)phonenumb, (Object)c);
+        this.cache.put(phonenumb,c);
         String code = null;
         if (StringUtils.isEmpty((CharSequence)type)) {
             code = this.messageProcessor.sendCode(phonenumb, "1");

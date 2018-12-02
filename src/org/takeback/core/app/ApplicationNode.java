@@ -156,7 +156,7 @@ public abstract class ApplicationNode implements Serializable
         if (this.properties == null) {
             return null;
         }
-        final String s = this.properties.get(nm);
+        final String s = (String) this.properties.get(nm);
         if (StringUtils.isEmpty((CharSequence)s)) {
             return null;
         }

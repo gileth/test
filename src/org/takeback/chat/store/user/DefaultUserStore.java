@@ -44,7 +44,7 @@ public class DefaultUserStore implements UserStore
     @Override
     public User get(final Serializable uid) {
         try {
-            return (User)this.store.get((Object)uid);
+            return (User)this.store.get((Integer) uid);
         }
         catch (ExecutionException e) {
             return null;

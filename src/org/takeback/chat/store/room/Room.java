@@ -11,6 +11,8 @@ import org.takeback.core.dictionary.DictionaryController;
 import org.takeback.core.dictionary.Dictionary;
 import org.takeback.util.exception.CodedBaseRuntimeException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import org.takeback.chat.lottery.listeners.GameException;
 import java.util.Iterator;
@@ -97,9 +99,9 @@ public class Room implements Item
         this.canTalk = true;
         this.candRed = true;
         this.shutup = new ArrayList<Integer>();
-        this.properties = (Map<String, Object>)Maps.newConcurrentMap();
-        this.users = (Map<Integer, User>)Maps.newConcurrentMap();
-        this.guests = (Map<String, AnonymousUser>)Maps.newConcurrentMap();
+        this.properties = new ConcurrentHashMap<String, Object>();
+        this.users = new ConcurrentHashMap<Integer, User>();
+        this.guests = new ConcurrentHashMap<String, AnonymousUser>();
         this.lotteries = (LoadingCache<String, Lottery>)CacheBuilder.newBuilder().expireAfterAccess(5L, TimeUnit.MINUTES).build((CacheLoader)new CacheLoader<String, Lottery>() {
             public Lottery load(final String s) throws Exception {
                 final LotteryService lotteryService = (LotteryService)ApplicationContextHolder.getBean("lotteryService");
@@ -138,12 +140,12 @@ public class Room implements Item
     }
     
     public void addLottery(final Lottery lottery) {
-        this.lotteries.put((Object)lottery.getId(), (Object)lottery);
+        this.lotteries.put(lottery.getId(),lottery);
     }
     
     public Lottery getLottery(final String id) {
         try {
-            return (Lottery)this.lotteries.get((Object)id);
+            return (Lottery)this.lotteries.get(id);
         }
         catch (ExecutionException e) {
             return null;

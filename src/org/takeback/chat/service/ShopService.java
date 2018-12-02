@@ -32,7 +32,7 @@ public class ShopService extends BaseService
     
     @Transactional
     public PubExchangeLog getContactInfo(final Integer id) {
-        final List<PubExchangeLog> list = this.dao.findByHql("from PubExchangeLog where uid =:uid order by id desc", (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)id));
+        final List<PubExchangeLog> list = this.dao.findByHql("from PubExchangeLog where uid =:uid order by id desc", ImmutableMap.of( "uid", (Object)id));
         if (list.size() == 0) {
             return null;
         }
@@ -46,7 +46,7 @@ public class ShopService extends BaseService
             throw new CodedBaseRuntimeException("\u5546\u54c1\u4fe1\u606f\u4e22\u5931");
         }
         final String hql = "update PubUser set money = coalesce(money,0) - :money where money > :money and id = :uid";
-        final int effected = this.dao.executeUpdate(hql, (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)s.getMoney(), (Object)"uid", (Object)uid));
+        final int effected = this.dao.executeUpdate(hql,  ImmutableMap.of( "money", s.getMoney(),  "uid",  uid));
         if (effected == 0) {
             throw new CodedBaseRuntimeException("\u8d26\u6237\u91d1\u989d\u4e0d\u8db3!");
         }

@@ -229,17 +229,17 @@ public class UserService extends BaseService
     
     @Transactional(rollbackFor = { Throwable.class })
     public void bindMobile(final int uid, final String mobile) {
-        this.dao.executeUpdate("update PubUser set mobile=:mobile where id=:uid", (Map<String, Object>)ImmutableMap.of((Object)"mobile", (Object)mobile, (Object)"uid", (Object)uid));
+        this.dao.executeUpdate("update PubUser set mobile=:mobile where id=:uid",  ImmutableMap.of( "mobile", mobile,  "uid", uid));
     }
     
     @Transactional(rollbackFor = { Throwable.class })
     public void updatePwd(final int uid, final String pwd) {
-        this.dao.executeUpdate("update PubUser set pwd=:pwd where id=:uid", (Map<String, Object>)ImmutableMap.of((Object)"pwd", (Object)pwd, (Object)"uid", (Object)uid));
+        this.dao.executeUpdate("update PubUser set pwd=:pwd where id=:uid", ImmutableMap.of( "pwd", pwd,  "uid", uid));
     }
     
     @Transactional(rollbackFor = { Throwable.class })
     public void updateHeadImg(final int uid, final String headImg) {
-        this.dao.executeUpdate("update PubUser set headImg=:headImg where id=:uid", (Map<String, Object>)ImmutableMap.of((Object)"headImg", (Object)headImg, (Object)"uid", (Object)uid));
+        this.dao.executeUpdate("update PubUser set headImg=:headImg where id=:uid", ImmutableMap.of( "headImg", headImg, "uid",  uid));
     }
     
     @Transactional(readOnly = true)
@@ -249,7 +249,7 @@ public class UserService extends BaseService
     
     @Transactional
     public void setLoginInfo(final String ip, final Integer uid) {
-        this.dao.executeUpdate("update PubUser set lastLoginDate=:loginDate,lastLoginIp = :lastLoginIp where id=:uid", (Map<String, Object>)ImmutableMap.of((Object)"loginDate", (Object)new Date(), (Object)"lastLoginIp", (Object)ip, (Object)"uid", (Object)uid));
+        this.dao.executeUpdate("update PubUser set lastLoginDate=:loginDate,lastLoginIp = :lastLoginIp where id=:uid",  ImmutableMap.of( "loginDate",  new Date(),  "lastLoginIp",  ip,  "uid",  uid));
     }
     
     @Transactional(readOnly = true)
@@ -357,11 +357,11 @@ public class UserService extends BaseService
             throw new CodedBaseRuntimeException("\u4f60\u5df2\u7ecf\u662f\u4ee3\u7406,\u65e0\u9700\u7533\u8bf7!");
         }
         final Double limit = Double.valueOf(conf.get("money").toString());
-        final int effected = this.dao.executeUpdate("update PubUser set money=coalesce(money,0)-:money where money>=:money and  id =:uid ", (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)limit, (Object)"uid", (Object)uid));
+        final int effected = this.dao.executeUpdate("update PubUser set money=coalesce(money,0)-:money where money>=:money and  id =:uid ",  ImmutableMap.of( "money",  limit, "uid", uid));
         if (effected == 0) {
             throw new CodedBaseRuntimeException("\u8d26\u6237\u91d1\u5e01\u4e0d\u8db3,\u7533\u8bf7\u5931\u8d25!");
         }
-        this.dao.executeUpdate("update PubUser set userType = '2' where id =:uid ", (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid));
+        this.dao.executeUpdate("update PubUser set userType = '2' where id =:uid ", ImmutableMap.of( "uid",  uid));
     }
     
     @Transactional(rollbackFor = { Throwable.class })
@@ -370,7 +370,7 @@ public class UserService extends BaseService
         if (money < 100.0) {
             throw new CodedBaseRuntimeException("\u6700\u4f4e\u63d0\u73b0\u91d1\u989d100");
         }
-        final List<PubWithdraw> wl = this.dao.findByHql("from PubWithdraw where uid=:uid and tradetime>:startDate and tradetime<=:endDate", (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid, (Object)"startDate", (Object)DateUtil.getStartOfToday(), (Object)"endDate", (Object)DateUtil.getEndOfToday()));
+        final List<PubWithdraw> wl = this.dao.findByHql("from PubWithdraw where uid=:uid and tradetime>:startDate and tradetime<=:endDate", ImmutableMap.of( "uid",  uid,  "startDate", DateUtil.getStartOfToday(), "endDate", DateUtil.getEndOfToday()));
         if (wl.size() >= 3) {
             throw new CodedBaseRuntimeException("\u6bcf\u5929\u63d0\u73b0\u6b21\u6570\u5df2\u8fbe\u4e0a\u9650:" + wl.size() + "\u6b21");
         }
@@ -389,7 +389,7 @@ public class UserService extends BaseService
         }
         final String mobile = data.get("mobile").toString();
         final String hql = "update PubUser set money = money - :money where id=:id and money > :money";
-        final int effect = this.dao.executeUpdate(hql, (Map<String, Object>)ImmutableMap.of((Object)"money", (Object)money, (Object)"id", (Object)uid));
+        final int effect = this.dao.executeUpdate(hql,  ImmutableMap.of( "money", money, "id",  uid));
         if (effect == 0) {
             throw new CodedBaseRuntimeException("\u91d1\u989d\u4e0d\u8db3");
         }
@@ -407,7 +407,7 @@ public class UserService extends BaseService
         pw.setTradetime(new Date());
         this.dao.save(PubWithdraw.class, pw);
         final String hql2 = "from PubBank where userId=:userId and account =:account";
-        final List<PubBank> bankList = this.dao.findByHql(hql2, (Map<String, Object>)ImmutableMap.of((Object)"userId", (Object)uid, (Object)"account", (Object)account));
+        final List<PubBank> bankList = this.dao.findByHql(hql2,  ImmutableMap.of( "userId", uid,  "account", account));
         PubBank pb;
         if (bankList.size() == 0) {
             pb = new PubBank();

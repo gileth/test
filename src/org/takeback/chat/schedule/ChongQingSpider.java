@@ -116,7 +116,7 @@ public class ChongQingSpider
         final String urlAll = new StringBuffer(this.url).toString();
         final String charset = "UTF-8";
         final String jsonResult = this.get(urlAll, charset);
-        final Map newData = JSONUtils.parse(jsonResult, Map.class);
+        final Map<String,Map<String,String>> newData = JSONUtils.parse(jsonResult, Map.class);
         if (newData == null || newData.size() == 0) {
             return;
         }

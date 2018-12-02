@@ -8,6 +8,8 @@ import org.takeback.chat.store.Item;
 import com.google.common.collect.Lists;
 import org.takeback.chat.store.user.User;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +54,7 @@ public class DefaultRoomStore implements RoomStore
                 final Room room = BeanUtils.map(gcRoom, Room.class);
                 final Map<String, Object> props = this.roomService.getRoomProperties(gcRoom.getId());
                 room.getProperties().putAll(props);
-                this.roomPojoMap.put((Object)room.getId(), (Object)room);
+                this.roomPojoMap.put(room.getId(),room);
             }
         }
     }
@@ -60,7 +62,7 @@ public class DefaultRoomStore implements RoomStore
     @Override
     public Room get(final Serializable roomId) {
         try {
-            return (Room)this.roomPojoMap.get((Object)roomId);
+            return (Room)this.roomPojoMap.get((String) roomId);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -77,7 +79,7 @@ public class DefaultRoomStore implements RoomStore
         }
         if (room == null) {
             room = BeanUtils.map(gcRoom, Room.class);
-            this.roomPojoMap.put((Object)room.getId(), (Object)room);
+            this.roomPojoMap.put(room.getId(),room);
         }
         else {
             BeanUtils.copy(gcRoom, room);
@@ -104,7 +106,7 @@ public class DefaultRoomStore implements RoomStore
     
     @Override
     public List<Room> getByType(final String type) {
-        final List<Room> ls = (List<Room>)Lists.newArrayList();
+        final List<Room> ls = new ArrayList<Room>();
         for (final String s : this.roomPojoMap.asMap().keySet()) {
             final Room room = this.get((Serializable)s);
             if (room.getType().equals(type)) {
@@ -116,7 +118,7 @@ public class DefaultRoomStore implements RoomStore
     
     @Override
     public List<Room> getByCatalog(final String catalog) {
-        final List<Room> ls = (List<Room>)Lists.newArrayList();
+        final List<Room> ls = new ArrayList<Room>();
         for (final String s : this.roomPojoMap.asMap().keySet()) {
             final Room room = this.get((Serializable)s);
             if (StringUtils.isEmpty((CharSequence)catalog)) {

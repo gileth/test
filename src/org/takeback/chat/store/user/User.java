@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.web.socket.WebSocketSession;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Date;
 import org.takeback.chat.store.Item;
 
@@ -74,7 +75,7 @@ public class User implements Item
         this.exp = 0.0;
         this.score = 0;
         this.handsUp = Boolean.FALSE;
-        this.properties = (Map<String, Object>)Maps.newConcurrentMap();
+        this.properties = new ConcurrentHashMap<String, Object>();
     }
     
     public Integer getId() {

@@ -151,9 +151,9 @@ public class PcEggStore
         try {
             for (int i = datas.size() - 1; i >= 0; --i) {
                 final Map data = datas.get(i);
-                final String data_id = data.get("expect");
-                final String data_time = data.get("opentime");
-                final String data_result = data.get("result");
+                final String data_id = (String) data.get("expect");
+                final String data_time = (String) data.get("opentime");
+                final String data_result = (String) data.get("result");
                 this.savePcEggLog(data_id, data_time, data_result);
             }
         }
@@ -199,22 +199,20 @@ public class PcEggStore
     }
     
     private void broadcast() {
-        final PcEggLog latest;
-        String simpleWord;
-        final Iterator<PcEggLog> iterator;
-        PcEggLog pel;
-        final String simpleWord2;
-        final long l;
-        final ImmutableMap content;
-        final List<Room> rms;
-        final Iterator<Room> iterator2;
-        Room r;
-        Message msg;
         this.threadPool.execute(() -> {
-            latest = this.getLastest();
+        	Message msg;
+            String simpleWord = null;
+            PcEggLog pel;
+            String simpleWord2;
+            long l;
+            ImmutableMap content;
+            List<Room> rms;
+            Iterator<Room> iterator2 = null;
+            Room r = null;
+            PcEggLog latest = this.getLastest();
+            simpleWord = "";
             if (latest != null) {
-                simpleWord = "";
-                this.getCache().iterator();
+            	Iterator<PcEggLog> iterator = this.getCache().iterator();
                 while (iterator.hasNext()) {
                     pel = iterator.next();
                     simpleWord = simpleWord + " " + (StringUtils.isNotEmpty((CharSequence)pel.getLucky()) ? pel.getLucky() : "?");
@@ -272,12 +270,12 @@ public class PcEggStore
             System.out.println("\u6570\u636e\u6e90\u6b47\u83dc!");
             return null;
         }
-        final String latest_id = data.get("expect");
+        final String latest_id = (String) data.get("expect");
         if (Integer.valueOf(latest_id) != termId) {
             return null;
         }
-        final String latest_result = data.get("result");
-        final String latest_time = data.get("opentime");
+        final String latest_result = (String) data.get("result");
+        final String latest_time = (String) data.get("opentime");
         return parse(latest_id, latest_time, latest_result);
     }
     
@@ -290,8 +288,8 @@ public class PcEggStore
         Date lastTime;
         if (this.latest == null) {
             final Map data = loadDateFromUrl(config.getDataSourceUrl()).get(0);
-            lasterId = Integer.valueOf(data.get("expect"));
-            final String latest_time = data.get("opentime");
+            lasterId = Integer.valueOf((String) data.get("expect"));
+            final String latest_time = (String) data.get("opentime");
             try {
                 lastTime = DateUtils.parseDate(latest_time, new String[] { "yyyy-MM-dd HH:mm:ss" });
             }
@@ -387,12 +385,12 @@ public class PcEggStore
     
     public void setPeriodConfigs(final List<String> periodConfigs) {
         if (periodConfigs != null) {
-            (this.periodConfigs = new ArrayList<PeriodConfig>(periodConfigs.size())).addAll(periodConfigs.stream().map((Function<? super Object, ?>)PeriodConfig::new).collect((Collector<? super Object, ?, Collection<? extends PeriodConfig>>)Collectors.toList()));
+            (this.periodConfigs = new ArrayList<PeriodConfig>(periodConfigs.size())).addAll(periodConfigs.stream().map(PeriodConfig::new).collect(Collectors.toList()));
         }
     }
     
     public List<PcEggLog> getCache() {
-        final List<PcEggLog> eggs = this.cache.stream().collect((Collector<? super Object, ?, List<PcEggLog>>)Collectors.toList());
+        final List<PcEggLog> eggs = this.cache.stream().collect(Collectors.toList());
         Collections.reverse(eggs);
         return eggs;
     }
@@ -426,10 +424,10 @@ public class PcEggStore
     }
     
     public static Map splitDate(final Map result) {
-        final String opencode = result.get("opencode");
+        final String opencode = (String) result.get("opencode");
         result.put("result", opencode.substring(0, opencode.length() - 3));
         result.put("extra", opencode.substring(opencode.length() - 2, opencode.length()));
-        String opentime = result.get("opentime");
+        String opentime = (String) result.get("opentime");
         opentime = opentime.substring(0, opentime.lastIndexOf(":") + 1) + "00";
         result.put("opentime", opentime);
         return result;
@@ -482,18 +480,18 @@ public class PcEggStore
         @Override
         public void run() {
             this.timer.cancel();
-            final PcEggLog latest;
-            final List<PcGameLog> logs;
-            final StringBuilder content;
-            final Iterator<PcGameLog> iterator;
-            PcGameLog log;
-            String bet;
-            String userId;
-            final List<Room> rms;
-            final Iterator<Room> iterator2;
-            Room r;
-            Message msg;
             PcEggStore.this.threadPool.execute(() -> {
+                PcEggLog latest;
+                List<PcGameLog> logs;
+                StringBuilder content;
+                Iterator<PcGameLog> iterator = null;
+                PcGameLog log;
+                String bet;
+                String userId;
+                List<Room> rms;
+                Iterator<Room> iterator2 = null;
+                Room r;
+                Message msg;
                 latest = PcEggStore.this.getLastest();
                 if (latest != null) {
                     logs = PcEggStore.this.pcEggService.getGameLog(latest.getId());

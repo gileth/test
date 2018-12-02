@@ -28,7 +28,7 @@ public class BetCmd implements Command
                 MessageUtils.sendCMD(session, "alert", "\u5e84\u5bb6\u65e0\u9700\u4e0b\u6ce8!");
                 return;
             }
-            final String type = data.get("type");
+            final String type = (String) data.get("type");
             final Double money = Double.valueOf(data.get("money").toString());
             Double deposit = 0.0;
             if ("1".equals(type)) {

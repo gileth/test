@@ -7,10 +7,12 @@ package org.takeback.chat.controller;
 import java.text.SimpleDateFormat;
 import cn.beecloud.BCCache;
 import org.takeback.util.MD5StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import com.obaopay.util.EkaPayEncrypt;
-import com.obaopay.util.StringUtils;
-import com.obaopay.util.EkaPayConfig;
+
+//import com.obaopay.util.EkaPayEncrypt;
+//import com.obaopay.util.StringUtils;
+//import com.obaopay.util.EkaPayConfig;
 import java.io.Serializable;
 import org.takeback.chat.entity.PubUser;
 import org.springframework.web.util.WebUtils;
@@ -105,7 +107,7 @@ public class PayController
         final String strTotalFee = data.get("totalFee");
         final String title = "\u5145\u503c";
         final double totalFee = Double.valueOf(strTotalFee);
-        final String url = PayOrderFactory.getInstance().getWxAuthorizeUrl(title, totalFee);
+        final String url = "";//PayOrderFactory.getInstance().getWxAuthorizeUrl(title, totalFee);
         return ResponseUtils.jsonView(url);
     }
     
@@ -147,22 +149,22 @@ public class PayController
     @RequestMapping(value = { "hrefbackurl" }, method = { RequestMethod.GET })
     public void hrefbackurl(final HttpServletRequest request, final HttpServletResponse response) {
         System.out.println("\u8fdb\u6765hrefbackurl");
-        final String md5key = StringUtils.formatString(EkaPayConfig.key);
-        final String orderid = StringUtils.formatString(request.getParameter("orderid"));
-        final String opstate = StringUtils.formatString(request.getParameter("opstate"));
-        final String ovalue = StringUtils.formatString(request.getParameter("ovalue"));
-        final String sign = StringUtils.formatString(request.getParameter("sign"));
-        final String sysorderid = StringUtils.formatString(request.getParameter("sysorderid"));
-        final String completiontime = StringUtils.formatString(request.getParameter("completiontime"));
-        final String attach = StringUtils.formatString(request.getParameter("attach"));
-        final String msg = StringUtils.formatString(request.getParameter("msg"));
-        if (!StringUtils.hasText(orderid) || !StringUtils.hasText(opstate) || !StringUtils.hasText(ovalue) || !StringUtils.hasText(sign)) {
+        final String md5key = "";//StringUtils.formatString(EkaPayConfig.key);
+        final String orderid = request.getParameter("orderid");
+        final String opstate = request.getParameter("opstate");
+        final String ovalue = request.getParameter("ovalue");
+        final String sign = request.getParameter("sign");
+        final String sysorderid = request.getParameter("sysorderid");
+        final String completiontime = request.getParameter("completiontime");
+        final String attach =request.getParameter("attach");
+        final String msg = request.getParameter("msg");
+        if (!StringUtils.isBlank(orderid) || !StringUtils.isBlank(opstate) || !StringUtils.isBlank(ovalue) || !StringUtils.isBlank(sign)) {
             System.out.println("\u51fa\u95ee\u9898\u4e86orderid=" + orderid + "&opstate=" + opstate + "&ovalue=" + ovalue + "&sign=" + sign);
             this.getOut(response).println("opstate=-1");
             return;
         }
         System.out.println("\u6b63\u786e\u7684");
-        final String checksign = EkaPayEncrypt.obaopayCardBackMd5Sign(orderid, opstate, ovalue, md5key);
+        final String checksign = "";//EkaPayEncrypt.obaopayCardBackMd5Sign(orderid, opstate, ovalue, md5key);
         if (checksign.equals(sign)) {
             System.out.println("\u9a8c\u8bc1\u901a\u8fc7");
             if (opstate.equals("0") || opstate.equals("-3")) {
@@ -187,20 +189,20 @@ public class PayController
     
     @RequestMapping(value = { "callbackurl" }, method = { RequestMethod.GET })
     public void callbackurl(final HttpServletRequest request, final HttpServletResponse response) {
-        final String md5key = StringUtils.formatString(EkaPayConfig.key);
-        final String orderid = StringUtils.formatString(request.getParameter("orderid"));
-        final String opstate = StringUtils.formatString(request.getParameter("opstate"));
-        final String ovalue = StringUtils.formatString(request.getParameter("ovalue"));
-        final String sign = StringUtils.formatString(request.getParameter("sign"));
-        final String sysorderid = StringUtils.formatString(request.getParameter("sysorderid"));
-        final String completiontime = StringUtils.formatString(request.getParameter("completiontime"));
-        final String attach = StringUtils.formatString(request.getParameter("attach"));
-        final String msg = StringUtils.formatString(request.getParameter("msg"));
-        if (!StringUtils.hasText(orderid) || !StringUtils.hasText(opstate) || !StringUtils.hasText(ovalue) || !StringUtils.hasText(sign)) {
+        final String md5key = "";//StringUtils.formatString(EkaPayConfig.key);
+        final String orderid =  request.getParameter("orderid") ;
+        final String opstate =  request.getParameter("opstate");
+        final String ovalue =  request.getParameter("ovalue" );
+        final String sign =  request.getParameter("sign" );
+        final String sysorderid =  request.getParameter("sysorderid");
+        final String completiontime =  request.getParameter("completiontime");
+        final String attach =  request.getParameter("attach");
+        final String msg =  request.getParameter("msg");
+        if (!StringUtils.isBlank(orderid) || !StringUtils.isBlank(opstate) || !StringUtils.isBlank(ovalue) || !StringUtils.isBlank(sign)) {
             this.getOut(response).println("opstate=-1");
             return;
         }
-        final String checksign = EkaPayEncrypt.obaopayCardBackMd5Sign(orderid, opstate, ovalue, md5key);
+        final String checksign = "";//EkaPayEncrypt.obaopayCardBackMd5Sign(orderid, opstate, ovalue, md5key);
         if (checksign.equals(sign)) {
             if (opstate.equals("0")) {
                 final PubRecharge pubRecharge = this.pubRechargeService.getRechargeRecordByTradeNo(orderid);
@@ -221,9 +223,9 @@ public class PayController
     public ModelAndView goPay(@RequestBody final Map<String, String> params, final HttpServletRequest request, final HttpServletResponse response) {
         final Object payIndex = params.get("payIndex");
         final Object amount = params.get("amount");
-        final String parter = StringUtils.formatString(EkaPayConfig.parter);
-        final String md5key = StringUtils.formatString(EkaPayConfig.key);
-        final String api_url = StringUtils.formatString(EkaPayConfig.bank_url);
+        final String parter = "";// StringUtils.formatString(EkaPayConfig.parter);
+        final String md5key = "";//StringUtils.formatString(EkaPayConfig.key);
+        final String api_url = "";//StringUtils.formatString(EkaPayConfig.bank_url);
         final Integer uid = (Integer)WebUtils.getSessionAttribute(request, "$uid");
         final String title = "\u5145\u503c";
         String orderid = new StringBuilder().append(uid).append(new Date().getTime()).toString();
@@ -241,20 +243,20 @@ public class PayController
         final PubUser u = this.pubRechargeService.get(PubUser.class, uid);
         pubRecharge.setUserIdText(u.getUserId());
         this.pubRechargeService.addRechargeRecord(pubRecharge);
-        final String callbackurl = StringUtils.formatString("http://www.6556hb.com/pay/callbackurl");
-        final String hrefbackurl = StringUtils.formatString("http://www.6556hb.com/pay/hrefbackurl");
-        orderid = StringUtils.formatString(orderid);
+        final String callbackurl = "";//StringUtils.formatString("http://www.6556hb.com/pay/callbackurl");
+        final String hrefbackurl = "";//StringUtils.formatString("http://www.6556hb.com/pay/hrefbackurl");
+    
         String type = "";
         final Integer pi = Integer.valueOf(payIndex.toString());
         if (pi == 0) {
-            type = StringUtils.formatString("2099");
+            type = "";//StringUtils.formatString("2099");
         }
         else if (pi == 1) {
-            type = StringUtils.formatString("2098");
+            type = "";//StringUtils.formatString("2098");
         }
-        final String value = StringUtils.formatString(amount.toString());
+        final String value = "";//StringUtils.formatString(amount.toString());
         final String attach = "";
-        final String sign = EkaPayEncrypt.obaopayBankMd5Sign(type, parter, value, orderid, callbackurl, md5key);
+        final String sign = "";//EkaPayEncrypt.obaopayBankMd5Sign(type, parter, value, orderid, callbackurl, md5key);
         final String payerIp = request.getRemoteAddr();
         final String str = "<form id=\"payBillForm\" action=\"" + api_url + "\" method=\"GET\">" + "<input type='hidden' name='parter'   value='" + parter + "'>" + "<input type='hidden' name='type' value='" + type + "'>" + "<input type='hidden' name='orderid' value='" + orderid + "'>" + "<input type='hidden' name='callbackurl'   value='" + callbackurl + "'>" + "<input type='hidden' name='hrefbackurl'   value='" + hrefbackurl + "'>" + "<input type='hidden' name='value'   value='" + value + "'>" + "<input type='hidden' name='attach'  value='" + attach + "'>" + "<input type='hidden' name='payerIp' value='" + payerIp + "'>" + "<input type='hidden' name='sign'   value='" + sign + "'>" + "</form>";
         return ResponseUtils.jsonView(str);
@@ -331,15 +333,15 @@ public class PayController
     }
     
     @RequestMapping(value = { "feedback/koudai" }, method = { RequestMethod.POST })
-    public void koudaiCallback0(@RequestBody final Map<String, Object> data, final HttpServletResponse response) throws IOException {
-        final String tradeNo = data.get("P_OrderId");
-        final String partnerId = data.get("P_UserId");
+    public void koudaiCallback0(@RequestBody final Map<Object, Object> data, final HttpServletResponse response) throws IOException {
+        final String tradeNo = (String) data.get("P_OrderId");
+        final String partnerId = (String) data.get("P_UserId");
         if (!partnerId.equals(this.kouDaiConfig.getPartnerId())) {
             PayController.LOGGER.error("Pay trade is not mine.");
             response.getOutputStream().println("errcode=0");
             return;
         }
-        final int errorCode = data.get("P_ErrCode");
+        final int errorCode = (int) data.get("P_ErrCode");
         final PubRecharge pubRecharge = this.pubRechargeService.getRechargeRecordByTradeNo(tradeNo);
         if (errorCode != 0) {
             PayController.LOGGER.error("Pay trade failed: ", data.get("P_ErrMsg"));
@@ -349,8 +351,8 @@ public class PayController
                 response.getOutputStream().println("errcode=0");
                 return;
             }
-            final double totalFee = data.get("P_FaceValue");
-            final String chanelId = data.get("P_ChannelId");
+            final double totalFee = (double) data.get("P_FaceValue");
+            final String chanelId = (String) data.get("P_ChannelId");
             if (pubRecharge.getFee() != totalFee) {
                 PayController.LOGGER.error("Total fee is different with the pay trade, expect: {}, {} in fact", (Object)pubRecharge.getFee(), (Object)totalFee);
                 return;
@@ -369,9 +371,9 @@ public class PayController
     
     @RequestMapping(value = { "webhook" }, method = { RequestMethod.POST })
     public void callback(@RequestBody final Map<String, Object> data, final HttpServletResponse response) throws IOException {
-        final String sign = data.get("sign");
-        final Long timestamp = data.get("timestamp");
-        final String transactionId = data.get("transaction_id");
+        final String sign = (String) data.get("sign");
+        final Long timestamp = (Long) data.get("timestamp");
+        final String transactionId = (String) data.get("transaction_id");
         final String text = String.valueOf(BCCache.getAppID()) + BCCache.getAppSecret() + timestamp;
         final String mySign = MD5StringUtil.MD5EncodeUTF8(text);
         final long timeDifference = System.currentTimeMillis() - timestamp;
@@ -380,11 +382,11 @@ public class PayController
             response.getOutputStream().println("fail");
             return;
         }
-        final Boolean success = data.get("trade_success");
+        final Boolean success = (Boolean) data.get("trade_success");
         if (success) {
-            final String transactionType = data.get("transaction_type");
+            final String transactionType = (String) data.get("transaction_type");
             if (transactionType.equals("PAY")) {
-                final Integer transactionFee = data.get("transaction_fee");
+                final Integer transactionFee = (Integer) data.get("transaction_fee");
                 final PubRecharge pubRecharge = this.pubRechargeService.getRechargeRecordByTradeNo(transactionId);
                 if (pubRecharge == null) {
                     response.getOutputStream().println("fail");

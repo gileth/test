@@ -208,7 +208,7 @@ public class UserController
         if (data.get("mobile") == null) {
             return ResponseUtils.jsonView(500, "\u624b\u673a\u53f7\u4e0d\u80fd\u4e3a\u7a7a!");
         }
-        final String mobile = data.get("mobile");
+        final String mobile = (String) data.get("mobile");
         if (!ValidateUtil.instance().validatePhone(mobile)) {
             return ResponseUtils.jsonView(500, "\u624b\u673a\u53f7\u7801\u683c\u5f0f\u4e0d\u6b63\u786e!");
         }
@@ -329,7 +329,7 @@ public class UserController
         user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
         final LocalDateTime expire = new LocalDateTime().plusDays(7);
         user.setTokenExpireTime(expire.toDate());
-        this.userService.updateUser(user.getId(), (Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime()));
+        this.userService.updateUser(user.getId(), new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime())*/);
         this.userService.setLoginInfo(ip, user.getId());
         final LoginLog l = new LoginLog();
         l.setIp(ip);
@@ -403,7 +403,7 @@ public class UserController
                     user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
                     final LocalDateTime expire = new LocalDateTime().plusDays(7);
                     user.setTokenExpireTime(expire.toDate());
-                    this.userService.updateUser(user.getId(), (Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime()));
+                    this.userService.updateUser(user.getId(), new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime())*/);
                     final User user2 = BeanUtils.map(user, User.class);
                     final StringBuffer url = request.getRequestURL();
                     final String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
@@ -431,8 +431,8 @@ public class UserController
     @RequestMapping(value = { "/login" }, method = { RequestMethod.POST })
     public ModelAndView login(@RequestBody final Map data, final HttpServletRequest request) {
         final String ip = IPUtil.getIp(request);
-        final String username = data.get("username");
-        final String password = data.get("password");
+        final String username = (String) data.get("username");
+        final String password = (String) data.get("password");
         final PubUser user = this.userService.login(username, password);
         if (user == null) {
             return ResponseUtils.jsonView(404, "\u7528\u6237\u4e0d\u5b58\u5728\u6216\u8005\u5bc6\u7801\u9519\u8bef");
@@ -447,7 +447,7 @@ public class UserController
         user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
         final LocalDateTime expire = new LocalDateTime().plusDays(7);
         user.setTokenExpireTime(expire.toDate());
-        this.userService.updateUser(user.getId(), (Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime()));
+        this.userService.updateUser(user.getId(), new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime())*/);
         this.userService.setLoginInfo(ip, user.getId());
         final LoginLog l = new LoginLog();
         l.setIp(ip);
@@ -467,11 +467,11 @@ public class UserController
     @RequestMapping(value = { "/user/createUser" }, method = { RequestMethod.POST })
     public ModelAndView createUser(@RequestBody final Map data, final HttpServletRequest request) {
         final Integer userId = (Integer)WebUtils.getSessionAttribute(request, "$uid");
-        final String username = data.get("username");
-        final String password = data.get("password");
-        final String mobile = data.containsKey("mobile") ? data.get("mobile") : "";
-        final String wx = data.containsKey("wx") ? data.get("wx") : "";
-        final String alipay = data.containsKey("alipay") ? data.get("alipay") : "";
+        final String username = (String) data.get("username");
+        final String password = (String) data.get("password");
+        final String mobile = data.containsKey("mobile") ? (String) data.get("mobile") : "";
+        final String wx = data.containsKey("wx") ? (String) data.get("wx") : "";
+        final String alipay = data.containsKey("alipay") ? (String) data.get("alipay") : "";
         try {
             final Integer parentId = userId;
             final String ip = IPUtil.getIp(request);
@@ -482,7 +482,7 @@ public class UserController
             user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
             final LocalDateTime expire = new LocalDateTime().plusDays(7);
             user.setTokenExpireTime(expire.toDate());
-            this.userService.updateUser(user.getId(), (Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime()));
+            this.userService.updateUser(user.getId(),new HashMap<String,Object>() /*(Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime())*/);
             return ResponseUtils.jsonView(200, "\u521b\u5efa\u6210\u529f!");
         }
         catch (CodedBaseRuntimeException e) {
@@ -492,11 +492,11 @@ public class UserController
     
     @RequestMapping(value = { "/register" }, method = { RequestMethod.POST })
     public ModelAndView register(@RequestBody final Map data, final HttpServletRequest request) {
-        final String username = data.get("username");
-        final String password = data.get("password");
-        final String mobile = data.containsKey("mobile") ? data.get("mobile") : "";
-        final String wx = data.containsKey("wx") ? data.get("wx") : "";
-        final String alipay = data.containsKey("alipay") ? data.get("alipay") : "";
+        final String username = (String) data.get("username");
+        final String password = (String) data.get("password");
+        final String mobile = data.containsKey("mobile") ? (String) data.get("mobile") : "";
+        final String wx = data.containsKey("wx") ? (String) data.get("wx") : "";
+        final String alipay = data.containsKey("alipay") ? (String) data.get("alipay") : "";
         try {
             Integer parentId = null;
             final Object invitor = WebUtils.getSessionAttribute(request, "$invitor");
@@ -513,7 +513,7 @@ public class UserController
             user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
             final LocalDateTime expire = new LocalDateTime().plusDays(7);
             user.setTokenExpireTime(expire.toDate());
-            this.userService.updateUser(user.getId(), (Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime()));
+            this.userService.updateUser(user.getId(), new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime())*/);
             final User user2 = BeanUtils.map(user, User.class);
             final StringBuffer url = request.getRequestURL();
             final String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
@@ -538,7 +538,7 @@ public class UserController
         if (pageSize > 20) {
             pageSize = 20;
         }
-        final List<GcLottery> list = this.userService.find(GcLottery.class, (Map<String, Object>)ImmutableMap.of((Object)"sender", (Object)uid), pageSize, pageNo, "createTime desc");
+        final List<GcLottery> list = this.userService.find(GcLottery.class,new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"sender", (Object)uid)*/, pageSize, pageNo, "createTime desc");
         if (list == null || list.isEmpty()) {
             return ResponseUtils.jsonView(null);
         }
@@ -559,8 +559,8 @@ public class UserController
     public ModelAndView transfer(@RequestBody final Map<String, Object> params, final HttpServletRequest request) {
         final Integer uid = (Integer)WebUtils.getSessionAttribute(request, "$uid");
         try {
-            final Integer targetId = params.get("userId");
-            final Integer money = params.get("money");
+            final Integer targetId = (Integer) params.get("userId");
+            final Integer money = (Integer) params.get("money");
             this.userService.transfer(uid, targetId, money);
         }
         catch (Exception e) {
@@ -575,8 +575,8 @@ public class UserController
     public ModelAndView prixyRecharge(@RequestBody final Map<String, Object> params, final HttpServletRequest request) {
         final Integer uid = (Integer)WebUtils.getSessionAttribute(request, "$uid");
         try {
-            final Integer targetId = params.get("userId");
-            final Integer money = params.get("money");
+            final Integer targetId = (Integer) params.get("userId");
+            final Integer money = (Integer) params.get("money");
             this.userService.prixyRecharge(uid, targetId, money);
         }
         catch (Exception e) {
@@ -591,8 +591,8 @@ public class UserController
     public ModelAndView prixyUnRecharge(@RequestBody final Map<String, Object> params, final HttpServletRequest request) {
         final Integer uid = (Integer)WebUtils.getSessionAttribute(request, "$uid");
         try {
-            final Integer targetId = params.get("userId");
-            final Integer money = params.get("money");
+            final Integer targetId = (Integer) params.get("userId");
+            final Integer money = (Integer) params.get("money");
             this.userService.prixyUnRecharge(uid, targetId, money);
         }
         catch (Exception e) {
@@ -648,7 +648,7 @@ public class UserController
     @RequestMapping(value = { "/user/getNickName" }, method = { RequestMethod.POST })
     public ModelAndView getNickName(@RequestBody final Map<String, Object> params, final HttpServletRequest request) {
         try {
-            final Integer uid = params.get("uid");
+            final Integer uid = (Integer) params.get("uid");
             final PubUser u = this.userService.get(PubUser.class, uid);
             if (u == null) {
                 return ResponseUtils.jsonView(500, "\u76ee\u6807\u8d26\u53f7\u4e0d\u5b58\u5728!");
@@ -669,7 +669,7 @@ public class UserController
     @RequestMapping(value = { "/user/checkRecharge" }, method = { RequestMethod.POST })
     public ModelAndView checkRecharge(@RequestBody final Map<String, Object> params, final HttpServletRequest request) {
         try {
-            final Integer uid = params.get("uid");
+            final Integer uid = (Integer) params.get("uid");
             final PubUser u = this.userService.get(PubUser.class, uid);
             if (u == null) {
                 return ResponseUtils.jsonView(500, "\u76ee\u6807\u8d26\u53f7\u4e0d\u5b58\u5728!");
@@ -691,10 +691,10 @@ public class UserController
     public ModelAndView exchange(@RequestBody final Map<String, Object> params, final HttpServletRequest request) {
         final Integer uid = (Integer)WebUtils.getSessionAttribute(request, "$uid");
         try {
-            final Integer shopId = Integer.valueOf(params.get("shopId"));
-            final String name = params.get("name");
-            final String address = params.get("address");
-            final String mobile = params.get("mobile");
+            final Integer shopId = Integer.valueOf((String)params.get("shopId"));
+            final String name = (String) params.get("name");
+            final String address = (String) params.get("address");
+            final String mobile = (String) params.get("mobile");
             this.userService.exchange(uid, shopId, name, address, mobile);
         }
         catch (Exception e) {
@@ -715,7 +715,7 @@ public class UserController
             pageSize = 20;
         }
         final String hql = "from TransferLog where fromUid =:uid or toUid=:uid order by id desc ";
-        final List<TransferLog> list = this.userService.findByHql(hql, (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid), pageSize, pageNo);
+        final List<TransferLog> list = this.userService.findByHql(hql,  new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo);
         if (list == null || list.isEmpty()) {
             return ResponseUtils.jsonView(null);
         }
@@ -733,7 +733,7 @@ public class UserController
             pageSize = 20;
         }
         final String hql = "select id,userId ,nickName , registDate,money from PubUser where parent=:uid order by id desc ";
-        final List<PubUser> list = this.userService.findByHql(hql, (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid), pageSize, pageNo);
+        final List<PubUser> list = this.userService.findByHql(hql, new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo);
         if (list == null || list.isEmpty()) {
             return ResponseUtils.jsonView(null);
         }
@@ -781,7 +781,7 @@ public class UserController
             pageSize = 20;
         }
         final String hql = "from ProxyVote where parentId=:uid order by id desc ";
-        final List<TransferLog> list = this.userService.findByHql(hql, (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid), pageSize, pageNo);
+        final List<TransferLog> list = this.userService.findByHql(hql, new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo);
         if (list == null || list.isEmpty()) {
             return ResponseUtils.jsonView(null);
         }
@@ -819,7 +819,7 @@ public class UserController
         if (pageSize > 20) {
             pageSize = 20;
         }
-        final List<GcLotteryDetail> list = this.userService.findByHql(" from GcLotteryDetail where uid=:uid and roomId is not null and roomId<>'' order by id desc ", (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid), pageSize, pageNo);
+        final List<GcLotteryDetail> list = this.userService.findByHql(" from GcLotteryDetail where uid=:uid and roomId is not null and roomId<>'' order by id desc ", new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo);
         if (list == null || list.isEmpty()) {
             return ResponseUtils.jsonView(null);
         }
@@ -849,7 +849,7 @@ public class UserController
         if (pageSize > 20) {
             pageSize = 20;
         }
-        final List<PcGameLog> list = this.userService.find(PcGameLog.class, (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid), pageSize, pageNo, "betTime desc");
+        final List<PcGameLog> list = this.userService.find(PcGameLog.class, new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo, "betTime desc");
         if (list == null || list.isEmpty()) {
             return ResponseUtils.jsonView(null);
         }
@@ -883,7 +883,7 @@ public class UserController
         if (pageSize > 20) {
             pageSize = 20;
         }
-        final List<PubExchangeLog> list = this.userService.find(PubExchangeLog.class, (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid), pageSize, pageNo, "id desc");
+        final List<PubExchangeLog> list = this.userService.find(PubExchangeLog.class, new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo, "id desc");
         if (list == null || list.isEmpty()) {
             return ResponseUtils.jsonView(null);
         }
@@ -922,7 +922,7 @@ public class UserController
         if (pageSize > 20) {
             pageSize = 20;
         }
-        final List<PubRecharge> list = this.userService.findByHql("from PubRecharge where uid=:uid and status =2 order by finishtime desc", (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid), pageSize, pageNo);
+        final List<PubRecharge> list = this.userService.findByHql("from PubRecharge where uid=:uid and status =2 order by finishtime desc", new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo);
         return ResponseUtils.jsonView(list);
     }
     
@@ -936,7 +936,7 @@ public class UserController
         if (pageSize > 20) {
             pageSize = 20;
         }
-        final List<PubWithdraw> list = this.userService.findByHql("from PubWithdraw where uid=:uid  order by tradetime desc", (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid), pageSize, pageNo);
+        final List<PubWithdraw> list = this.userService.findByHql("from PubWithdraw where uid=:uid  order by tradetime desc", new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo);
         return ResponseUtils.jsonView(list);
     }
     

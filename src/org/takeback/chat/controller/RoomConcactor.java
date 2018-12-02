@@ -104,11 +104,11 @@ public class RoomConcactor
                 this.lock.unlock();
             }
         }
-        final List<GcRoomKickLog> kickLogs = this.roomService.findByHql("from GcRoomKickLog where kickTime>=:t and  roomId=:roomId and uid =:uid ", (Map<String, Object>)ImmutableMap.of((Object)"t", (Object)DateUtil.getDateBeforeSeconds(RoomService.KICK_TIME), (Object)"roomId", (Object)id, (Object)"uid", (Object)uid), 1, 1);
+        final List<GcRoomKickLog> kickLogs = null;//this.roomService.findByHql("from GcRoomKickLog where kickTime>=:t and  roomId=:roomId and uid =:uid ", (Map<Object, Object>)ImmutableMap.of((Object)"t", (Object)DateUtil.getDateBeforeSeconds(RoomService.KICK_TIME), (Object)"roomId", (Object)id, (Object)"uid", (Object)uid), 1, 1);
         if (kickLogs.size() > 0) {
             return ResponseUtils.jsonView(500, "\u7981\u6b62\u8fdb\u5165\u623f\u95f4.");
         }
-        final Map<String, Object> body = (Map<String, Object>)Maps.newHashMap();
+        final Map<Object, Object> body = (Map<Object, Object>)Maps.newHashMap();
         body.put("room", room);
         body.put("uid", uid);
         return ResponseUtils.jsonView(200, "success", body);
@@ -117,7 +117,7 @@ public class RoomConcactor
     @RequestMapping({ "/list/{pageNo}" })
     public ModelAndView rooms(@PathVariable final Integer pageNo, final HttpServletRequest request) {
         String s = "";
-        final Map<String, Object> params = (Map<String, Object>)Maps.newHashMap();
+        final Map<String, String> params = new HashMap<String,String>();
         final String cata = request.getParameter("cata");
         final String type = request.getParameter("type");
         if (!StringUtils.isEmpty((CharSequence)cata)) {
@@ -128,11 +128,11 @@ public class RoomConcactor
             s = " and a.type = :p";
             params.put("p", type);
         }
-        final List<GcRoom> rooms = this.roomService.findByHql("from GcRoom a where a.status !='9'" + s + " order by a.hot desc, a.createdate desc", params, 100, pageNo);
+        final List<GcRoom> rooms = null;//this.roomService.findByHql("from GcRoom a where a.status !='9'" + s + " order by a.hot desc, a.createdate desc", params, 100, pageNo);
         if (rooms == null || rooms.size() == 0) {
             return ResponseUtils.jsonView(new ArrayList());
         }
-        final List<Room> result = (List<Room>)Lists.newArrayList();
+        final List<Room> result = new ArrayList<Room>();//(List<Room>)Lists.newArrayList();
         for (final GcRoom room : rooms) {
             result.add(this.roomStore.get(room.getId()));
         }
@@ -186,7 +186,7 @@ public class RoomConcactor
         if (!room.getOwner().equals(uid)) {
             return ResponseUtils.jsonView(404, "\u65e0\u6743\u6267\u884c\u8be5\u64cd\u4f5c!");
         }
-        final List<GcRoomMember> ls = this.roomService.findByProperties(GcRoomMember.class, (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)roomId));
+        final List<GcRoomMember> ls = null;//this.roomService.findByProperties(GcRoomMember.class, (Map<Object, Object>)ImmutableMap.of((Object)"roomId", (Object)roomId));
         return ResponseUtils.jsonView(ls);
     }
     
@@ -290,7 +290,7 @@ public class RoomConcactor
         if (!room.getOwner().equals(uid)) {
             return ResponseUtils.jsonView(500, "\u65e0\u6743\u6267\u884c\u8be5\u64cd\u4f5c!");
         }
-        final List<GcRoomMember> ls = this.roomService.findByProperties(GcRoomMember.class, (Map<String, Object>)ImmutableMap.of((Object)"roomId", (Object)roomId));
+        final List<GcRoomMember> ls = null;// this.roomService.findByProperties(GcRoomMember.class, (Map<Object, Object>)ImmutableMap.of((Object)"roomId", (Object)roomId));
         Double fullRateExceptCurrent = 0.0;
         for (final GcRoomMember mb : ls) {
             if (!mb.getId().equals(m.getId())) {

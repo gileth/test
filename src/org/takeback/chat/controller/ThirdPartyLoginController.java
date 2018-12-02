@@ -59,11 +59,11 @@ public class ThirdPartyLoginController
     @RequestMapping(value = { "/apply" }, method = { RequestMethod.POST })
     public ModelAndView apply(@RequestBody final Map<String, Object> params, final HttpSession session) {
         final String s;
-        final String type = s = params.get("type");
+        final String type = s = (String) params.get("type");
         switch (s) {
             case "wx": {
                 final String url = this.getWeixinAuthorUrl(true);
-                final Map<String, Object> extras = params.get("extras");
+                final Map<String, Object> extras = (Map<String, Object>) params.get("extras");
                 if (extras != null && extras.get("fromUrl") != null) {
                     session.setAttribute("$beforeLoginState", (Object)extras);
                 }
@@ -77,7 +77,7 @@ public class ThirdPartyLoginController
     
     @RequestMapping(value = { "/auto" }, method = { RequestMethod.POST })
     public ModelAndView autoLogin(@RequestBody final Map<String, Object> params, final HttpServletRequest request, final HttpSession session) {
-        final Integer uid = params.get("uid");
+        final Integer uid = (Integer) params.get("uid");
         if (uid == null) {
             return ResponseUtils.jsonView(500, "\u7528\u6237id\u4e3a\u7a7a\u3002");
         }
@@ -88,7 +88,7 @@ public class ThirdPartyLoginController
         if ("2".equals(user.getStatus()) || "3".equals(user.getStatus())) {
             return ResponseUtils.jsonView(404, "\u8d26\u53f7\u88ab\u9501\u5b9a\u6216\u6ce8\u9500,\u8bf7\u8054\u7cfb\u5ba2\u670d\u54a8\u8be2\u5904\u7406!");
         }
-        final Boolean inWeixin = params.get("inWeixin");
+        final Boolean inWeixin = (Boolean) params.get("inWeixin");
         if (user.getWbOpenId() != null) {
             if (!inWeixin) {
                 return ResponseUtils.jsonView(500, "\u53ea\u80fd\u5728\u5fae\u4fe1\u6d4f\u89c8\u5668\u4e2d\u767b\u5f55\u3002");
@@ -99,7 +99,7 @@ public class ThirdPartyLoginController
             }
         }
         else {
-            final String token = params.get("accessToken");
+            final String token = (String) params.get("accessToken");
             if (token == null || !token.equals(user.getAccessToken())) {
                 return ResponseUtils.jsonView(402, "\u7528\u6237\u6388\u6743\u5931\u8d25, \u8bf7\u91cd\u65b0\u767b\u5f55\u3002");
             }
@@ -129,7 +129,7 @@ public class ThirdPartyLoginController
             if (isApp) {
                 return ResponseUtils.jsonView(500, "\u767b\u5f55\u5931\u8d25");
             }
-            return ResponseUtils.modelView("jump", (Map<String, Object>)ImmutableMap.of((Object)"url", (Object)"/#/tab/login", (Object)"message", (Object)"\u767b\u5f55\u5931\u8d25\u3002"));
+            return ResponseUtils.modelView("jump", new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"url", (Object)"/#/tab/login", (Object)"message", (Object)"\u767b\u5f55\u5931\u8d25\u3002")*/);
         }
         else {
             final ModelAndView mav = this.doWxLogin(resultObject.getString("refresh_token"), resultObject.getString("openid"), isApp, request, session);
@@ -143,11 +143,11 @@ public class ThirdPartyLoginController
             LocalDateTime expire = new LocalDateTime();
             expire = expire.plusDays(7);
             user.setTokenExpireTime(expire.toDate());
-            this.userService.updateUser(uid, (Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime()));
+            this.userService.updateUser(uid, new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime())*/);
             if (isApp) {
-                return ResponseUtils.jsonView((Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid, (Object)"username", (Object)user.getUserId(), (Object)"accessToken", (Object)user.getAccessToken()));
+                return ResponseUtils.jsonView( new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid, (Object)"username", (Object)user.getUserId(), (Object)"accessToken", (Object)user.getAccessToken())*/);
             }
-            return ResponseUtils.modelView("jump", (Map<String, Object>)ImmutableMap.of((Object)"url", (Object)redirectUrl, (Object)"uid", (Object)uid, (Object)"username", (Object)user.getUserId(), (Object)"accessToken", (Object)user.getAccessToken()));
+            return ResponseUtils.modelView("jump",new HashMap<String,Object>() /*(Map<String, Object>)ImmutableMap.of((Object)"url", (Object)redirectUrl, (Object)"uid", (Object)uid, (Object)"username", (Object)user.getUserId(), (Object)"accessToken", (Object)user.getAccessToken())*/);
         }
     }
     
@@ -214,7 +214,7 @@ public class ThirdPartyLoginController
         if (isApp) {
             return ResponseUtils.jsonView(500, "\u767b\u5f55\u5931\u8d25\u3002");
         }
-        return ResponseUtils.modelView("jump", (Map<String, Object>)ImmutableMap.of((Object)"url", (Object)"/#/tab/login", (Object)"message", (Object)"\u767b\u5f55\u5931\u8d25\u3002"));
+        return ResponseUtils.modelView("jump", new HashMap<String,Object>() /*(Map<String, Object>)ImmutableMap.of((Object)"url", (Object)"/#/tab/login", (Object)"message", (Object)"\u767b\u5f55\u5931\u8d25\u3002")*/);
     }
     
     private String getRedirectUrl(final HttpSession session) {
@@ -222,8 +222,8 @@ public class ThirdPartyLoginController
         final Map<String, Object> extras = (Map<String, Object>)session.getAttribute("$beforeLoginState");
         session.removeAttribute("$beforeLoginState");
         if (extras != null) {
-            redirectUrl = extras.get("fromUrl");
-            final Map<String, String> params = extras.get("fromParams");
+            redirectUrl = (String) extras.get("fromUrl");
+            final Map<String, String> params = (Map<String, String>) extras.get("fromParams");
             int idx = redirectUrl.indexOf(":");
             if (idx > 0) {
                 final String pvs = redirectUrl.substring(idx + 1);

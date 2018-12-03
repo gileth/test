@@ -70,9 +70,9 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
     
     public void attributeAdded(final HttpSessionBindingEvent se) {
         if ("$uid".equals(se.getName())) {
-            final int uid = (int)se.getValue();
+            final String uid = (String) se.getValue();
             final String sid = se.getSession().getId();
-            this.login(uid, sid);
+            this.login(Integer.parseInt(uid), sid);
         }
     }
     

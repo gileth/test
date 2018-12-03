@@ -936,7 +936,7 @@ public class UserController
         if (pageSize > 20) {
             pageSize = 20;
         }
-        final List<PubWithdraw> list = this.userService.findByHql("from PubWithdraw where uid=:uid  order by tradetime desc", new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo);
+        final List<PubWithdraw> list = this.userService.findByHql("from PubWithdraw where uid=:uid  order by tradetime desc",  ImmutableMap.of("uid",uid), pageSize, pageNo);
         return ResponseUtils.jsonView(list);
     }
     

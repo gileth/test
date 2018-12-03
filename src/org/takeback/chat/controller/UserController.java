@@ -403,7 +403,7 @@ public class UserController
                     user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
                     final LocalDateTime expire = new LocalDateTime().plusDays(7);
                     user.setTokenExpireTime(expire.toDate());
-                    this.userService.updateUser(user.getId(), new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime())*/);
+                    this.userService.updateUser(user.getId(),  ImmutableMap.of( "accessToken",  user.getAccessToken(),  "tokenExpireTime", user.getTokenExpireTime()));
                     final User user2 = BeanUtils.map(user, User.class);
                     final StringBuffer url = request.getRequestURL();
                     final String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
@@ -447,7 +447,7 @@ public class UserController
         user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
         final LocalDateTime expire = new LocalDateTime().plusDays(7);
         user.setTokenExpireTime(expire.toDate());
-        this.userService.updateUser(user.getId(), new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime())*/);
+        this.userService.updateUser(user.getId(),  ImmutableMap.of( "accessToken",  user.getAccessToken(),  "tokenExpireTime",  user.getTokenExpireTime()) );
         this.userService.setLoginInfo(ip, user.getId());
         final LoginLog l = new LoginLog();
         l.setIp(ip);
@@ -482,7 +482,7 @@ public class UserController
             user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
             final LocalDateTime expire = new LocalDateTime().plusDays(7);
             user.setTokenExpireTime(expire.toDate());
-            this.userService.updateUser(user.getId(),new HashMap<String,Object>() /*(Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime())*/);
+            this.userService.updateUser(user.getId(), ImmutableMap.of( "accessToken",  user.getAccessToken(), "tokenExpireTime",  user.getTokenExpireTime()) );
             return ResponseUtils.jsonView(200, "\u521b\u5efa\u6210\u529f!");
         }
         catch (CodedBaseRuntimeException e) {
@@ -513,7 +513,7 @@ public class UserController
             user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
             final LocalDateTime expire = new LocalDateTime().plusDays(7);
             user.setTokenExpireTime(expire.toDate());
-            this.userService.updateUser(user.getId(), new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime())*/);
+            this.userService.updateUser(user.getId(),  ImmutableMap.of( "accessToken", user.getAccessToken(),  "tokenExpireTime", user.getTokenExpireTime()) );
             final User user2 = BeanUtils.map(user, User.class);
             final StringBuffer url = request.getRequestURL();
             final String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
@@ -538,7 +538,7 @@ public class UserController
         if (pageSize > 20) {
             pageSize = 20;
         }
-        final List<GcLottery> list = this.userService.find(GcLottery.class,new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"sender", (Object)uid)*/, pageSize, pageNo, "createTime desc");
+        final List<GcLottery> list = this.userService.find(GcLottery.class, ImmutableMap.of( "sender",  uid) , pageSize, pageNo, "createTime desc");
         if (list == null || list.isEmpty()) {
             return ResponseUtils.jsonView(null);
         }
@@ -715,7 +715,7 @@ public class UserController
             pageSize = 20;
         }
         final String hql = "from TransferLog where fromUid =:uid or toUid=:uid order by id desc ";
-        final List<TransferLog> list = this.userService.findByHql(hql,  new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo);
+        final List<TransferLog> list = this.userService.findByHql(hql,   ImmutableMap.of( "uid",  uid) , pageSize, pageNo);
         if (list == null || list.isEmpty()) {
             return ResponseUtils.jsonView(null);
         }
@@ -733,7 +733,7 @@ public class UserController
             pageSize = 20;
         }
         final String hql = "select id,userId ,nickName , registDate,money from PubUser where parent=:uid order by id desc ";
-        final List<PubUser> list = this.userService.findByHql(hql, new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo);
+        final List<PubUser> list = this.userService.findByHql(hql,    ImmutableMap.of( "uid",  uid) , pageSize, pageNo);
         if (list == null || list.isEmpty()) {
             return ResponseUtils.jsonView(null);
         }
@@ -781,7 +781,7 @@ public class UserController
             pageSize = 20;
         }
         final String hql = "from ProxyVote where parentId=:uid order by id desc ";
-        final List<TransferLog> list = this.userService.findByHql(hql, new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo);
+        final List<TransferLog> list = this.userService.findByHql(hql,  ImmutableMap.of( "uid",  uid) , pageSize, pageNo);
         if (list == null || list.isEmpty()) {
             return ResponseUtils.jsonView(null);
         }
@@ -819,7 +819,7 @@ public class UserController
         if (pageSize > 20) {
             pageSize = 20;
         }
-        final List<GcLotteryDetail> list = this.userService.findByHql(" from GcLotteryDetail where uid=:uid and roomId is not null and roomId<>'' order by id desc ", new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo);
+        final List<GcLotteryDetail> list = this.userService.findByHql(" from GcLotteryDetail where uid=:uid and roomId is not null and roomId<>'' order by id desc ",  ImmutableMap.of( "uid",  uid) , pageSize, pageNo);
         if (list == null || list.isEmpty()) {
             return ResponseUtils.jsonView(null);
         }
@@ -883,7 +883,7 @@ public class UserController
         if (pageSize > 20) {
             pageSize = 20;
         }
-        final List<PubExchangeLog> list = this.userService.find(PubExchangeLog.class, new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo, "id desc");
+        final List<PubExchangeLog> list = this.userService.find(PubExchangeLog.class, ImmutableMap.of( "uid",  uid) , pageSize, pageNo, "id desc");
         if (list == null || list.isEmpty()) {
             return ResponseUtils.jsonView(null);
         }
@@ -922,7 +922,7 @@ public class UserController
         if (pageSize > 20) {
             pageSize = 20;
         }
-        final List<PubRecharge> list = this.userService.findByHql("from PubRecharge where uid=:uid and status =2 order by finishtime desc", new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo);
+        final List<PubRecharge> list = this.userService.findByHql("from PubRecharge where uid=:uid and status =2 order by finishtime desc",  ImmutableMap.of( "uid",  uid) , pageSize, pageNo);
         return ResponseUtils.jsonView(list);
     }
     
@@ -936,7 +936,7 @@ public class UserController
         if (pageSize > 20) {
             pageSize = 20;
         }
-        final List<PubWithdraw> list = this.userService.findByHql("from PubWithdraw where uid=:uid  order by tradetime desc", new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo);
+        final List<PubWithdraw> list = this.userService.findByHql("from PubWithdraw where uid=:uid  order by tradetime desc",  ImmutableMap.of("uid",uid), pageSize, pageNo);
         return ResponseUtils.jsonView(list);
     }
     

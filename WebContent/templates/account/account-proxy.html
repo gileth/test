@@ -1,0 +1,129 @@
+<ion-view view-title="邀请小伙伴" need-login>
+    <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+        <ion-nav-back-button>返回</ion-nav-back-button>
+    </ion-nav-bar>
+
+
+    <ion-content>
+        <div class="list list-inset" align="center">
+            <span style="color:grey;margin-left: 20px;">辣么好玩的游戏,赶紧转发给小伙伴吧~</span>
+            <div align="center">
+<!--
+			<div style="position: relative; height:550px; width:300px;">
+  <div style="position: absolute; margin-left:110px; margin-top:250px;"> 
+    <img width="180" src="http://qr.topscan.com/api.php?&amp;bg=ffffff&amp;m=8&amp;fg=000000&amp;text={{user.url}}&amp;logo=http://{{user.host}}/img/system.png" />
+  </div>  
+  <img width="300" src="img/qr_bg.png"/>
+</div>  -->
+<img width="300" src="http://pan.baidu.com/share/qrcode?w=300&h=300&url={{selfUri+user.id}}" />
+<!-- <img width="300" src="http://qr.topscan.com/api.php?&amp;bg=ffffff&amp;m=8&amp;fg=000000&amp;text={{user.url}}&amp;logo=http://{{user.host}}/img/system.png" /> -->
+              <!--<img  src="{{user.invitImg}}"> --><br />
+			将二维码发送至朋友圈即可拉人成为自己下线，对方参与红包都有回扣!
+			                                                                                                                                               
+		  </div>
+          <div class="item item-input">
+                邀请： <input id="shareLink" type="text" ng-model="selfUri+user.id" ><!--readonly="readonly"-->
+               
+            </div>
+        </div>
+
+      <ion-list>
+            <ion-item class="item-divider">获取二维码海报</ion-item>
+			<div align="center">
+			<a href="http://wx.cdiuu.cn/proxy_qrcode.asp?url2={{selfUri+user.id}}&url=http://h5w.axiij.cn/&bgimg=/img/qrcode_bg/1.png&qrsize=&left=-1&top=42&lx=1" style="text-decoration:none"><img width="120" src="/img/qrcode_bg/1.png"/></a>
+			<a href="http://wx.cdiuu.cn/proxy_qrcode.asp?url2={{selfUri+user.id}}&url=http://h5w.axiij.cn/&bgimg=/img/qrcode_bg/2.jpg&qrsize=&left=-1&top=42&lx=1" style="text-decoration:none"><img width="120" src="/img/qrcode_bg/2.jpg"/></a>
+			<a href="http://wx.cdiuu.cn/proxy_qrcode.asp?url2={{selfUri+user.id}}&url=http://h5w.axiij.cn/&bgimg=/img/qrcode_bg/3.jpg&qrsize=&left=-1&top=42&lx=1" style="text-decoration:none"><img width="120" src="/img/qrcode_bg/3.jpg"/></a>
+			<a href="http://wx.cdiuu.cn/proxy_qrcode.asp?url2={{selfUri+user.id}}&url=http://h5w.axiij.cn/&bgimg=/img/qrcode_bg/4.jpg&qrsize=&left=-1&top=42&lx=1" style="text-decoration:none"><img width="120" src="/img/qrcode_bg/4.jpg"/></a>
+			<a href="http://wx.cdiuu.cn/proxy_qrcode.asp?url2={{selfUri+user.id}}&url=http://h5w.axiij.cn/&bgimg=/img/qrcode_bg/5.jpg&qrsize=&left=-1&top=42&lx=1" style="text-decoration:none"><img width="120" src="/img/qrcode_bg/5.jpg"/></a>
+			<a href="http://wx.cdiuu.cn/proxy_qrcode.asp?url2={{selfUri+user.id}}&url=http://h5w.axiij.cn/&bgimg=/img/qrcode_bg/6.jpg&qrsize=&left=-1&top=42&lx=1" style="text-decoration:none"><img width="120" src="/img/qrcode_bg/6.jpg"/></a>
+			<a href="http://wx.cdiuu.cn/proxy_qrcode.asp?url2={{selfUri+user.id}}&url=http://h5w.axiij.cn/&bgimg=/img/qrcode_bg/7.jpg&qrsize=&left=-1&top=42&lx=1" style="text-decoration:none"><img width="120" src="/img/qrcode_bg/7.jpg"/></a>
+			<a href="http://wx.cdiuu.cn/proxy_qrcode.asp?url2={{selfUri+user.id}}&url=http://h5w.axiij.cn/&bgimg=/img/qrcode_bg/8.jpg&qrsize=&left=-1&top=42&lx=1" style="text-decoration:none"><img width="120" src="/img/qrcode_bg/8.jpg"/></a>
+			<a href="http://wx.cdiuu.cn/proxy_qrcode.asp?url2={{selfUri+user.id}}&url=http://h5w.axiij.cn/&bgimg=/img/qrcode_bg/9.jpg&qrsize=&left=-1&top=42&lx=1" style="text-decoration:none"><img width="120" src="/img/qrcode_bg/9.jpg"/></a>
+			</div> 
+			<!--<ion-item class="item-icon-left item-icon-right" >
+                <i class="icon ion-android-clipboard"></i>
+                <a href="http://{{user.host}}:88/daili/proxy_qrcode.asp?id={{user.id}}&url=http://{{user.host}}/&bgimg=/img/qrcode_bg/1.png" style="text-decoration:none">获取二维码海报(红包)</a>
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item>
+			<ion-item class="item-icon-left item-icon-right" >
+                <i class="icon ion-android-clipboard"></i>
+                <a href="http://{{user.host}}:88/daili/proxy_qrcode.asp?id={{user.id}}&url=http://{{user.host}}/&bgimg=/img/qrcode_bg/2.jpg" style="text-decoration:none">获取二维码海报(美女)</a>
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item>
+			<ion-item class="item-icon-left item-icon-right" >
+                <i class="icon ion-android-clipboard"></i>
+                <a href="http://{{user.host}}:88/daili/proxy_qrcode.asp?id={{user.id}}&url=http://{{user.host}}/&bgimg=/img/qrcode_bg/3.jpg&top=48&qrsize=42" style="text-decoration:none">获取二维码海报(马云)</a>
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item> -->
+
+			<ion-item class="item-divider"></ion-item>
+            <ion-item class="item-icon-left item-icon-right" ui-sref="tab.account-proxy-create">
+                <i class="icon ion-android-add"></i>
+                手动创建下线账号
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item>
+
+            <ion-item class="item-icon-left item-icon-right" ui-sref="tab.account-proxy-users">
+                <i class="icon ion-person-stalker"></i>
+                我邀请的人
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item>
+
+
+     <!--       <ion-item class="item-icon-left item-icon-right" ui-sref="tab.account-proxy-logs-red">
+                <i class="icon ion-ios-heart-outline"></i>
+                红包游戏返佣
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item> -->
+
+            <!--
+			<ion-item class="item-icon-left item-icon-right" ui-sref="tab.account-proxy-logs-pc">
+                <i class="icon ion-ios-heart-outline"></i>
+                PC团队返佣
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item> -->
+
+			<ion-item class="item-icon-left item-icon-right" ui-sref="tab.account-proxy-recharge-do">
+                <i class="icon ion-arrow-up-a"></i>
+                代理上分 </span>
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item>
+            <ion-item class="item-icon-left item-icon-right" ui-sref="tab.account-proxy-recharge-log">
+                <i class="icon ion-android-clipboard"></i>
+                上分记录
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item>
+            <ion-item class="item-icon-left item-icon-right" ui-sref="tab.account-proxy-unRecharge-do">
+                <i class="icon ion-arrow-down-a"></i>
+                代理下分 </span>
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item>
+            <ion-item class="item-icon-left item-icon-right" ui-sref="tab.account-proxy-unRecharge-log">
+                <i class="icon ion-android-clipboard"></i>
+                下分记录
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item>
+        </ion-list>
+
+<!--
+        <div class="list">
+            <div class="item card">
+                <div class="row clearfix">
+                    <div class="left">天煞反击战 <span style="color:chartreuse;">+150.00</span></div>
+                    <div class="right">1988-11-21</div>
+                </div>
+            </div>
+
+            <div class="item card">
+                <div class="row clearfix">
+                    <div class="left">天煞反击战 <span style="color:chartreuse;">+150.00</span></div>
+                    <div class="right">1988-11-21</div>
+                </div>
+            </div>
+
+            <div class="item" ng-show="forWithdraw" style="border: 0;">
+                <button class="button button-block button-positive button-green" ui-sref="tab.account-withdraw">其他</button>
+            </div>
+        </div>-->
+    </ion-content>
+</ion-view>

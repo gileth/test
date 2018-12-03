@@ -1,0 +1,44 @@
+﻿<!--
+Create tabs with an icon and label, using the tabs-positive style.
+Each tab's child <ion-nav-view> directive will have its own
+navigation history that also transitions its views in and out.
+-->
+<ion-tabs class="tabs-icon-top tabs-color-active-positive" ng-class="{'tabs-item-hide': hideTabs}" style="background-color: #2f3847;">
+<!--
+  <ion-tab title="注册" class="tab-icon" hidden="{{user != null && user != undefined}}" icon-off="register-off" icon-on="register-on" href="#/register">
+    <ion-nav-view name="register"></ion-nav-view>
+  </ion-tab>
+  <ion-tab title="登录" class="tab-icon" hidden="{{user != null && user != undefined}}" icon-off="login-off" icon-on="login-on" href="#/login">
+    <ion-nav-view name="login"></ion-nav-view>
+  </ion-tab>
+
+-->
+
+
+
+<!--  <ion-tab title="资金" class="tab-icon" hidden="{{user == null || user == undefined}}" icon-off="funds-off" icon-on="funds-on" href="#/tab/account/rechargeAndWithdraw">
+    <ion-nav-view name="tab-account-rechargeAndWithdraw"></ion-nav-view>
+  </ion-tab> -->
+
+
+    <ion-tab title="大厅" class="tab-icon" icon-off="hall-off" icon-on="hall-on" href="#/tab/rooms">
+        <ion-nav-view name="tab-rooms"></ion-nav-view>
+    </ion-tab>
+    <ion-tab title="商城" class="tab-icon" icon-off="shop-off" icon-on="shop-on" href="/tab/shop">
+        <ion-nav-view name="tab-shop"></ion-nav-view>
+    </ion-tab>
+   <ion-tab title="建群" class="tab-icon" icon-off="users-off" icon-on="users-on" href="/tab/create">
+        <ion-nav-view name="tab-create"></ion-nav-view>
+    </ion-tab>
+   <ion-tab title="客服" class="tab-icon" icon-off="users-off" icon-on="users-on" href="#/kf"> 
+        <ion-nav-view name="tab-kf"></ion-nav-view>
+    </ion-tab> 
+   <ion-tab title="账户" class="tab-icon" icon-off="member-off" icon-on="member-on" href="#/tab/account">
+        <ion-nav-view name="tab-account"></ion-nav-view>
+    </ion-tab>
+
+
+<!--  <ion-tab title="客服" class="tab-icon" icon-off="help-off" icon-on="help-on" href="#/kf">
+    <ion-nav-view name="tab-kf"></ion-nav-view>
+  </ion-tab>-->
+</ion-tabs>

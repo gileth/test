@@ -1,0 +1,13 @@
+<ion-view view-title="绑定手机-输入验证码" need-login>
+    <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+        <ion-nav-back-button>返回</ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content>
+        <div class="list list-inset">
+            <label class="item item-input">
+                <input type="text" placeholder="请输入收到的短信验证码" ng-model="smsCode">
+            </label>
+            <button class="button button-block button-positive button-green" ng-click="bindMobile(smsCode)">确定</button>
+        </div>
+    </ion-content>
+</ion-view>

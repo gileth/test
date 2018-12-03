@@ -1,0 +1,22 @@
+<ion-view view-title="发包记录" need-login>
+    <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+        <ion-nav-back-button>返回</ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content>
+        <ion-refresher pulling-text="下拉刷新列表..." on-refresh="doRefresh()">
+        </ion-refresher>
+        <ion-list>
+            <div class="item rec-history" ng-repeat="r in records" ng-click="openDetailModal(r)">
+                <div class="row clearfix" >
+                    <div class="left">{{r.roomName}}</div>
+                    <div class="right" style="color: red;">￥{{r.money.toFixed(2)}}</div>
+                </div>
+                <div class="row time">
+                    {{r.createTime}}
+                </div>
+            </div>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="loadMore()" ng-if="!noMoreItemsAvailable">
+        </ion-infinite-scroll>
+    </ion-content>
+</ion-view>

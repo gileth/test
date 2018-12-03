@@ -1,0 +1,117 @@
+<ion-view view-title="{{room.name}}" class="chat-view" hide-tabs="true">
+    <ion-header-bar align-title="center" class="bar-dark bar-header-black">
+        <div class="buttons">
+            <button class="button button-icon icon ion-arrow-left-c" ng-click="back()"></button>
+        </div>
+        <div class="title">{{room.name}}</div>
+        <div class="buttons"><!--
+            <button class="button button-icon icon" ng-class="{false: 'ion-ios-play-outline', true: 'ion-ios-play'}[isGameBegin]"
+                    ng-click="handUp()" ng-if="user.id"></button>-->
+
+            <button class="button button-icon icon ion-navicon" ng-click="openRoomMenu($event)"
+                    ng-disabled="user == null || user.id == null || user.id == undefined"></button>
+        </div>
+    </ion-header-bar>
+    <div class="has-header room-alert-wrapper" ng-show="alert.content"
+         ng-class="{'room-alert-active': alert.active, '': !alert.active, 'room-alert-hide': alert.hide}">
+        <div class="room-alert">
+            <span ng-bind="alert.content"></span>
+        </div>
+    </div>
+    <div class="room-pwd-mask" ng-if="pwdInput"></div>
+    <div class="room-menu-mask" ng-click="closeRoomMenu()" ng-style="menuMaskStyle">
+        <div class="room-menu" ng-style="menuStyle">
+            <ul>
+                <li class="room-menu-item" ng-click="gotoAccount()">
+                    <i class="ion-person room-menu-icon"></i>我的账户<span style="font-size:11px">(<span style="color:greenyellow">金币</span>
+                    <span style="color:red">{{balance ? balance : '...'}}</span>)</span>
+                </li>
+                <li class="room-menu-item" ng-click="openMembersModal()">
+                    <i class="ion-person-stalker room-menu-icon"></i>成员列表
+                </li>
+                <li class="room-menu-item" ng-click="openDescModal()">
+                    <i class="ion-ios-game-controller-b room-menu-icon"></i>游戏说明
+                </li>
+                <li class="room-menu-item" ng-click="startMaster()" ng-if="room.owner == user.id" >
+                    <i class="ion-ios-game-controller-b room-menu-icon"></i><span style="color:greenyellow">开始标庄</span>
+                </li>
+                <li class="room-menu-item" ng-click="check1()" ng-if="room.owner == user.id">
+                    <i class="ion-ios-game-controller-b room-menu-icon"></i><span style="color:greenyellow">标桩确认</span>
+                </li>
+                <li class="room-menu-item" ng-click="startBet()" ng-if="room.owner == user.id">
+                    <i class="ion-ios-game-controller-b room-menu-icon"></i><span style="color:greenyellow">开始下注</span>
+                </li>
+                <li class="room-menu-item" ng-click="finishBet()" ng-if="room.owner == user.id">
+                    <i class="ion-ios-game-controller-b room-menu-icon"></i><span style="color:greenyellow">下注结束</span>
+                </li>
+                <li class="room-menu-item" ng-click="sendRed()" ng-if="room.owner == user.id">
+                    <i class="ion-ios-game-controller-b room-menu-icon"></i><span style="color:greenyellow">发包</span>
+                </li>
+                <li class="room-menu-item" ng-click="masterDown()" ng-if="room.owner == user.id">
+                    <i class="ion-ios-game-controller-b room-menu-icon"></i><span style="color:greenyellow">下庄</span>
+                </li>
+                <li class="room-menu-item" ng-click="resetGame()" ng-if="room.owner == user.id" >
+                    <i class="ion-ios-game-controller-b room-menu-icon"></i><span style="color:greenyellow">重置游戏</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--<ion-scroll></ion-scroll>-->
+    <ion-content class="chat-content" ng-class="{'kb-open': emojiOpen}" delegate-handle="mainScroll"
+                 overflow-scroll="false" on-scroll-complete="scrollComplete()" on-hold="onHold()"
+                 on-release="onRelease()">
+        <ion-refresher on-refresh="loadMoreMessages()" paging="false"></ion-refresher>
+        <ion-list>
+            <ion-item ng-repeat="item in visibleMessages" class="item-borderless chat-item"
+                      ng-class="{'item-avatar':item.showAvatar&&item.align=='left','item-avatar-right':item.showAvatar&&item.align=='right'}">
+                <img ng-src="{{item.headImg}}" ng-if="item.showAvatar" ng-click="openPopover($event, item)">
+                <span class="chat-triangle-left" ng-if="item.align=='left'"
+                      ng-class="{'lottery':item.lottery, 'yellow-bg': item.sender>0, 'red-bg':item.sender==0}"></span>
+                <div align="{{item.align}}">
+                    <div class="chat-item-nick" ng-show="item.align=='left'"
+                         ng-class="{'room-owner': room.owner == item.sender}">
+                        <span ng-show="room.owner == item.sender">(管理员)</span>
+                        <span>{{item.nickName}}</span>
+                    </div>
+                    <div class="chat-item-text {{item.style}}" ng-if="!item.lottery"
+                         ng-bind-html="item.content|trustHtml"></div>
+                    <div class="chat-item-lottery" ng-if="item.lottery"
+                         ng-class="{true:'yellow-bg', false:'red-bg'}[item.sender>0]"
+                         ng-click="openLottery(item.content.id, $event)">
+                        <div class="lottery-up">
+                            <img src="img/lottery/lottery.png" class="lottery-img {{item.style}}">
+                            <div class="lottery-content {{item.style}}">
+                                <div ng-class="{0: 'room-menu-icon'}[item.content.sender]">
+                                    {{item.content.description?item.content.description:'新春快乐，万事如意!'}}
+                                </div>
+                                <div>游戏红包</div>
+                            </div>
+                        </div>
+
+                        <div class="lottery-down">
+                            <div style="line-height: 30px; font-size: 14px; color: #808080; margin-left: 10px;">
+                                {{appTitle}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span class="chat-triangle-right" ng-if="item.align=='right'" ng-class="{'lottery':item.lottery}"></span>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+    <ion-footer-bar keyboard-attach ng-class="{'kb-open': emojiOpen}">
+        <div class="buttons">
+            <button class="button button-touzhu" ng-click="bet05()"></button>
+            <button class="button button-master" ng-click="beMaster()"></button>
+        </div>
+        <div class="{{className}}" style="left: 100px;right: 40px;">
+            <input id="chatMsgInput" class="chat-input" ng-model="content" ng-keydown="keyEnter($event)">
+        </div>
+        <div class="buttons">
+            <button class="button" ng-click="send()">发送</button>
+        </div>
+    </ion-footer-bar>
+    <!--<div class="emoji-board" ng-class="{'kb-close': !emojiOpen}">-->
+    <!--<i class="emoji" ng-repeat="emoji in emojiList" ng-bind="emoji" ng-click="insertEmoji(emoji)"></i>-->
+    <!--</div>-->
+</ion-view>

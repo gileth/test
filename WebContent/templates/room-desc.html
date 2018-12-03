@@ -1,0 +1,12 @@
+<ion-modal-view>
+  <ion-header-bar align-title="left" class="bar-dark bar-header-black">
+    <h1 class="title">游戏说明</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeDescModal()">关闭</button>
+    </div>
+  </ion-header-bar>
+  <ion-content >
+     <div style="text-align: left; color: grey; margin-left: 10px;margin-top: 10px;margin-right: 10px;"
+          ng-bind-html="room.detail|trustHtml"></div>
+  </ion-content>
+</ion-modal-view>

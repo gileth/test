@@ -1,0 +1,31 @@
+<ion-view view-title="我的提现记录" need-login>
+    <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+        <ion-nav-back-button>返回</ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content>
+        <ion-refresher pulling-text="下拉刷新列表..." on-refresh="doRefresh()"></ion-refresher>
+        <div class="list">
+            <div ng-if="records.length==0" style="margin: 10px;color: grey">
+                没有任何记录.
+            </div>
+            <div class="item rec-history" ng-repeat="r in records">
+                <div class="row clearfix">
+                    <div class="left">{{r.finishtime}}</div>
+                    <div class="right" style="color: red;">￥{{r.fee.toFixed(2)}}</div>
+                </div>
+                <div class="row bank-name">
+                    {{r.bankName}}
+                </div>
+                <div class="row clearfix">
+                    <div class="card-no left">
+                        <span class="star">**** **** **** </span>{{r.account.substring(r.account.length - 4)}}
+                    </div>
+                    <div class="right withdraw-status withdraw-status-{{r.status}}">
+                        {{r.status == '2' ? '提现成功' : r.status == '1' ? '审核中' : '提现失败'}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ion-infinite-scroll on-infinite="loadMore()" ng-if="!noMoreItemsAvailable"></ion-infinite-scroll>
+    </ion-content>
+</ion-view>

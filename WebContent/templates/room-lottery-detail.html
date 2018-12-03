@@ -1,0 +1,41 @@
+<ion-modal-view class="lottery-detail-view">
+    <ion-header-bar class="bar-assertive lottery-detail-header" align-title="center">
+        <div class="buttons">
+            <button class="button button-clear" ng-click="closeDetailModal()">关闭</button>
+        </div>
+        <h1 class="title">红包详情</h1>
+    </ion-header-bar>
+    <ion-content class="lottery-detail-content">
+        <ion-list>
+            <ion-item class="lottery-detail-title">
+                <div class="lottery-detail-north"></div>
+                <div class="lottery-detail-avatar">
+                    <img ng-src="{{detail.lottery.headImg}}" class="lottery-detail-sender-head">
+                </div>
+                <div class="lottery-detail-owner">
+                    {{detail.lottery.nickName}}的红包
+                </div>
+                <div class="lottery-detail-description">
+                    {{detail.lottery.description}}
+                </div>
+
+                <div class="lottery-detail-owner" style="margin-top:15px;margin-bottom: 15px;"  ng-show="detail.lottery.mine!=null">
+                    <span style="font-size:40px;">{{detail.lottery.mine}}</span> 金币
+                </div>
+            </ion-item>
+            <ion-item class="item-divider lottery-detail-list">
+                已经领取{{detail.lottery.number}}个 , 共{{detail.lottery.money}}金币
+            </ion-item>
+            <ion-item class="item-avatar" ng-repeat="d in detail.body">
+                <img ng-src="{{d.headImg}}">
+                <div class="lottery-detail-nickName">
+                    <span>{{d.nickName}}</span><br>
+                    <span class="lottery-detail-time">{{d.time}}</span>
+                </div>
+                <div class="lottery-detail-coin">
+                    {{d.coin == 0?'***':d.coin.toFixed(2)}}
+                </div>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-modal-view>

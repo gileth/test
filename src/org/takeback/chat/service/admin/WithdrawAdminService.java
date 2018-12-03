@@ -6,7 +6,7 @@ package org.takeback.chat.service.admin;
 
 import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
-import org.takeback.chat.utils.SmsUtil2;
+import org.takeback.chat.utils.SmsUtil;
 import java.io.Serializable;
 import org.takeback.chat.entity.PubUser;
 import org.takeback.util.exception.CodedBaseRuntimeException;
@@ -32,7 +32,7 @@ public class WithdrawAdminService extends MyListService
         final PubUser user = this.dao.get(PubUser.class, uid);
         final Double fee = Double.valueOf(data.get("fee").toString());
         if ("2".equals(status) && user.getMobile() != null && !"".equals(user.getMobile())) {
-            SmsUtil2.send(user.getMobile(), "\u60a8\u7684\u63d0\u73b0\u7533\u8bf7\u5df2\u7ecf\u5904\u7406\u6210\u529f,\u8bf7\u6ce8\u610f\u67e5\u6536!");
+            SmsUtil.send(user.getMobile(), "\u60a8\u7684\u63d0\u73b0\u7533\u8bf7\u5df2\u7ecf\u5904\u7406\u6210\u529f,\u8bf7\u6ce8\u610f\u67e5\u6536!");
         }
         if ("9".equals(status)) {
             final String hql2 = "update PubUser set chargeAmount=chargeAmount + :water , money=money+ :money where id = :id";
@@ -42,7 +42,7 @@ public class WithdrawAdminService extends MyListService
             param.put("id", uid);
             this.dao.executeUpdate(hql2, param);
             if (user.getMobile() != null && !"".equals(user.getMobile())) {
-                SmsUtil2.send(user.getMobile(), "\u60a8\u7684\u63d0\u73b0\u7533\u8bf7\u6ca1\u6709\u901a\u8fc7\u5ba1\u6838,\u8bf7\u5c3d\u5feb\u5904\u7406\u5e76\u91cd\u65b0\u63d0\u4ea4\u7533\u8bf7!");
+                SmsUtil.send(user.getMobile(), "\u60a8\u7684\u63d0\u73b0\u7533\u8bf7\u6ca1\u6709\u901a\u8fc7\u5ba1\u6838,\u8bf7\u5c3d\u5feb\u5904\u7406\u5e76\u91cd\u65b0\u63d0\u4ea4\u7533\u8bf7!");
             }
         }
         super.save(req);

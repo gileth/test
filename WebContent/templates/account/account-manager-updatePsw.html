@@ -1,0 +1,21 @@
+<ion-view view-title="修改密码" need-login>
+    <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+        <ion-nav-back-button>返回</ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content>
+        <div class="list list-inset">
+            <label class="item item-input">
+                <input type="password" placeholder="请输入原密码" ng-model="oldPwd">
+            </label>
+            <label class="item item-input">
+                <input type="password" placeholder="请输入新密码" ng-model="newPwd">
+            </label>
+            <label class="item item-input">
+                <input type="password" placeholder="请再次输入新密码" ng-model="confirmPwd">
+            </label>
+            <button class="button button-block button-positive button-green"
+                    ng-click="updatePsw(oldPwd,newPwd,confirmPwd)">确定
+            </button>
+        </div>
+    </ion-content>
+</ion-view>

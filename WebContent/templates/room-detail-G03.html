@@ -1,0 +1,261 @@
+<ion-view view-title="{{room.name}}" class="chat-view" hide-tabs="true">
+    <ion-header-bar align-title="center" class="bar-dark bar-header-black">
+        <div class="buttons">
+            <button class="button button-icon icon ion-arrow-left-c" ng-click="back()"></button>
+        </div>
+        <div class="title">{{room.name}}</div>
+        <div class="buttons">
+            <button class="button button-icon icon" ng-class="{'qz-status-forbidden disabled': isGameBegin}"
+                    ng-click="goTrend()">走势
+            </button>
+            <button class="button button-icon icon ion-navicon" ng-click="openRoomMenu($event)"
+                    ng-disabled="user == null || user.id == null || user.id == undefined"></button>
+        </div>
+    </ion-header-bar>
+    <div class="has-header room-alert-wrapper" ng-show="alert.content"
+         ng-class="{'room-alert-active': alert.active, '': !alert.active, 'room-alert-hide': alert.hide}">
+        <div class="room-alert">
+            <span ng-bind="alert.content"></span>
+        </div>
+    </div>
+    <div class="room-menu-mask" ng-click="closeRoomMenu()" ng-style="menuMaskStyle">
+        <div class="room-menu" ng-style="menuStyle">
+            <ul>
+                <li class="room-menu-item" ng-click="gotoAccount()">
+                    <i class="ion-person room-menu-icon"></i>我的账户<span style="font-size:11px">(<span style="color:greenyellow">￥</span>
+                    <span style="color:red">{{balance ? balance : '...'}}</span>)</span>
+                </li>
+                <li class="room-menu-item" ng-click="openMembersModal()">
+                    <i class="ion-person-stalker room-menu-icon"></i>成员列表
+                </li>
+                <li class="room-menu-item" ng-click="openDescModal()">
+                    <i class="ion-ios-game-controller-b room-menu-icon"></i>游戏说明
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="has-header result-p">
+        <div class="timer-p">
+            <span>距离<i style="color:red;">{{termId}}</i>期还剩</span>
+            <span class="time-num" ng-bind="hour1 ? hour1 : 0">0</span><span class="time-num" ng-bind="hour2 ? hour2 : 0">0</span><span style="color: red;">:</span>
+            <span class="time-num" ng-bind="minute1 ? minute1 : 0">0</span><span class="time-num" ng-bind="minute2 ? minute2 : 0">0</span><span style="color: red;">:</span>
+            <span class="time-num" ng-bind="second1 ? second1 : 0">0</span><span class="time-num" ng-bind="second2 ? second2 : 0">0</span>
+        </div>
+        <div class="timer-p" ng-if="stopTime">
+            <span>距离封盘时间还剩</span>
+            <span class="time-num" ng-bind="stopSecond1 ? stopSecond1 : 0">0</span><span class="time-num" ng-bind="stopSecond2 ? stopSecond2 : 0">0</span>
+        </div>
+        <div class="history-p" ng-click="toggleHistory()">
+            第<span style="color:#F30124;font-weight: 400;">{{logs[0].id}}</span>期:&nbsp;&nbsp;
+            <span ng-if="logs[0].exp"><span style="font-weight: 400;">{{logs[0].exp}}={{logs[0].lucky}}</span>  {{logs[0].special}}</span>
+            <span ng-if="!logs[0].exp" style="font-weight:normal">等待开奖中...</span>
+            <div class="history-10">
+                近10期开奖:
+                <span style="color:#F30124;font-size: 15px;margin-left: 5px;">{{simpleWord}}</span>
+                <i class="expander"
+                   ng-class="{true: 'ion-ios-arrow-down', false: 'ion-ios-arrow-up', undefined: 'ion-ios-arrow-up'}[historyListShow]"></i>
+                <div class="history-list" ng-show="historyListShow">
+                    <table>
+                        <tr ng-repeat="log in logs">
+                            <td><span class="his-info">{{log.id}}</span>期</td>
+                            <td class="his-info">{{log.exp}}={{log.lucky}} {{log.special}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<ion-scroll></ion-scroll>-->
+    <ion-content class="chat-content isG03" delegate-handle="mainScroll" overflow-scroll="false" on-scroll-complete="scrollComplete()" on-hold="onHold()"
+                 on-release="onRelease()">
+        <ion-refresher on-refresh="loadMoreMessages()" paging="false"></ion-refresher>
+        <ion-list>
+            <ion-item ng-repeat="item in visibleMessages" class="item-borderless chat-item"
+                      ng-class="{'item-avatar':item.showAvatar&&item.align=='left','item-avatar-right':item.showAvatar&&item.align=='right'}">
+                <img ng-src="{{item.headImg}}" ng-if="item.showAvatar" ng-click="openPopover($event, item)">
+                <span class="chat-triangle-left" ng-if="item.align=='left'" ng-class="{'lottery':item.lottery, 'yellow-bg': item.sender>0, 'red-bg':item.sender==0}"></span>
+                <div align="{{item.align}}">
+                    <div class="chat-item-nick" ng-show="item.align=='left'" ng-class="{'room-owner': room.owner == item.sender}">
+                        <!--<span ng-show="room.owner == item.sender">(房主)</span>
+                        <span>{{item.nickName}}</span> 红包上面的昵称显示 -->
+                    </div>
+                    <div class="chat-item-text {{item.style}}" ng-if="!item.lottery" ng-bind-html="item.content|trustHtml"></div>
+                    <div class="chat-item-lottery" ng-if="item.lottery" ng-class="{true:'yellow-bg', false:'red-bg'}[item.sender>0]"
+                         ng-click="openLottery(item.content.id, $event)">
+                        <div class="lottery-up">
+                            <img src="img/lottery/lottery.png" class="lottery-img {{item.style}}">
+                            <div class="lottery-content {{item.style}}">
+                                <div ng-class="{0: 'room-menu-icon'}[item.content.sender]">
+                                    {{item.content.description?item.content.description:'新春快乐，万事如意!'}}
+                                </div>
+                                <div> {{item.content.title}}</div>
+                            </div>
+                        </div>
+
+                        <div class="lottery-down">
+                            <div style="line-height: 30px; font-size: 14px; color: #808080; margin-left: 10px;">
+                                幸运二八
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span class="chat-triangle-right" ng-if="item.align=='right'" ng-class="{'lottery':item.lottery}"></span>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+    <ion-footer-bar keyboard-attach>
+        <div class="buttons">
+            <button class="button button-touzhu" ng-click="openModal($event)"></button>
+            <button class="button button-cancel" ng-click="cancelPcEggBet()"></button>
+        </div>
+        <div class="{{className}}" style="left: 100px;right: 40px;">
+            <input id="chatMsgInput" class="chat-input" ng-model="content" ng-keydown="keyEnter($event)">
+        </div>
+        <div class="buttons">
+            <button class="button" ng-click="send()">发送</button>
+        </div>
+    </ion-footer-bar>
+</ion-view>
+<div class="touzhu-p" ng-if="touzhuPadShow">
+    <div class="touzhu-mask" ng-click="hideTouzhuPad()"></div>
+    <div class="touzhu-pad-all clearfix" ng-class="'show-' + (currentTouzhuPad ? currentTouzhuPad : 'c')">
+        <div class="touzhu-pad left">
+            <div class="mask" ng-click="switchToLeft();" ng-show="currentTouzhuPad != 'l'"></div>
+            <div class="title">
+                <div class="fk"></div>
+                <span>猜数字</span>
+                <div class="fk"></div>
+            </div>
+            <div class="tz-desc">和值为购买数字即中奖</div>
+            <table class="number">
+                <tr>
+                    <td ng-repeat="rate in pcRates.num.slice(0, 7)" ng-class="{'selected': currentTouzhuPad == 'l' && selectedRate.param == rate.param}" ng-click="switchTz(rate)">
+                        <p><strong>{{rate.alias}}</strong></p><p>1:{{rate.val}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td ng-repeat="rate in pcRates.num.slice(7, 14)" ng-class="{'selected': currentTouzhuPad == 'l' && selectedRate.param == rate.param}" ng-click="switchTz(rate)">
+                        <p><strong>{{rate.alias}}</strong></p><p>1:{{rate.val}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td ng-repeat="rate in pcRates.num.slice(14, 21)" ng-class="{'selected': currentTouzhuPad == 'l' && selectedRate.param == rate.param}" ng-click="switchTz(rate)">
+                        <p><strong>{{rate.alias}}</strong></p><p>1:{{rate.val}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td ng-repeat="rate in pcRates.num.slice(21, 28)" ng-class="{'selected': currentTouzhuPad == 'l' && selectedRate.param == rate.param}" ng-click="switchTz(rate)">
+                        <p><strong>{{rate.alias}}</strong></p><p>1:{{rate.val}}</p>
+                    </td>
+                </tr>
+            </table>
+            <div class="tz-btn-group">
+                <button class="button v50" ng-class="{'input-selected': currentTouzhuPad == 'l' && touzhuState.inputSelected}" ng-click="calculateAmount(0)">
+                    <span ng-if="currentTouzhuPad == 'l' && !touzhuState.inputSelected">立即充值</span>
+                </button>
+                <button class="button v100" ng-class="{'input-selected': currentTouzhuPad == 'l' && touzhuState.inputSelected}" ng-click="calculateAmount(1)">
+                    <span ng-if="currentTouzhuPad == 'l' && !touzhuState.inputSelected">下10金币</span>
+                </button>
+                <button class="button v200" ng-class="{'input-selected': currentTouzhuPad == 'l' && touzhuState.inputSelected}" ng-click="calculateAmount(2)">
+                    <span ng-if="currentTouzhuPad == 'l' && !touzhuState.inputSelected">加倍投注</span>
+                </button>
+            </div>
+            <div class="balance">
+                余额：{{balance ? balance : 0.00}}
+            </div>
+            <div class="result">
+                <input placeholder="最低：2, 最高：20000" type="number" ng-click="switchInputSelected()" ng-model="touzhuState.amount">
+                <button class="button button-touzhu" ng-click="pcEggBet()" ng-class="{'disabled': touzhuState.betting}"></button>
+            </div>
+        </div>
+        <div class="touzhu-pad center">
+            <div class="mask" ng-click="switchToCenter();" ng-show="currentTouzhuPad != 'c'"></div>
+            <div class="title">
+                <div class="fk"></div>
+                <span>大小单双</span>
+                <div class="fk"></div>
+            </div>
+            <div class="tz-desc">和值为单数即中奖</div>
+            <table class="number">
+                <tr>
+                    <td ng-repeat="rate in pcRates.bs.slice(0, 5)" ng-class="{'selected': currentTouzhuPad == 'c' && selectedRate.param == rate.param}" ng-click="switchTz(rate)">
+                        <p><strong>{{rate.alias}}</strong></p><p>1:{{rate.val}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td ng-repeat="rate in pcRates.bs.slice(5, 10)" ng-class="{'selected': currentTouzhuPad == 'c' && selectedRate.param == rate.param}" ng-click="switchTz(rate)">
+                        <p><strong>{{rate.alias}}</strong></p><p>1:{{rate.val}}</p>
+                    </td>
+                </tr>
+            </table>
+            <div class="tz-btn-group">
+                <button class="button v50" ng-class="{'input-selected': currentTouzhuPad == 'c' &&touzhuState.inputSelected}" ng-click="calculateAmount(0)">
+                    <span ng-if="currentTouzhuPad == 'c' && !touzhuState.inputSelected">立即充值</span>
+                </button>
+                <button class="button v100" ng-class="{'input-selected': currentTouzhuPad == 'c' &&touzhuState.inputSelected}" ng-click="calculateAmount(1)">
+                    <span ng-if="currentTouzhuPad == 'c' && !touzhuState.inputSelected">下10金币</span>
+                </button>
+                <button class="button v200" ng-class="{'input-selected': currentTouzhuPad == 'c' &&touzhuState.inputSelected}" ng-click="calculateAmount(2)">
+                    <span ng-if="currentTouzhuPad == 'c' && !touzhuState.inputSelected">加倍投注</span>
+                </button>
+            </div>
+            <div class="balance">
+                余额：{{balance ? balance : 0.00}}
+            </div>
+            <div class="result">
+                <input placeholder="最低：2, 最高：20000" type="number" ng-click="switchInputSelected()" ng-model="touzhuState.amount">
+                <button class="button button-touzhu" ng-click="pcEggBet()" ng-class="{'disabled': touzhuState.betting}"></button>
+            </div>
+        </div>
+
+        <div class="touzhu-pad right">
+            <div class="mask" ng-click="switchToRight();" ng-show="currentTouzhuPad != 'r'"></div>
+            <div class="title">
+                <div class="fk"></div>
+                <span>特殊玩法</span>
+                <div class="fk"></div>
+            </div>
+            <div class="tz-desc">特殊玩法</div>
+            <table class="number">
+                <tr>
+                    <td ng-repeat="rate in pcRates.spc.slice(0, 1)" ng-class="{'selected': currentTouzhuPad == 'r' && selectedRate.param == rate.param}" ng-click="switchTz(rate)">
+                        <p style="color: rgb(255, 116, 116);">{{rate.alias}}</p><p>1:{{rate.val}}</p>
+                        <p style="color: rgb(224, 42, 10);" class="tz-spec-desc">{{rate.info}}</p>
+                    </td>
+                    <td ng-repeat="rate in pcRates.spc.slice(1, 2)" ng-class="{'selected': currentTouzhuPad == 'r' && selectedRate.param == rate.param}" ng-click="switchTz(rate)">
+                        <p style="color: rgb(113, 222, 71);">{{rate.alias}}</p><p>1:{{rate.val}}</p>
+                        <p style="color: rgb(113, 222, 71);" class="tz-spec-desc">{{rate.info}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td ng-repeat="rate in pcRates.spc.slice(2, 3)" ng-class="{'selected': currentTouzhuPad == 'r' && selectedRate.param == rate.param}" ng-click="switchTz(rate)">
+                        <p style="color: rgb(94, 200, 255);">{{rate.alias}}</p><p>1:{{rate.val}}</p>
+                        <p style="color: rgb(94, 200, 255);" class="tz-spec-desc">{{rate.info}}</p>
+                    </td>
+                    <td ng-repeat="rate in pcRates.spc.slice(3, 4)" ng-class="{'selected': currentTouzhuPad == 'r' && selectedRate.param == rate.param}" ng-click="switchTz(rate)">
+                        <p style="color: rgb(251, 231, 204);">{{rate.alias}}</p><p>1:{{rate.val}}</p>
+                        <p style="color: rgb(251, 231, 204);" class="tz-spec-desc">{{rate.info}}</p>
+                    </td>
+                </tr>
+            </table>
+            <div class="tz-btn-group">
+                <button class="button v50" ng-class="{'input-selected': currentTouzhuPad == 'r' && touzhuState.inputSelected}" ng-click="calculateAmount(0)">
+                    <span ng-if="currentTouzhuPad == 'r' && !touzhuState.inputSelected">立即充值</span>
+                </button>
+                <button class="button v100" ng-class="{'input-selected': currentTouzhuPad == 'r' && touzhuState.inputSelected}" ng-click="calculateAmount(1)">
+                    <span ng-if="currentTouzhuPad == 'r' && !touzhuState.inputSelected">下10金币</span>
+                </button>
+                <button class="button v200" ng-class="{'input-selected': currentTouzhuPad == 'r' && touzhuState.inputSelected}" ng-click="calculateAmount(2)">
+                    <span ng-if="currentTouzhuPad == 'r' && !touzhuState.inputSelected">加倍投注</span>
+                </button>
+            </div>
+            <div class="balance">
+                余额：{{balance ? balance : 0.00}}
+            </div>
+            <div class="result">
+                <input placeholder="最低：2, 最高：20000" type="number" ng-click="switchInputSelected()" ng-model="touzhuState.amount">
+                <button class="button button-touzhu" ng-click="pcEggBet()" ng-class="{'disabled': touzhuState.betting}"></button>
+            </div>
+        </div>
+    </div>
+</div>

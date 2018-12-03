@@ -1,0 +1,22 @@
+﻿<ion-view view-title="礼品商城">
+    <ion-header-bar align-title="center" class="bar-positive bar-header-black">
+        <h1 class="title">礼品商城</h1>
+        <div class="buttons">
+        </div>
+    </ion-header-bar>
+    <ion-content overflow-scroll="false">
+        <div class="padding" style="background-color: #F1E9CF;color:#8E7525;margin: 1px;">
+            每天 12:30 统一处理昨日(00:00-24:00)的订单!
+        </div>
+        <ion-list>
+            <ion-item ng-repeat="record in records" class="item-thumbnail-left" ng-click="goShop(record.id)">
+                <img ng-src="{{record.listImg}}" width="160" height="160">
+                <h3 class="item-title">{{record.name}}</h3>
+                <p class="item-desc">{{record.summary}}</p>
+                <div class="item-btm "><p class="clearfix"><span class="item-price">{{record.money}}</span> <span style="color: green;font-size: 11px;margin-left: 3px;">金币 </span> <span class="item-buys"><span style="color:orange;font-size:11px;">{{record.exchanged}}</span>人兑换</span></p></div>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll on-infinite="loadMore()" ng-if="!noMoreItemsAvailable">
+        </ion-infinite-scroll>
+    </ion-content>
+</ion-view>

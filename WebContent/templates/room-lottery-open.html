@@ -1,0 +1,22 @@
+<ion-popover-view class="lottery-cover-view">
+    <ion-content scroll="false" class="lottery-cover">
+        <div class="north">
+            <div class="close" ng-click="closeLottery()">+</div>
+            <div class="avatar">
+                <div class="avatar-wrap">
+                    <img ng-src="{{lottery.headImg}}">
+                </div>
+            </div>
+            <div class="nickName">
+                <span>{{lottery.nickName}}</span>
+            </div>
+            <div class="hint">发送了一个红包</div>
+            <div class="msg">{{lottery.content.description}}</div>
+        </div>
+        <div class="chai" ng-class="{true:'chai-rotate'}[opening]" ng-click="realOpenLottery(lottery.content.id)">
+            <div class="chai-border">
+                <span class="kai">開</span>
+            </div>
+        </div>
+    </ion-content>
+</ion-popover-view>

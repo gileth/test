@@ -1,0 +1,29 @@
+<ion-view view-title="我的银行卡" need-login>
+    <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+        <ion-nav-back-button>返回</ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content>
+        <div class="padding" style="background-color: #F1E9CF;color:#8E7525;margin: 1px;" ng-show="forWithdraw">
+            请从以下列表里选择收款的银行卡
+        </div>
+        <ion-refresher pulling-text="下拉刷新列表..." on-refresh="refreshCards()"></ion-refresher>
+        <div class="list">
+            <div ng-if="cards.length==0" style="margin: 10px;color: grey">
+                没有任何记录.
+            </div>
+            <div class="item card" ng-repeat="card in cards" ng-click="gotoWithdraw(card)">
+                <div class="row clearfix">
+                    <div class="left">{{card.bankName}}</div>
+                    <div class="right">{{card.createTime}}</div>
+                </div>
+                <div class="row clearfix">
+                    <div class="card-no left"><span class="star">**** **** **** </span>{{card.account.substring(card.account.length - 4)}}</div>
+                    <div class="right" ng-show="selected == card.id"><i class="ion-checkmark"></i></div>
+                </div>
+            </div>
+            <div class="item" ng-show="forWithdraw" style="border: 0;">
+                <button class="button button-block button-positive button-green" ui-sref="tab.account-withdraw">其他</button>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

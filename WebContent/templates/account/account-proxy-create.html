@@ -1,0 +1,25 @@
+<ion-view view-title="创建下线账号">
+  <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+      <ion-nav-back-button>返回</ion-nav-back-button>
+  </ion-nav-bar>
+
+  <ion-content class="login-main">
+    <div class="list list-inset">
+        <label class="item item-input">
+            <i class="icon ion-person placeholder-icon"></i>
+            <input type="text" placeholder="请输入帐号" ng-model="data.username">
+        </label>
+        <label class="item item-input">
+            <i class="icon ion-key placeholder-icon"></i>
+            <input type="password" placeholder="请设置密码" ng-model="data.password" >
+        </label>
+        <label class="item item-input">
+            <i class="icon ion-key placeholder-icon"></i>
+            <input type="password" placeholder="请再次输入密码" ng-model="data.password_c">
+        </label>
+        <button class="button button-block button-positive button-green" ng-click="createUser()">创建账号</button>
+
+    </div>
+  </ion-content>
+
+</ion-view>

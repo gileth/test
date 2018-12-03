@@ -1,0 +1,46 @@
+<ion-view view-title="充值提现" need-login>
+    <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+        <ion-nav-buttons>
+            <button class="button back-button buttons button-clear header-item" ui-sref="tab.account">
+                <!--<i class="icon" ng-class="{{backButtonIcon}}"></i>-->
+                我的帐户
+            </button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-content>
+        <ion-list>
+            <ion-item class="item-thumbnail-left">
+                <img ng-src="{{user.headImg}}" style="border-radius: 40px;">
+                <div style="padding-top: 18px;">
+                    <h2>{{user.nickName}}</h2>
+                    <p><img src="img/gold.png" width="15" height="15">
+                        <span style="display: inline-block; margin-left: 5px; color: red;">{{user.money}}</span>
+                    </p>
+                </div>
+            </ion-item>
+            <ion-item class="row">
+                <div class="col" style="text-align: center;" ui-sref="tab.account-recharge">充值</div>
+                <div class="col" style="text-align: center;"
+                     ui-sref="tab.account-cards({target:'tab.account-withdraw'})">提现
+                </div>
+            </ion-item>
+            <ion-item class="item-divider"></ion-item>
+            <ion-item class="item-icon-left item-icon-right" ui-sref="tab.account-cards">
+                <i class="icon ion-person"></i>
+                我的银行卡
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item>
+            <ion-item class="item-divider"></ion-item>
+           <!-- <ion-item class="item-icon-left item-icon-right" ui-sref="tab.account-recharge-history">
+                <i class="icon ion-home"></i>
+                我的充值记录
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item> -->
+            <ion-item class="item-icon-left item-icon-right" ui-sref="tab.account-withdraw-history">
+                <i class="icon ion-android-hand"></i>
+                我的提现记录
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

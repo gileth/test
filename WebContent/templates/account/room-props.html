@@ -1,0 +1,72 @@
+<ion-view view-title="房间参数" need-login>
+    <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+        <ion-nav-back-button>返回</ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content>
+        <ion-list  style="font-size: 12px;">
+            <ion-item class="">
+                <div style="font-size: 14px;">
+                    <span><strong style="font-size: 22px;">{{room.name}}</strong></span>
+                    <strong style="color:forestgreen">(限{{room.limitNum}}人)</strong><br><br>
+                    房间抽佣 <strong style="color:red;font-size:26px;font-style:italic">{{room.sumFee}} </strong> (金币)
+                    单次服务费<strong ng-show="room.type=='G011'" style="color:red"> {{room.feeAdd}}金币</strong>
+                    <strong ng-show="room.type!='G011'" style="color:red"> {{room.feeAdd *100}}%</strong>
+                    <br>
+                </div>
+            </ion-item>
+
+            <ion-item class="item-divider"></ion-item>
+            <ion-item class="item-icon-left item-icon-right" ng-click="updateProp(room.id,'id','房间ID')" style="font-size: 12px;">
+                <i class="icon ion-pinpoint"></i>
+                <span >房 间 I D：</span><strong>{{room.id}}</strong>&nbsp;
+                <i class="icon ion-ios-compose-outline item-note"></i>
+            </ion-item>
+            <ion-item class="item-icon-left item-icon-right" ng-click="updateProp(room.id,'name','房间名称')" style="font-size: 12px;">
+                <i class="icon ion-ios-paper"></i>
+                <span >房间名称：</span><strong >{{room.name}}</strong>&nbsp;
+                <i class="icon ion-ios-compose-outline item-note"></i>
+            </ion-item>
+            <ion-item class="item-icon-left item-icon-right" ng-click="updateProp(room.id,'psw','房间密码')" style="font-size: 12px;">
+                <i class="icon ion-ios-locked"></i>
+                <span >房间密码：</span><strong ng-if="!room.psw">无密码</strong><strong ng-if="room.psw">{{room.psw}}</strong>&nbsp;
+                <i class="icon ion-ios-compose-outline item-note"></i>
+            </ion-item>
+
+            <ion-item class="item-divider"></ion-item>
+
+
+
+            <ion-item class="item-icon-left item-icon-right" style="font-size: 12px;" ng-click="addMoney(room.id)">
+                <i class="icon ion-ios-home"></i>
+                <div class="clearfix">
+                    <span style="float: left;">剩余房费：</span><strong style="color:red;font-style:italic" ng-bind="qunInfo.restMoney"></strong>金币
+                    <span class="item-note room-note" >追加房费</span>
+                </div>
+                <i class="icon ion-ios-plus-empty item-note"></i>
+            </ion-item>
+
+
+            <ion-item class="item-divider"></ion-item>
+
+            <ion-item class="item-icon-left item-icon-right" ui-sref="tab.account-room-my-members({roomId:room.id})" style="font-size: 12px;">
+                <i class="icon ion-android-contacts"></i>
+                <span >群成员管理</span></span>
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item>
+
+            <ion-item class="item-divider"></ion-item>
+
+            <ion-item ng-repeat="prop in props" class="item-icon-right" ng-click="updateProp(room.id,prop.key,prop.alias)">
+                <span style="font-size: 12px;" ng-bind="prop.alias"></span>:&nbsp;<strong ng-bind="prop.value"></strong>
+                <i class="icon ion-ios-compose-outline item-note"></i>
+            </ion-item>
+
+            <ion-item class="item-divider"></ion-item>
+            <ion-item class="item-icon-left item-icon-right" ng-click="dismiss(room.id)" style="font-size: 12px;">
+                <i class="icon ion-android-delete"></i>
+                <span style="color:red">解散房间</span>
+                <i class="icon ion-ios-close-empty item-note"></i>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

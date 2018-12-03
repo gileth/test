@@ -1,0 +1,50 @@
+<ion-view view-title="抢包记录" need-login>
+    <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+        <ion-nav-back-button>返回</ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content>
+        <ion-refresher pulling-text="下拉刷新列表..." on-refresh="doRefresh()">
+        </ion-refresher><!--
+        <ion-list>
+            <div class="item rec-history" ng-repeat="r in records">
+                <div class="row clearfix">
+                    <div class="left">{{r.roomName}}</div>
+                    <div class="right" style="color: rgba(128, 128, 128, 0.51);">{{r.createTime}}</div>
+                </div>
+                <div class="row time">
+                    <span>金币：</span>
+                    <span style="color:orange">{{r.money.toFixed(2)}}</span>
+                    <span style="" ng-if="r.desc1">({{r.desc1}})</span>
+                    <span style="margin-left: 72px;">输赢：</span>
+                    <strong ng-if="r.inoutNum>0" style="color:red">金币+{{r.inoutNum}}</strong>
+                    <strong ng-if="r.inoutNum<0" style="color:green">金币{{r.inoutNum}}</strong>
+                    <strong ng-if="r.inoutNum==0" >金币+0</strong>
+                </div>
+            </div>
+        </ion-list>-->
+		<button class="button button-block button-positive button-green"  ui-sref="tab.account">返回</button>
+        <div class="list">
+            <div ng-if="records.length==0" style="margin: 10px;color: grey">
+                没有任何记录.
+            </div>
+            <div class="item card" ng-repeat="r in records">
+                <div class="row clearfix" ng-show="r.inoutNum>0">
+                    <div class="left"><span style="color:grey;font-weight: bold">{{r.roomName}} </span></div>
+                    <div class="right"><span style="color:grey">{{r.createTime}}</span></div>
+                    <br>
+                    <div class="left"><span style="color:grey">金币：{{r.money.toFixed(2)}}({{r.desc1}})</span><span style="color:orangered;">+{{r.inoutNum}}金币</span></div>
+                </div>
+
+                <div class="row clearfix" ng-show="r.inoutNum<=0">
+                    <div class="left"><span style="color:grey;font-weight: bold">{{r.roomName}}</span></div>
+                    <div class="right"><span style="color:grey">{{r.createTime}}</span></div>
+                    <br>
+                    <div class="left"><span style="color:forestgreen">金币：{{r.money.toFixed(2)}}({{r.desc1}})</span><span style="color:forestgreen;"> {{r.inoutNum}}金币</span></div>
+                </div>
+            </div>
+        </div>
+
+        <ion-infinite-scroll on-infinite="loadMore()" ng-if="!noMoreItemsAvailable">
+        </ion-infinite-scroll>
+    </ion-content>
+</ion-view>

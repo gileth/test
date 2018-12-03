@@ -46,7 +46,7 @@ import org.takeback.chat.store.user.User;
 import java.util.Objects;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.takeback.mvc.listener.SessionListener;
-import org.takeback.chat.utils.SmsUtil;
+import org.takeback.chat.utils.SmsUtil3;
 import org.takeback.util.valid.ValidateUtil;
 import java.util.Date;
 import org.takeback.util.encrypt.CryptoUtils;
@@ -215,7 +215,7 @@ public class UserController
         final Long rand = Math.round(Math.random() * 1000000.0);
         final String msg = "\u60a8\u7684\u9a8c\u8bc1\u7801\u4e3a:" + rand.toString();
         try {
-            SmsUtil.send(mobile, msg);
+            SmsUtil3.send(mobile, msg);
             WebUtils.setSessionAttribute(request, "mobile", (Object)mobile);
             WebUtils.setSessionAttribute(request, "mobileCode", (Object)rand.toString());
             WebUtils.setSessionAttribute(request, "mobileCodeTime", (Object)new Date());

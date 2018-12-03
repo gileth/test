@@ -1,0 +1,43 @@
+<ion-modal-view class="lottery-view">
+  <ion-header-bar class="bar-assertive" align-title="center">
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeModal()">关闭</button>
+    </div>
+    <h1 class="title">发红包</h1>
+  </ion-header-bar>
+  <ion-content>
+    <div class="list list-inset">
+      <label class="item item-input lottery-label">
+        <span class="input-label label-auto-width">红包个数</span>
+        <input type="number" class="lottery-money" placeholder="填写个数" ng-model="data.number" ng-keydown="numberFilter($event)" >
+
+        <span class="input-label label-auto-width">个包</span>
+      </label>
+      <br>
+      <label class="item item-input lottery-label">
+        <span class="input-label label-auto-width">总金额</span>
+
+        <input type="number"  placeholder="填写总数" class="lottery-money" ng-disabled="room.type=='G022'" ng-model="data.money" ng-keydown="numberFilter($event)" >
+<script>
+
+</script>
+        <span class="input-label label-auto-width">{{lotteryUnit}}</span>
+      </label>
+      <br>
+      <label class="item item-input lottery-label">
+        <textarea ng-show="room.type!='G04'" placeholder="{{lotteryDescription}}" class="lottery-description" ng-model="data.description"></textarea>
+
+        <textarea ng-show="room.type=='G04'" placeholder="输入地雷点数(0-9)" class="lottery-description" ng-model="data.description"  ng-keydown="numberFilter($event)"></textarea>
+
+      </label>
+      <br>
+      <div class="lottery-money-led">
+        <h1>{{data.moneyLed}}<span style="font-size:20px;">金币</span></h1>
+      </div>
+      <br>
+      <button class="button button-block button-assertive" ng-disabled="btnDisabled" ng-click="send(1)">
+        塞金币进红包
+      </button>
+    </div>
+  </ion-content>
+</ion-modal-view>

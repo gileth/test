@@ -1,0 +1,13 @@
+<ion-view view-title="绑定手机" need-login>
+  <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+    <ion-nav-back-button>返回</ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content>
+    <div class="list list-inset">
+      <label class="item item-input">
+        <input type="text" placeholder="请输入新的手机号码" ng-model="newMobile">
+      </label>
+      <button class="button button-block button-positive button-green" ng-click="sendSmsCode(newMobile)">确定</button>
+    </div>
+  </ion-content>
+</ion-view>

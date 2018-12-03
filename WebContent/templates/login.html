@@ -1,0 +1,44 @@
+﻿<ion-view>
+<ion-content class="home-body">
+<div class="main_wrap">
+<div class="header">
+  <div class="container clearfix">
+    <div id="main_title">
+      <h1 style="color: white">快来8</h1>
+    </div>
+  </div>
+</div>
+<div class="notice">
+  <div class="notice_inner">
+    <ul>
+      <li style="line-height: 30px;    height: 30px;">
+        <marquee behavior="scroll">
+        欢迎来到快来8！
+        </marquee>
+        <div id="scrollobj" style="white-space:nowrap;overflow:hidden;"><span></span></div>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="home-body">
+<label class="item item-input"> <i class="icon ion-person placeholder-icon"></i>
+<input type="text" placeholder="帐号" ng-model="data.username">
+</label>
+<label class="item item-input"> <i class="icon ion-key placeholder-icon"></i>
+<input type="password" placeholder="密码" ng-model="data.password">
+</label>
+<ul class="list">
+<button class="button button-block button-positive button-body" ng-click="doLogin()"> 登录游戏 </button>
+<button class="button button-block button-positive button-body" ui-sref="register"> 注册账号 </button>
+
+<div style="text-align:center;    BACKGROUND-COLOR: #FFF;margin-bottom: 10px;">
+<a href="/wx_login"><img src="img/login/wxlogin.jpg" style="width:250px;margin-top:8px;"><br /></a> 
+</div>
+<!-- <div class="item item-borderless"><label class="checkbox"><input type="checkbox" ng-model="data.autoLogin">记住账号和密码</label></div> 
+				 <div class="item item-borderless">
+				<span ui-sref="tab.rooms" class="item-note">返回首页看看</span>
+               <label class="third-login-title"></label>
+            </div>    -->
+</div>
+</ion-content>
+</ion-view>

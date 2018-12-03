@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<organ name="technology company">
+    <properties>
+        <p name="address">#1000 xxx RD</p>
+        <p name="telephone">QQ:835177944</p>
+        <p name="system">仅供学习交流请勿违法运营</p>
+        <p name="version">V6.0</p>
+        <p name="company">红包大作战</p>
+        <p name="email">835177944@qq.com</p>
+    </properties>
+    <installedApps>
+        <app id="app.lottery"/>
+        <app id="app.system"/>
+    </installedApps>
+    <unit id="default" name="管理团队">
+
+    </unit>
+</organ>

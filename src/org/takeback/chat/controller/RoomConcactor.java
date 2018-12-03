@@ -105,7 +105,7 @@ public class RoomConcactor
                 this.lock.unlock();
             }
         }
-        final List<GcRoomKickLog> kickLogs = null;//this.roomService.findByHql("from GcRoomKickLog where kickTime>=:t and  roomId=:roomId and uid =:uid ", (Map<Object, Object>)ImmutableMap.of("t", DateUtil.getDateBeforeSeconds(RoomService.KICK_TIME), "roomId", id, "uid", uid), 1, 1);
+        final List<GcRoomKickLog> kickLogs = this.roomService.findByHql("from GcRoomKickLog where kickTime>=:t and  roomId=:roomId and uid =:uid ",ImmutableMap.of("t", DateUtil.getDateBeforeSeconds(RoomService.KICK_TIME), "roomId", id, "uid", uid), 1, 1);
         if (kickLogs.size() > 0) {
             return ResponseUtils.jsonView(500, "\u7981\u6b62\u8fdb\u5165\u623f\u95f4.");
         }
@@ -118,7 +118,7 @@ public class RoomConcactor
     @RequestMapping({ "/list/{pageNo}" })
     public ModelAndView rooms(@PathVariable final Integer pageNo, final HttpServletRequest request) {
         String s = "";
-        final Map<String, String> params = new HashMap<String,String>();
+        final Map<String, Object> params = new HashMap<String,Object>();
         final String cata = request.getParameter("cata");
         final String type = request.getParameter("type");
         if (!StringUtils.isEmpty((CharSequence)cata)) {
@@ -129,11 +129,11 @@ public class RoomConcactor
             s = " and a.type = :p";
             params.put("p", type);
         }
-        final List<GcRoom> rooms = null;//this.roomService.findByHql("from GcRoom a where a.status !='9'" + s + " order by a.hot desc, a.createdate desc", params, 100, pageNo);
+        final List<GcRoom> rooms = this.roomService.findByHql("from GcRoom a where a.status !='9'" + s + " order by a.hot desc, a.createdate desc", params, 100, pageNo);
         if (rooms == null || rooms.size() == 0) {
             return ResponseUtils.jsonView(new ArrayList());
         }
-        final List<Room> result = new ArrayList<Room>();//(List<Room>)Lists.newArrayList();
+        final List<Room> result = Lists.newArrayList();
         for (final GcRoom room : rooms) {
             result.add(this.roomStore.get(room.getId()));
         }

@@ -30,8 +30,8 @@ public class OnlineUserService extends MyListServiceInt
         }
         final int limit = (Integer) req.get(OnlineUserService.LIMIT);
         final int page = (Integer) req.get(OnlineUserService.PAGE);
-        final Map<Integer, List<String>> users = SessionListener.getUsers();
-        final Set<Integer> keyset = users.keySet();
+        final Map<String, List<String>> users = SessionListener.getUsers();
+        final Set<String> keyset = users.keySet();
         final Integer start = (page - 1) * limit;
         final Integer end = start + limit;
         final Iterator itr = keyset.iterator();

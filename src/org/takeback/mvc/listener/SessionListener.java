@@ -23,10 +23,10 @@ import javax.servlet.http.HttpSessionListener;
 public class SessionListener implements HttpSessionListener, HttpSessionAttributeListener
 {
     private static final Logger log;
-    private static Map<Integer, List<String>> users;
+    private static Map<String, List<String>> users;
     
-    public static Map<Integer, List<String>> getUsers() {
-        return Collections.unmodifiableMap((Map<? extends Integer, ? extends List<String>>)SessionListener.users);
+    public static Map<String, List<String>> getUsers() {
+        return Collections.unmodifiableMap((Map<? extends String, ? extends List<String>>)SessionListener.users);
     }
     
     public static List<String> getUser(final int uid) {
@@ -45,7 +45,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
         return SessionListener.users.get(uid) != null;
     }
     
-    private void login(final int uid, final String sid) {
+    private void login(final String uid, final String sid) {
         List<String> sids = SessionListener.users.get(uid);
         if (sids == null) {
             sids = new CopyOnWriteArrayList<String>();
@@ -72,7 +72,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
         if ("$uid".equals(se.getName())) {
             final String uid = (String) se.getValue();
             final String sid = se.getSession().getId();
-            this.login(Integer.parseInt(uid), sid);
+            this.login(uid, sid);
         }
     }
     
@@ -96,6 +96,6 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
     
     static {
         log = LoggerFactory.getLogger((Class)SessionListener.class);
-        SessionListener.users = new ConcurrentHashMap<Integer, List<String>>();
+        SessionListener.users = new ConcurrentHashMap<String, List<String>>();
     }
 }

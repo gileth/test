@@ -32,7 +32,7 @@ public class ShopService extends BaseService
     
     @Transactional
     public PubExchangeLog getContactInfo(final Integer id) {
-        final List<PubExchangeLog> list = this.dao.findByHql("from PubExchangeLog where uid =:uid order by id desc", ImmutableMap.of( "uid", (Object)id));
+        final List<PubExchangeLog> list = this.dao.findByHql("from PubExchangeLog where uid =:uid order by id desc", ImmutableMap.of( "uid", id));
         if (list.size() == 0) {
             return null;
         }

@@ -34,7 +34,7 @@ public class RoomAdminService extends MyListService
             if (defaults != null) {
                 for (final GcRoomProperty prop : defaults) {
                     prop.setRoomId(id);
-                    this.dao.getSession().save((Object)prop);
+                    this.dao.getSession().save(prop);
                 }
             }
         }

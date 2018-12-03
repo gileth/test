@@ -67,7 +67,7 @@ public class LogonManager
         if (StringUtils.isEmpty((CharSequence)verifycode) || !verifycode.equalsIgnoreCase((String)WebUtils.getSessionAttribute(request, "verifycode"))) {
             return ResponseUtils.createBody(504, "\u9a8c\u8bc1\u7801\u4e0d\u6b63\u786e");
         }
-        WebUtils.setSessionAttribute(request, "verifycode", (Object)null);
+        WebUtils.setSessionAttribute(request, "verifycode", null);
         final User user = AccountCenter.getUser(uid);
         if (user == null) {
             return ResponseUtils.createBody(503, "\u7528\u6237\u4e0d\u5b58\u5728");
@@ -100,8 +100,8 @@ public class LogonManager
         user.setLastsignintime(logintime);
         user.setLastsigninip(ServletUtils.getClientIP(request));
         this.baseService.update(User.class, user);
-        WebUtils.setSessionAttribute(request, "$uid", (Object)user.getId());
-        WebUtils.setSessionAttribute(request, "$urt", (Object)urt.getId());
+        WebUtils.setSessionAttribute(request, "$uid", user.getId());
+        WebUtils.setSessionAttribute(request, "$urt", urt.getId());
         LogonManager.log.info(uid + " logon with role " + urt.getRoleid() + " at " + new DateTime().toString("yyyy-MM-dd HH:mm:ss") + ",IP:" + ServletUtils.getClientIP(request));
         return ResponseUtils.createBody(urtMap);
     }

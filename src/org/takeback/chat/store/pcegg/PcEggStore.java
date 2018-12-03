@@ -179,7 +179,7 @@ public class PcEggStore
         try {
             final PcEggLog pel = this.load(egg.getId());
             if (pel == null) {
-                PcEggStore.LOGGER.error("Cannot load data for term id: {}", (Object)egg.getId());
+                PcEggStore.LOGGER.error("Cannot load data for term id: {}", egg.getId());
                 return false;
             }
             if (pel.getLucky() != null) {
@@ -193,7 +193,7 @@ public class PcEggStore
             return true;
         }
         catch (Exception e) {
-            PcEggStore.LOGGER.error("Failed to fetch new data for term id: {}", (Object)egg.getId(), (Object)e);
+            PcEggStore.LOGGER.error("Failed to fetch new data for term id: {}", egg.getId(), e);
             return false;
         }
     }
@@ -219,7 +219,7 @@ public class PcEggStore
                 }
                 simpleWord2 = ((simpleWord.length() > 1) ? simpleWord.substring(1) : simpleWord);
                 l = latest.getExpireTime().getTime() - System.currentTimeMillis();
-                content = ImmutableMap.of((Object)"termId", (Object)latest.getId(), (Object)"expireTime", (Object)latest.getExpireTime(), (Object)"remainSeconds", (Object)(int)Math.floor(l / 1000L), (Object)"simpleWord", (Object)simpleWord2, (Object)"logs", (Object)this.getCache());
+                content = ImmutableMap.of("termId", latest.getId(), "expireTime", latest.getExpireTime(), "remainSeconds", (int)Math.floor(l / 1000L), "simpleWord", simpleWord2, "logs", this.getCache());
                 rms = this.roomStore.getByType("G03");
                 rms.iterator();
                 while (iterator2.hasNext()) {
@@ -294,7 +294,7 @@ public class PcEggStore
                 lastTime = DateUtils.parseDate(latest_time, new String[] { "yyyy-MM-dd HH:mm:ss" });
             }
             catch (ParseException e) {
-                PcEggStore.LOGGER.error("Failed to parse date: {}", (Object)latest_time, (Object)e);
+                PcEggStore.LOGGER.error("Failed to parse date: {}", latest_time, e);
                 return null;
             }
         }

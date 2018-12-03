@@ -106,7 +106,7 @@ public class PayOrderFactory implements InitializingBean
         catch (IOException e) {
             throw new PaymentException("Failed to get open id.", e);
         }
-        if (resultObject.containsKey((Object)"errcode")) {
+        if (resultObject.containsKey("errcode")) {
             throw new PaymentException("Failed to get open id, caused by: " + resultObject.get("errmsg"));
         }
         return resultObject.get("openid").toString();

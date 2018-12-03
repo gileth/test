@@ -36,7 +36,7 @@ public class LotterySchedule
                     if (!lottery.isOpen() && lottery.isExpired()) {
                         final String roomId = lottery.getRoomId();
                         final Room rm = this.roomStore.get(roomId);
-                        rm.getLotteries().invalidate((Object)lottery.getId());
+                        rm.getLotteries().invalidate(lottery.getId());
                         lottery = null;
                         room.showLotteries();
                     }

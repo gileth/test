@@ -53,6 +53,6 @@ public class DefaultUserStore implements UserStore
     
     @Override
     public void reload(final Serializable uid) {
-        this.store.invalidate((Object)uid);
+        this.store.invalidate(uid);
     }
 }

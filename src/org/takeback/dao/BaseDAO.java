@@ -42,73 +42,73 @@ public class BaseDAO implements IBaseDAO
     }
     
     public <T> void save(final Class<T> cls, final T t) {
-        BaseDAO.log.debug("saving {} instance", (Object)cls.getSimpleName());
+        BaseDAO.log.debug("saving {} instance", cls.getSimpleName());
         try {
-            this.getSession().save((Object)t);
+            this.getSession().save(t);
         }
         catch (DaoException re) {
-            BaseDAO.log.error("saving {} instance failed", (Object)cls.getSimpleName(), (Object)re);
+            BaseDAO.log.error("saving {} instance failed", cls.getSimpleName(), re);
             throw re;
         }
     }
     
     public <T> void delete(final Class<T> cls, final T t) {
-        BaseDAO.log.debug("deleting {} instance", (Object)cls.getSimpleName());
+        BaseDAO.log.debug("deleting {} instance", cls.getSimpleName());
         try {
-            this.getSession().delete((Object)t);
+            this.getSession().delete(t);
         }
         catch (DaoException re) {
-            BaseDAO.log.error("deleting {} instance failed", (Object)cls.getSimpleName(), (Object)re);
+            BaseDAO.log.error("deleting {} instance failed", cls.getSimpleName(), re);
             throw re;
         }
     }
     
     public <T> void delete(final String entityName, final Serializable id) {
-        BaseDAO.log.debug("deleting {} instance", (Object)entityName);
+        BaseDAO.log.debug("deleting {} instance", entityName);
         try {
             this.getSession().delete(entityName, this.get(entityName, id));
         }
         catch (DaoException re) {
-            BaseDAO.log.error("deleting {} instance failed", (Object)entityName, (Object)re);
+            BaseDAO.log.error("deleting {} instance failed", entityName, re);
             throw re;
         }
     }
     
     public <T> void update(final Class<T> cls, final T t) {
-        BaseDAO.log.debug("updating {} instance", (Object)cls.getSimpleName());
+        BaseDAO.log.debug("updating {} instance", cls.getSimpleName());
         try {
-            this.getSession().update((Object)t);
+            this.getSession().update(t);
         }
         catch (DaoException re) {
-            BaseDAO.log.error("updating {} instance failed", (Object)cls.getSimpleName(), (Object)re);
+            BaseDAO.log.error("updating {} instance failed", cls.getSimpleName(), re);
             throw re;
         }
     }
     
     public <T> void merge(final Class<T> cls, final T t) {
-        BaseDAO.log.debug("merge {} instance", (Object)cls.getSimpleName());
+        BaseDAO.log.debug("merge {} instance", cls.getSimpleName());
         try {
-            this.getSession().merge((Object)t);
+            this.getSession().merge(t);
         }
         catch (DaoException re) {
-            BaseDAO.log.error("merge {} instance failed", (Object)cls.getSimpleName(), (Object)re);
+            BaseDAO.log.error("merge {} instance failed", cls.getSimpleName(), re);
             throw re;
         }
     }
     
     public <T> void saveOrUpdate(final Class<T> cls, final T t) {
-        BaseDAO.log.debug("saving or updating {} instance", (Object)cls.getSimpleName());
+        BaseDAO.log.debug("saving or updating {} instance", cls.getSimpleName());
         try {
-            this.getSession().saveOrUpdate((Object)t);
+            this.getSession().saveOrUpdate(t);
         }
         catch (DaoException re) {
-            BaseDAO.log.error("saving or updating {} instance failed", (Object)cls.getSimpleName(), (Object)re);
+            BaseDAO.log.error("saving or updating {} instance failed", cls.getSimpleName(), re);
             throw re;
         }
     }
     
     public <T> T get(final Class<T> cls, final Serializable id) {
-        BaseDAO.log.debug("getting {} instance with id {}", (Object)cls.getSimpleName(), (Object)id);
+        BaseDAO.log.debug("getting {} instance with id {}", cls.getSimpleName(), id);
         try {
             final T instance = (T)this.getSession().get((Class)cls, id);
             return instance;
@@ -120,7 +120,7 @@ public class BaseDAO implements IBaseDAO
     }
     
     public <T> T get(final String entityName, final Serializable id) {
-        BaseDAO.log.debug("getting {} instance with id {}", (Object)entityName, (Object)id);
+        BaseDAO.log.debug("getting {} instance with id {}", entityName, id);
         try {
             final T instance = (T)this.getSession().get(entityName, id);
             return instance;
@@ -132,7 +132,7 @@ public class BaseDAO implements IBaseDAO
     }
     
     public <T> T getUnique(final String hql, final Object... pramas) {
-        BaseDAO.log.debug("get unique result with hql {}, with params {}", (Object)hql, (Object)pramas);
+        BaseDAO.log.debug("get unique result with hql {}, with params {}", hql, pramas);
         try {
             final Query q = this.getSession().createQuery(hql);
             for (int i = 0; i < pramas.length; ++i) {
@@ -160,7 +160,7 @@ public class BaseDAO implements IBaseDAO
     }
     
     public <T> T getUniqueByProps(final Class<T> cls, final Map<String, Object> props) {
-        BaseDAO.log.debug("finding {} instance with properties: {}", (Object)cls.getSimpleName(), (Object)props);
+        BaseDAO.log.debug("finding {} instance with properties: {}", cls.getSimpleName(), props);
         try {
             final Query queryObject = this.processHql(cls.getSimpleName(), props, null);
             return (T)queryObject.uniqueResult();
@@ -172,7 +172,7 @@ public class BaseDAO implements IBaseDAO
     }
     
     public int executeUpdate(final String hql, final Object[] pramas) {
-        BaseDAO.log.debug("executeUpdate with hql {}, with params {}", (Object)hql, (Object)pramas);
+        BaseDAO.log.debug("executeUpdate with hql {}, with params {}", hql, pramas);
         try {
             final Query q = this.getSession().createQuery(hql);
             for (int i = 0; i < pramas.length; ++i) {
@@ -187,7 +187,7 @@ public class BaseDAO implements IBaseDAO
     }
     
     public int executeUpdate(final String hql, final Map<String, Object> pramas) {
-        BaseDAO.log.debug("executeUpdate with hql {}, with params {}", (Object)hql, (Object)pramas);
+        BaseDAO.log.debug("executeUpdate with hql {}, with params {}", hql, pramas);
         try {
             final Query q = this.getSession().createQuery(hql);
             for (final String k : pramas.keySet()) {
@@ -226,9 +226,9 @@ public class BaseDAO implements IBaseDAO
     }
     
     public <T> List<T> findByExample(final Class<T> cls, final T instance) {
-        BaseDAO.log.debug("finding {} instance by example {}", (Object)cls.getSimpleName(), (Object)instance);
+        BaseDAO.log.debug("finding {} instance by example {}", cls.getSimpleName(), instance);
         try {
-            final List<T> results = (List<T>)this.getSession().createCriteria((Class)cls).add((Criterion)Example.create((Object)instance)).list();
+            final List<T> results = (List<T>)this.getSession().createCriteria((Class)cls).add((Criterion)Example.create(instance)).list();
             BaseDAO.log.debug("find by example successful, result size: " + results.size());
             return results;
         }
@@ -239,7 +239,7 @@ public class BaseDAO implements IBaseDAO
     }
     
     public <T> List<T> findByProperties(final Class<T> cls, final Map<String, Object> properties) {
-        BaseDAO.log.debug("finding {} instance with properties: {}", (Object)cls.getSimpleName(), (Object)properties);
+        BaseDAO.log.debug("finding {} instance with properties: {}", cls.getSimpleName(), properties);
         try {
             final Query queryObject = this.processHql(cls.getSimpleName(), properties, null);
             return (List<T>)queryObject.list();
@@ -251,7 +251,7 @@ public class BaseDAO implements IBaseDAO
     }
     
     public <T> List<T> findByProperties(final Class<T> cls, final Map<String, Object> properties, final String orderInfo) {
-        BaseDAO.log.debug("finding {} instance with properties: {}", (Object)cls.getSimpleName(), (Object)properties);
+        BaseDAO.log.debug("finding {} instance with properties: {}", cls.getSimpleName(), properties);
         try {
             final Query queryObject = this.processHql(cls.getSimpleName(), properties, orderInfo);
             return (List<T>)queryObject.list();
@@ -282,7 +282,7 @@ public class BaseDAO implements IBaseDAO
     }
     
     public <T> List<T> findByProperties(final Class<T> cls, final Map<String, Object> properties, final String... columns) {
-        BaseDAO.log.debug("finding {} instance with properties: {}", (Object)cls.getSimpleName(), (Object)properties);
+        BaseDAO.log.debug("finding {} instance with properties: {}", cls.getSimpleName(), properties);
         try {
             final StringBuilder queryString = new StringBuilder("select ");
             int columnsize = columns.length;

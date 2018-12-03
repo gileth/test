@@ -90,9 +90,9 @@ public class RoomConcactor
         }
         final String lastRoomId = (String)WebUtils.getSessionAttribute(request, "roomId");
         if (lastRoomId != null) {
-            WebUtils.setSessionAttribute(request, "lastRoomId", (Object)lastRoomId);
+            WebUtils.setSessionAttribute(request, "lastRoomId", lastRoomId);
         }
-        WebUtils.setSessionAttribute(request, "roomId", (Object)id);
+        WebUtils.setSessionAttribute(request, "roomId", id);
         final Integer uid = (Integer)WebUtils.getSessionAttribute(request, "$uid");
         if (uid != null) {
             try {
@@ -105,7 +105,7 @@ public class RoomConcactor
                 this.lock.unlock();
             }
         }
-        final List<GcRoomKickLog> kickLogs = null;//this.roomService.findByHql("from GcRoomKickLog where kickTime>=:t and  roomId=:roomId and uid =:uid ", (Map<Object, Object>)ImmutableMap.of((Object)"t", (Object)DateUtil.getDateBeforeSeconds(RoomService.KICK_TIME), (Object)"roomId", (Object)id, (Object)"uid", (Object)uid), 1, 1);
+        final List<GcRoomKickLog> kickLogs = null;//this.roomService.findByHql("from GcRoomKickLog where kickTime>=:t and  roomId=:roomId and uid =:uid ", (Map<Object, Object>)ImmutableMap.of("t", DateUtil.getDateBeforeSeconds(RoomService.KICK_TIME), "roomId", id, "uid", uid), 1, 1);
         if (kickLogs.size() > 0) {
             return ResponseUtils.jsonView(500, "\u7981\u6b62\u8fdb\u5165\u623f\u95f4.");
         }
@@ -173,7 +173,7 @@ public class RoomConcactor
         res.put("room", this.roomService.get(GcRoom.class, roomId));
         res.put("props", this.roomService.getRoomProps(roomId));
         res.put("qunInfo", this.roomService.getQunInfo(roomId));
-        return ResponseUtils.jsonView((Object)res);
+        return ResponseUtils.jsonView(res);
     }
     
     @AuthPassport
@@ -187,7 +187,7 @@ public class RoomConcactor
         if (!room.getOwner().equals(uid)) {
             return ResponseUtils.jsonView(404, "\u65e0\u6743\u6267\u884c\u8be5\u64cd\u4f5c!");
         }
-        final List<GcRoomMember> ls = null;//this.roomService.findByProperties(GcRoomMember.class, (Map<Object, Object>)ImmutableMap.of((Object)"roomId", (Object)roomId));
+        final List<GcRoomMember> ls = null;//this.roomService.findByProperties(GcRoomMember.class, (Map<Object, Object>)ImmutableMap.of("roomId", roomId));
         return ResponseUtils.jsonView(ls);
     }
     
@@ -291,7 +291,7 @@ public class RoomConcactor
         if (!room.getOwner().equals(uid)) {
             return ResponseUtils.jsonView(500, "\u65e0\u6743\u6267\u884c\u8be5\u64cd\u4f5c!");
         }
-        final List<GcRoomMember> ls = null;// this.roomService.findByProperties(GcRoomMember.class, (Map<Object, Object>)ImmutableMap.of((Object)"roomId", (Object)roomId));
+        final List<GcRoomMember> ls = null;// this.roomService.findByProperties(GcRoomMember.class, (Map<Object, Object>)ImmutableMap.of("roomId", roomId));
         Double fullRateExceptCurrent = 0.0;
         for (final GcRoomMember mb : ls) {
             if (!mb.getId().equals(m.getId())) {

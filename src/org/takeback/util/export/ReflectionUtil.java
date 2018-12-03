@@ -55,7 +55,7 @@ public class ReflectionUtil
             result = field.get(object);
         }
         catch (IllegalAccessException e) {
-            ReflectionUtil.logger.error((Object)("\u4e0d\u53ef\u80fd\u629b\u51fa\u7684\u5f02\u5e38{}" + e.getMessage()));
+            ReflectionUtil.logger.error(("\u4e0d\u53ef\u80fd\u629b\u51fa\u7684\u5f02\u5e38{}" + e.getMessage()));
         }
         return result;
     }
@@ -70,7 +70,7 @@ public class ReflectionUtil
             field.set(object, value);
         }
         catch (IllegalAccessException e) {
-            ReflectionUtil.logger.error((Object)("\u4e0d\u53ef\u80fd\u629b\u51fa\u7684\u5f02\u5e38:{}" + e.getMessage()));
+            ReflectionUtil.logger.error(("\u4e0d\u53ef\u80fd\u629b\u51fa\u7684\u5f02\u5e38:{}" + e.getMessage()));
         }
     }
     
@@ -132,16 +132,16 @@ public class ReflectionUtil
     public static Class getSuperClassGenricType(final Class<?> clazz, final int index) {
         final Type genType = clazz.getGenericSuperclass();
         if (!(genType instanceof ParameterizedType)) {
-            ReflectionUtil.logger.warn((Object)(clazz.getSimpleName() + "'s superclass not ParameterizedType"));
+            ReflectionUtil.logger.warn((clazz.getSimpleName() + "'s superclass not ParameterizedType"));
             return Object.class;
         }
         final Type[] params = ((ParameterizedType)genType).getActualTypeArguments();
         if (index >= params.length || index < 0) {
-            ReflectionUtil.logger.warn((Object)("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length));
+            ReflectionUtil.logger.warn(("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length));
             return Object.class;
         }
         if (!(params[index] instanceof Class)) {
-            ReflectionUtil.logger.warn((Object)(clazz.getSimpleName() + " not set the actual class on superclass generic parameter"));
+            ReflectionUtil.logger.warn((clazz.getSimpleName() + " not set the actual class on superclass generic parameter"));
             return Object.class;
         }
         return (Class)params[index];
@@ -208,7 +208,7 @@ public class ReflectionUtil
     public static void copyPorperties(final Object dest, final Object source, final String[] porperties) throws InvocationTargetException, IllegalAccessException {
         for (final String por : porperties) {
             final Object srcObj = invokeGetterMethod(source, por);
-            ReflectionUtil.logger.debug((Object)("\u5c5e\u6027\u540d\uff1a" + por + "------------- \u5c5e\u6027\u503c\uff1a" + srcObj));
+            ReflectionUtil.logger.debug(("\u5c5e\u6027\u540d\uff1a" + por + "------------- \u5c5e\u6027\u503c\uff1a" + srcObj));
             if (srcObj != null) {
                 try {
                     BeanUtils.setProperty(dest, por, srcObj);

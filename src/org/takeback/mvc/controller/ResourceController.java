@@ -63,7 +63,7 @@ public class ResourceController
         final String oFilename = file.getOriginalFilename();
         final String suffix = oFilename.contains(".") ? oFilename.substring(oFilename.lastIndexOf(".")) : "";
         final String deskName = StringUtils.join((Object[])new Serializable[] { System.currentTimeMillis(), suffix });
-        final File directory = new File(request.getSession().getServletContext().getRealPath(org.springframework.util.StringUtils.isEmpty((Object)filePath) ? this.fileDirectory : filePath));
+        final File directory = new File(request.getSession().getServletContext().getRealPath(org.springframework.util.StringUtils.isEmpty(filePath) ? this.fileDirectory : filePath));
         if (!directory.exists()) {
             directory.mkdirs();
         }
@@ -78,7 +78,7 @@ public class ResourceController
         try {
             final File deskFile = new File(directory.getAbsolutePath() + "/" + deskName);
             file.transferTo(deskFile);
-            return ResponseUtils.jsonView((Map<String, Object>)ImmutableMap.of("code", 200, "success",true,"body", (Object)map));
+            return ResponseUtils.jsonView(ImmutableMap.of("code", 200, "success",true,"body", map));
         }
         catch (IOException e) {
             return ResponseUtils.jsonView(500, "failure", deskName);

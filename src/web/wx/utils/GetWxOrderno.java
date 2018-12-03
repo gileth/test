@@ -39,7 +39,7 @@ public class GetWxOrderno
     public static String getCodeUrl(final String url, final String xmlParam) {
         System.out.println("xml\u662f:" + xmlParam);
         final DefaultHttpClient client = new DefaultHttpClient();
-        client.getParams().setParameter("http.protocol.allow-circular-redirects", (Object)true);
+        client.getParams().setParameter("http.protocol.allow-circular-redirects", true);
         final HttpPost httpost = HttpClientConnectionManager.getPostMethod(url);
         String code_url = "";
         try {
@@ -63,7 +63,7 @@ public class GetWxOrderno
     public static String getPayNo(final String url, final String xmlParam) {
         System.out.println("xml\u662f:" + xmlParam);
         final DefaultHttpClient client = new DefaultHttpClient();
-        client.getParams().setParameter("http.protocol.allow-circular-redirects", (Object)true);
+        client.getParams().setParameter("http.protocol.allow-circular-redirects", true);
         final HttpPost httpost = HttpClientConnectionManager.getPostMethod(url);
         String prepay_id = "";
         try {
@@ -88,7 +88,7 @@ public class GetWxOrderno
     public static String getMweb_url(final String url, final String xmlParam) {
         System.out.println("xml\u662f:" + xmlParam);
         final DefaultHttpClient client = new DefaultHttpClient();
-        client.getParams().setParameter("http.protocol.allow-circular-redirects", (Object)true);
+        client.getParams().setParameter("http.protocol.allow-circular-redirects", true);
         final HttpPost httpost = HttpClientConnectionManager.getPostMethod(url);
         String mweb_url = "";
         try {

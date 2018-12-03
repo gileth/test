@@ -37,29 +37,29 @@ public class AuthInterceptor extends HandlerInterceptorAdapter
         final String uid = request.getHeader("x-access-uid");
         if (uid == null || uid.equals("null")) {
             this.writeAuthorizeFailResponse(response);
-            AuthInterceptor.LOGGER.error("No x-access-uid found, failed to authorize, URI: {}.", (Object)request.getRequestURI());
+            AuthInterceptor.LOGGER.error("No x-access-uid found, failed to authorize, URI: {}.", request.getRequestURI());
             return false;
         }
         final User user = this.userStore.get(Integer.valueOf(uid));
         if (user == null) {
             this.writeAuthorizeFailResponse(response);
-            AuthInterceptor.LOGGER.error("User not found with id: {}, failed to authorize, URI: {}.", (Object)uid, (Object)request.getRequestURI());
+            AuthInterceptor.LOGGER.error("User not found with id: {}, failed to authorize, URI: {}.", uid, request.getRequestURI());
             return false;
         }
         final String token = request.getHeader("x-access-token");
         if (token == null) {
             this.writeAuthorizeFailResponse(response);
-            AuthInterceptor.LOGGER.error("No x-access-token found, failed to authorize, URI: {}.", (Object)request.getRequestURI());
+            AuthInterceptor.LOGGER.error("No x-access-token found, failed to authorize, URI: {}.", request.getRequestURI());
             return false;
         }
         if (!token.equals(user.getAccessToken())) {
             this.writeAuthorizeFailResponse(response);
-            AuthInterceptor.LOGGER.error("Token is not validate, failed to authorize, URI: {}.", (Object)request.getRequestURI());
+            AuthInterceptor.LOGGER.error("Token is not validate, failed to authorize, URI: {}.", request.getRequestURI());
             return false;
         }
         if (user.getTokenExpireTime().compareTo(new Date()) >= 0) {
             if (request.getSession(true).getAttribute("$uid") == null) {
-                request.getSession().setAttribute("$uid", (Object)user.getId());
+                request.getSession().setAttribute("$uid", user.getId());
             }
             return true;
         }
@@ -68,7 +68,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter
     }
     
     private void writeAuthorizeFailResponse(final HttpServletResponse response) throws IOException {
-        final String json = JSONUtils.toString(ImmutableMap.of((Object)"code", (Object)401, (Object)"msg", (Object)"\u8bf7\u767b\u5f55\u8d26\u53f7\u3002"));
+        final String json = JSONUtils.toString(ImmutableMap.of("code", 401, "msg", "\u8bf7\u767b\u5f55\u8d26\u53f7\u3002"));
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);

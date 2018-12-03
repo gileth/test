@@ -222,7 +222,7 @@ public class LotteryFactory
                             continue;
                         }
                         lottery.expired();
-                        room.getLotteries().invalidate((Object)tmp[0]);
+                        room.getLotteries().invalidate(tmp[0]);
                     }
                     catch (GameException e) {
                         LotteryFactory.LOGGER.error("FATAL: Set lottery to expire state failed: ", (Throwable)e);

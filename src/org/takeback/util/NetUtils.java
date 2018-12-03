@@ -143,7 +143,7 @@ public class NetUtils
             }
         }
         catch (Throwable e) {
-            NetUtils.logger.warn((Object)("Failed to retriving ip address, " + e.getMessage()), e);
+            NetUtils.logger.warn(("Failed to retriving ip address, " + e.getMessage()), e);
         }
         try {
             final Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
@@ -164,20 +164,20 @@ public class NetUtils
                                 continue;
                             }
                             catch (Throwable e2) {
-                                NetUtils.logger.warn((Object)("Failed to retriving ip address, " + e2.getMessage()), e2);
+                                NetUtils.logger.warn(("Failed to retriving ip address, " + e2.getMessage()), e2);
                             }
                         }
                     }
                     catch (Throwable e3) {
-                        NetUtils.logger.warn((Object)("Failed to retriving ip address, " + e3.getMessage()), e3);
+                        NetUtils.logger.warn(("Failed to retriving ip address, " + e3.getMessage()), e3);
                     }
                 }
             }
         }
         catch (Throwable e) {
-            NetUtils.logger.warn((Object)("Failed to retriving ip address, " + e.getMessage()), e);
+            NetUtils.logger.warn(("Failed to retriving ip address, " + e.getMessage()), e);
         }
-        NetUtils.logger.error((Object)"Could not get local host ip address, will use 127.0.0.1 instead.");
+        NetUtils.logger.error("Could not get local host ip address, will use 127.0.0.1 instead.");
         return localAddress;
     }
     

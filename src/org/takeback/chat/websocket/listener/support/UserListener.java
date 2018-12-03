@@ -73,7 +73,7 @@ public class UserListener implements ConnectListener, DisconnectListener, Transp
             user.setHandsUp(false);
             room.join(user);
             if ("G022".equals(room.getType())) {
-                final List<GcRoomMember> ls = this.lotteryService.findByProperties(GcRoomMember.class, (Map<String, Object>)ImmutableMap.of("roomId",(Object)roomId, "uid", (Object)uid));
+                final List<GcRoomMember> ls = this.lotteryService.findByProperties(GcRoomMember.class, ImmutableMap.of("roomId",roomId, "uid", uid));
                 if (ls.size() == 0) {
                     final GcRoomMember grm = new GcRoomMember();
                     grm.setIsPartner("0");
@@ -87,12 +87,12 @@ public class UserListener implements ConnectListener, DisconnectListener, Transp
                 }
             }
             needNotice = true;
-            UserListener.log.info("user {} join in the room {}", (Object)user.getUserId(), (Object)roomId);
+            UserListener.log.info("user {} join in the room {}", user.getUserId(), roomId);
         }
         else {
             final User user = new AnonymousUser(session);
             room.guestJoin((AnonymousUser)user);
-            UserListener.log.info("anonymous user {} join in the room {}", (Object)session.getId(), (Object)roomId);
+            UserListener.log.info("anonymous user {} join in the room {}", session.getId(), roomId);
         }
         if (needNotice) {
             final Map<String, Lottery> lotterys = (Map<String, Lottery>)room.getLotteries().asMap();
@@ -145,13 +145,13 @@ public class UserListener implements ConnectListener, DisconnectListener, Transp
         else {
             final User user = new AnonymousUser(session);
             room.guestLeft((AnonymousUser)user);
-            UserListener.log.info("anonymous user {} left the room {}", (Object)session.getId(), (Object)roomId);
+            UserListener.log.info("anonymous user {} left the room {}", session.getId(), roomId);
         }
     }
     
     private void letUserLeftRoom(final User user, final Room room, final boolean broadcast) {
         room.left(user);
-        UserListener.log.info("user {} left the room {}", (Object)user.getUserId(), (Object)room.getId());
+        UserListener.log.info("user {} left the room {}", user.getUserId(), room.getId());
         if (broadcast) {
             final List<FailedResult> results = MessageUtils.broadcast(room, new Message("TXT_SYS", user.getId(), user.getNickName() + " \u79bb\u5f00\u4e86\u623f\u95f4."));
             if (results.size() > 0) {}

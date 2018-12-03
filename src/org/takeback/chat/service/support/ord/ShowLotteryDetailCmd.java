@@ -73,7 +73,7 @@ public class ShowLotteryDetailCmd implements Command
             obj.put("uid", u.getId());
             obj.put("nickName", u.getNickName());
             obj.put("headImg", u.getHeadImg());
-            obj.put("time", new DateTime((Object)ld.getCreateDate()).toString("HH:mm:ss"));
+            obj.put("time", new DateTime(ld.getCreateDate()).toString("HH:mm:ss"));
             if (lottery.isOpen() && "0".equals(lottery.getStatus())) {
                 obj.put("coin", 0);
                 if (room.getType().startsWith("G01") || room.getType().startsWith("G022")) {

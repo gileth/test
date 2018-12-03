@@ -47,13 +47,13 @@ public class AuthorityService extends MyListService
                 }
                 BeanUtils.copy(user, oUser);
                 this.beforeSave(oUser);
-                this.dao.getSession().update((Object)oUser);
+                this.dao.getSession().update(oUser);
                 DictionaryController.instance().reload("dic.users");
                 UserController.instance().reload(id);
                 return;
             }
             this.beforeSave(user);
-            this.dao.getSession().save((Object)user);
+            this.dao.getSession().save(user);
             DictionaryController.instance().reload("dic.users");
         }
         catch (ClassNotFoundException e) {

@@ -31,7 +31,7 @@ public class JsonUtil
         JSONObject jsonObject = null;
         try {
             setDataFormat2JAVA();
-            jsonObject = JSONObject.fromObject((Object)jsonString);
+            jsonObject = JSONObject.fromObject(jsonString);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -43,7 +43,7 @@ public class JsonUtil
         JSONObject jsonObject = null;
         try {
             setDataFormat2JAVA();
-            jsonObject = JSONObject.fromObject((Object)jsonString);
+            jsonObject = JSONObject.fromObject(jsonString);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -53,7 +53,7 @@ public class JsonUtil
     
     public static Object[] getDTOArray(final String jsonString, final Class clazz) {
         setDataFormat2JAVA();
-        final JSONArray array = JSONArray.fromObject((Object)jsonString);
+        final JSONArray array = JSONArray.fromObject(jsonString);
         final Object[] obj = new Object[array.size()];
         for (int i = 0; i < array.size(); ++i) {
             final JSONObject jsonObject = array.getJSONObject(i);
@@ -64,7 +64,7 @@ public class JsonUtil
     
     public static Object[] getDTOArray(final String jsonString, final Class clazz, final Map map) {
         setDataFormat2JAVA();
-        final JSONArray array = JSONArray.fromObject((Object)jsonString);
+        final JSONArray array = JSONArray.fromObject(jsonString);
         final Object[] obj = new Object[array.size()];
         for (int i = 0; i < array.size(); ++i) {
             final JSONObject jsonObject = array.getJSONObject(i);
@@ -75,7 +75,7 @@ public class JsonUtil
     
     public static List getDTOList(final String jsonString, final Class clazz) {
         setDataFormat2JAVA();
-        final JSONArray array = JSONArray.fromObject((Object)jsonString);
+        final JSONArray array = JSONArray.fromObject(jsonString);
         final List list = new ArrayList();
         for(int i=0;i<array.size();i++) {
             list.add(JSONObject.toBean(array.getJSONObject(i), clazz));
@@ -85,7 +85,7 @@ public class JsonUtil
     
     public static List getDTOList(final String jsonString, final Class clazz, final Map map) {
         setDataFormat2JAVA();
-        final JSONArray array = JSONArray.fromObject((Object)jsonString);
+        final JSONArray array = JSONArray.fromObject(jsonString);
         final List list = new ArrayList();
         for(int i=0;i<array.size();i++) {
             list.add(JSONObject.toBean(array.getJSONObject(i), clazz));
@@ -95,7 +95,7 @@ public class JsonUtil
     
     public static Map getMapFromJson(final String jsonString) {
         setDataFormat2JAVA();
-        final JSONObject jsonObject = JSONObject.fromObject((Object)jsonString);
+        final JSONObject jsonObject = JSONObject.fromObject(jsonString);
         final Map map = new HashMap();
         final Iterator iter = jsonObject.keys();
         while (iter.hasNext()) {
@@ -106,7 +106,7 @@ public class JsonUtil
     }
     
     public static Object[] getObjectArrayFromJson(final String jsonString) {
-        final JSONArray jsonArray = JSONArray.fromObject((Object)jsonString);
+        final JSONArray jsonArray = JSONArray.fromObject(jsonString);
         return jsonArray.toArray();
     }
     

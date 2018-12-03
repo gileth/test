@@ -39,7 +39,7 @@ public class PK10Service extends BaseService
         }
         final Date start = DateUtil.getStartOfTheDay(d);
         final Date end = DateUtil.getEndOfTheDay(d);
-        final List<PK10> list = this.dao.findByHql("from PK10 where openTime>:start and openTime <:end order by number asc", (Map<String, Object>)ImmutableMap.of("start", (Object)start, "end", (Object)end));
+        final List<PK10> list = this.dao.findByHql("from PK10 where openTime>:start and openTime <:end order by number asc", ImmutableMap.of("start", start, "end", end));
         final List<List<String>> bs1 = new ArrayList<List<String>>();
         final List<List<String>> ds1 = new ArrayList<List<String>>();
         final List<List<String>> lh1 = new ArrayList<List<String>>();

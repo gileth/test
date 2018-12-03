@@ -30,7 +30,7 @@ public class ReflectUtil
     	    .build();
     
     public static boolean isSimpleType(final Class<?> c) {
-        return c.isPrimitive() || ReflectUtil.PrimitiveBigTypes.contains((Object)c);
+        return c.isPrimitive() || ReflectUtil.PrimitiveBigTypes.contains(c);
     }
     
     public static boolean isCompatible(Class<?> c, final Object o) {

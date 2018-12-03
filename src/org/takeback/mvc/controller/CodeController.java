@@ -53,7 +53,7 @@ public class CodeController
         if (!verifycode.equalsIgnoreCase((String)WebUtils.getSessionAttribute(request, "verifycode"))) {
             return ResponseUtils.jsonView(909, "\u56fe\u7247\u9a8c\u8bc1\u7801\u4e0d\u6b63\u786e");
         }
-        WebUtils.setSessionAttribute(request, "verifycode", (Object)null);
+        WebUtils.setSessionAttribute(request, "verifycode", null);
         if (!ValidateUtil.instance().validatePhone(phonenumb)) {
             return ResponseUtils.jsonView(502, "\u624b\u673a\u53f7\u7801\u4e0d\u6b63\u786e");
         }
@@ -78,7 +78,7 @@ public class CodeController
             }
         }
         CodeController.log.info("send code [{}] to {} at {}", new Object[] { code, phonenumb, new DateTime().toString("yyyy-MM-dd HH:mm:ss") });
-        WebUtils.setSessionAttribute(request, "smscode", (Object)code);
+        WebUtils.setSessionAttribute(request, "smscode", code);
         return ResponseUtils.jsonView(200, "\u624b\u673a\u9a8c\u8bc1\u7801\u5df2\u53d1\u9001");
     }
     
@@ -89,7 +89,7 @@ public class CodeController
         response.setDateHeader("Expires", 0L);
         response.setContentType("image/jpeg");
         final String verifyCode = VerifyCodeUtils.generateVerifyCode(4);
-        WebUtils.setSessionAttribute(request, "verifycode", (Object)verifyCode.toLowerCase());
+        WebUtils.setSessionAttribute(request, "verifycode", verifyCode.toLowerCase());
         VerifyCodeUtils.outputImage(w, h, (OutputStream)response.getOutputStream(), verifyCode);
     }
     

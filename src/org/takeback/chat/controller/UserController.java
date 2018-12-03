@@ -216,9 +216,9 @@ public class UserController
         final String msg = "\u60a8\u7684\u9a8c\u8bc1\u7801\u4e3a:" + rand.toString();
         try {
             SmsUtil3.send(mobile, msg);
-            WebUtils.setSessionAttribute(request, "mobile", (Object)mobile);
-            WebUtils.setSessionAttribute(request, "mobileCode", (Object)rand.toString());
-            WebUtils.setSessionAttribute(request, "mobileCodeTime", (Object)new Date());
+            WebUtils.setSessionAttribute(request, "mobile", mobile);
+            WebUtils.setSessionAttribute(request, "mobileCode", rand.toString());
+            WebUtils.setSessionAttribute(request, "mobileCodeTime", new Date());
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -245,9 +245,9 @@ public class UserController
         }
         try {
             this.userService.bindMobile(uid, sMobile);
-            WebUtils.setSessionAttribute(request, "mobile", (Object)null);
-            WebUtils.setSessionAttribute(request, "mobileCode", (Object)null);
-            WebUtils.setSessionAttribute(request, "mobileCodeTime", (Object)null);
+            WebUtils.setSessionAttribute(request, "mobile", null);
+            WebUtils.setSessionAttribute(request, "mobileCode", null);
+            WebUtils.setSessionAttribute(request, "mobileCodeTime", null);
             return ResponseUtils.jsonView(200, "\u624b\u673a\u53f7\u7801\u7ed1\u5b9a\u6210\u529f!");
         }
         catch (Exception e) {
@@ -302,7 +302,7 @@ public class UserController
     public void wx_login(final HttpServletRequest request, final HttpServletResponse response) {
         System.out.println("***************1");
         final String state = UUID.randomUUID().toString();
-        request.getSession().setAttribute("wx_state", (Object)state);
+        request.getSession().setAttribute("wx_state", state);
         final StringBuffer url = request.getRequestURL();
         final String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
         final String callback = String.valueOf(tempContextUrl) + "wx_login_callback";
@@ -325,11 +325,11 @@ public class UserController
         if ("2".equals(user.getStatus()) || "3".equals(user.getStatus())) {
             return ResponseUtils.jsonView(404, "\u8d26\u53f7\u88ab\u9501\u5b9a\u6216\u6ce8\u9500,\u8bf7\u8054\u7cfb\u5ba2\u670d\u54a8\u8be2\u5904\u7406!");
         }
-        WebUtils.setSessionAttribute(request, "$uid", (Object)user.getId());
+        WebUtils.setSessionAttribute(request, "$uid", user.getId());
         user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
         final LocalDateTime expire = new LocalDateTime().plusDays(7);
         user.setTokenExpireTime(expire.toDate());
-        this.userService.updateUser(user.getId(), new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime())*/);
+        this.userService.updateUser(user.getId(), new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of("accessToken", user.getAccessToken(), "tokenExpireTime", user.getTokenExpireTime())*/);
         this.userService.setLoginInfo(ip, user.getId());
         final LoginLog l = new LoginLog();
         l.setIp(ip);
@@ -399,7 +399,7 @@ public class UserController
                     user.setWxOpenId(tk.getOpenid());
                     user.setHeadImg(userinfo.getHeadimgurl());
                     this.userService.update(PubUser.class, user);
-                    WebUtils.setSessionAttribute(request, "$uid", (Object)user.getId());
+                    WebUtils.setSessionAttribute(request, "$uid", user.getId());
                     user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
                     final LocalDateTime expire = new LocalDateTime().plusDays(7);
                     user.setTokenExpireTime(expire.toDate());
@@ -409,7 +409,7 @@ public class UserController
                     final String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
                     user2.setUrl(String.valueOf(tempContextUrl) + "i?u=" + user2.getId());
                     this.userStore.reload(user2.getId());
-                    request.getSession().setAttribute("user_wx_username", (Object)user.getUserId());
+                    request.getSession().setAttribute("user_wx_username", user.getUserId());
                     this.getOut(response).println("<script>location.href='/wxLoginCheck.jsp';</script>");
                 }
                 catch (CodedBaseRuntimeException e) {
@@ -419,7 +419,7 @@ public class UserController
             else {
                 System.out.println("\u6570\u636e\u5e93\u4e2d\u6709\u6570\u636e1111");
                 final PubUser user3 = pulist.get(0);
-                request.getSession().setAttribute("user_wx_username", (Object)user3.getUserId());
+                request.getSession().setAttribute("user_wx_username", user3.getUserId());
                 this.getOut(response).println("<script>location.href='/wxLoginCheck.jsp';</script>");
             }
         }
@@ -443,7 +443,7 @@ public class UserController
         if ("2".equals(user.getStatus()) || "3".equals(user.getStatus())) {
             return ResponseUtils.jsonView(404, "\u8d26\u53f7\u88ab\u9501\u5b9a\u6216\u6ce8\u9500,\u8bf7\u8054\u7cfb\u5ba2\u670d\u54a8\u8be2\u5904\u7406!");
         }
-        WebUtils.setSessionAttribute(request, "$uid", (Object)user.getId());
+        WebUtils.setSessionAttribute(request, "$uid", user.getId());
         user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
         final LocalDateTime expire = new LocalDateTime().plusDays(7);
         user.setTokenExpireTime(expire.toDate());
@@ -509,7 +509,7 @@ public class UserController
             if (user == null) {
                 return ResponseUtils.jsonView(500, "\u6ce8\u518c\u5931\u8d25");
             }
-            WebUtils.setSessionAttribute(request, "$uid", (Object)user.getId());
+            WebUtils.setSessionAttribute(request, "$uid", user.getId());
             user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
             final LocalDateTime expire = new LocalDateTime().plusDays(7);
             user.setTokenExpireTime(expire.toDate());
@@ -849,7 +849,7 @@ public class UserController
         if (pageSize > 20) {
             pageSize = 20;
         }
-        final List<PcGameLog> list = this.userService.find(PcGameLog.class, new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid)*/, pageSize, pageNo, "betTime desc");
+        final List<PcGameLog> list = this.userService.find(PcGameLog.class, new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of("uid", uid)*/, pageSize, pageNo, "betTime desc");
         if (list == null || list.isEmpty()) {
             return ResponseUtils.jsonView(null);
         }
@@ -1000,7 +1000,7 @@ public class UserController
     @RequestMapping(value = { "/i" }, method = { RequestMethod.GET })
     public void getUserRooms(@RequestParam final Integer u, final HttpServletRequest request, final HttpServletResponse response) {
         try {
-            WebUtils.setSessionAttribute(request, "$invitor", (Object)u);
+            WebUtils.setSessionAttribute(request, "$invitor", u);
             response.sendRedirect("/");
         }
         catch (IOException e) {

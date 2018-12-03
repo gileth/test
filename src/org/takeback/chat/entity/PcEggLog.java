@@ -92,7 +92,7 @@ public class PcEggLog implements Comparable<PcEggLog>
     @Override
     public int compareTo(final PcEggLog o) {
         final Long v = Long.valueOf(o.getId()) - Long.valueOf(this.id);
-        return (int)(Object)v;
+        return v.intValue();
     }
     
     @Override

@@ -17,7 +17,7 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor
     public static final String HTTP_SESSION_ATTR_NAME = "HTTP.SESSION";
     
     public boolean beforeHandshake(final ServerHttpRequest request, final ServerHttpResponse response, final WebSocketHandler wsHandler, final Map<String, Object> attributes) throws Exception {
-        if (request.getHeaders().containsKey((Object)"Sec-WebSocket-Extensions")) {
+        if (request.getHeaders().containsKey("Sec-WebSocket-Extensions")) {
             request.getHeaders().set("Sec-WebSocket-Extensions", "permessage-deflate");
         }
         final HttpSession session = this.getSession(request);

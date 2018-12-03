@@ -64,7 +64,7 @@ public class MessageLisnener implements MessageReceiveListener
             message.setNickName(user.getNickName());
             message.setHeadImg(user.getHeadImg());
         }
-        MessageLisnener.log.info("receive msg {}", (Object)JSONUtils.toString(message));
+        MessageLisnener.log.info("receive msg {}", JSONUtils.toString(message));
         final String s = messageType;
         switch (s) {
             case "TXT": {

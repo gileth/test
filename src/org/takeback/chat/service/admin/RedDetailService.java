@@ -29,8 +29,8 @@ public class RedDetailService extends MyListService
         c.setTime(DateUtil.getStartOfToday());
         c.add(5, -2);
         final Date d = c.getTime();
-        this.dao.executeUpdate("delete from GcLottery where createTime <=:time", ImmutableMap.of( "time", (Object)c.getTime()));
-        this.dao.executeUpdate("delete from GcLotteryDetail where createDate<=:time",  ImmutableMap.of( "time", (Object)c.getTime()));
+        this.dao.executeUpdate("delete from GcLottery where createTime <=:time", ImmutableMap.of( "time", c.getTime()));
+        this.dao.executeUpdate("delete from GcLotteryDetail where createDate<=:time",  ImmutableMap.of( "time", c.getTime()));
     }
     
     @Transactional(rollbackFor = { Throwable.class })
@@ -38,7 +38,7 @@ public class RedDetailService extends MyListService
         final Calendar c = Calendar.getInstance();
         c.setTime(DateUtil.getStartOfToday());
         c.add(5, -5);
-        this.dao.executeUpdate("delete from GcLottery where createTime <=:time", ImmutableMap.of("time", (Object)c.getTime()));
-        this.dao.executeUpdate("delete from GcLotteryDetail where createDate<=:time", ImmutableMap.of("time", (Object)c.getTime()));
+        this.dao.executeUpdate("delete from GcLottery where createTime <=:time", ImmutableMap.of("time", c.getTime()));
+        this.dao.executeUpdate("delete from GcLotteryDetail where createDate<=:time", ImmutableMap.of("time", c.getTime()));
     }
 }

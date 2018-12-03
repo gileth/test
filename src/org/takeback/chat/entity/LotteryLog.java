@@ -73,7 +73,7 @@ public class LotteryLog implements Comparable<LotteryLog>
     @Override
     public int compareTo(final LotteryLog o) {
         final Long v = Long.valueOf(o.getId()) - Long.valueOf(this.id);
-        return (int)(Object)v;
+        return  v.intValue();
     }
     
     @Id

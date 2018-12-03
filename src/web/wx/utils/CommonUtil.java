@@ -57,7 +57,7 @@ public class CommonUtil
             inputStream.close();
             inputStream = null;
             conn.disconnect();
-            jsonObject = JSONObject.fromObject((Object)buffer.toString());
+            jsonObject = JSONObject.fromObject(buffer.toString());
         }
         catch (ConnectException ex) {}
         catch (Exception ex2) {}

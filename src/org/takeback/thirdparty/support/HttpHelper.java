@@ -35,7 +35,7 @@ public class HttpHelper
                 conn.disconnect();
             }
         }
-        return JSONObject.fromObject((Object)result);
+        return JSONObject.fromObject(result);
     }
     
     public static JSONObject postForJson(final String url, final String data, final String encoding) throws IOException {
@@ -62,6 +62,6 @@ public class HttpHelper
                 conn.disconnect();
             }
         }
-        return JSONObject.fromObject((Object)result);
+        return JSONObject.fromObject(result);
     }
 }

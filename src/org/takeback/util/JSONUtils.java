@@ -60,7 +60,7 @@ public class JSONUtils
     
     public static <T> T update(final String value, final T object) {
         try {
-            return (T)JSONUtils.mapper.readerForUpdating((Object)object).readValue(value);
+            return (T)JSONUtils.mapper.readerForUpdating(object).readValue(value);
         }
         catch (Exception e) {
             throw new IllegalStateException(e);

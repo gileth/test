@@ -40,7 +40,7 @@ public class LatestTermCmd implements Command
             }
             simpleWord = ((simpleWord.length() > 1) ? simpleWord.substring(1) : simpleWord);
             final long l = egg.getExpireTime().getTime() - System.currentTimeMillis();
-            MessageUtils.sendCMD(session, "latestTerm", ImmutableMap.of((Object)"termId", (Object)egg.getId(), (Object)"expireTime", (Object)egg.getExpireTime(), (Object)"remainSeconds", (Object)(int)Math.floor(l / 1000L), (Object)"simpleWord", (Object)simpleWord, (Object)"logs", (Object)logs));
+            MessageUtils.sendCMD(session, "latestTerm", ImmutableMap.of("termId", egg.getId(), "expireTime", egg.getExpireTime(), "remainSeconds", (int)Math.floor(l / 1000L), "simpleWord", simpleWord, "logs", logs));
         }
     }
 }

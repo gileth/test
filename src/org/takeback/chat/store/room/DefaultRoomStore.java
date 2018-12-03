@@ -165,6 +165,6 @@ public class DefaultRoomStore implements RoomStore
     
     @Override
     public void delete(final String roomId) {
-        this.roomPojoMap.invalidate((Object)roomId);
+        this.roomPojoMap.invalidate(roomId);
     }
 }

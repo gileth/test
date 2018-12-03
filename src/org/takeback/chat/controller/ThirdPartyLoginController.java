@@ -65,7 +65,7 @@ public class ThirdPartyLoginController
                 final String url = this.getWeixinAuthorUrl(true);
                 final Map<String, Object> extras = (Map<String, Object>) params.get("extras");
                 if (extras != null && extras.get("fromUrl") != null) {
-                    session.setAttribute("$beforeLoginState", (Object)extras);
+                    session.setAttribute("$beforeLoginState", extras);
                 }
                 return ResponseUtils.jsonView(url);
             }
@@ -107,7 +107,7 @@ public class ThirdPartyLoginController
                 return ResponseUtils.jsonView(401, "\u767b\u5f55\u5df2\u8fc7\u671f\u8bf7\u91cd\u65b0\u767b\u5f55\u3002");
             }
         }
-        session.setAttribute("$uid", (Object)user.getId());
+        session.setAttribute("$uid", user.getId());
         final User user2 = BeanUtils.map(user, User.class);
         user2.setUrl(this.wxConfig.getGameServerBaseUrl() + "i?u=" + user2.getId());
         this.userStore.reload(user2.getId());
@@ -124,12 +124,12 @@ public class ThirdPartyLoginController
         catch (IOException e) {
             throw new IllegalStateException("Failed to get open id.", e);
         }
-        if (resultObject.containsKey((Object)"errcode")) {
-            ThirdPartyLoginController.LOGGER.error("Failed to get open id, error code: {}, caused by: {}", (Object)resultObject.getInt("errcode"), resultObject.get("errmsg"));
+        if (resultObject.containsKey("errcode")) {
+            ThirdPartyLoginController.LOGGER.error("Failed to get open id, error code: {}, caused by: {}", resultObject.getInt("errcode"), resultObject.get("errmsg"));
             if (isApp) {
                 return ResponseUtils.jsonView(500, "\u767b\u5f55\u5931\u8d25");
             }
-            return ResponseUtils.modelView("jump", new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"url", (Object)"/#/tab/login", (Object)"message", (Object)"\u767b\u5f55\u5931\u8d25\u3002")*/);
+            return ResponseUtils.modelView("jump", new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of("url", "/#/tab/login", "message", "\u767b\u5f55\u5931\u8d25\u3002")*/);
         }
         else {
             final ModelAndView mav = this.doWxLogin(resultObject.getString("refresh_token"), resultObject.getString("openid"), isApp, request, session);
@@ -207,10 +207,10 @@ public class ThirdPartyLoginController
             l.setUserId(user.getId());
             l.setUserName(user.getUserId());
             this.userService.save(LoginLog.class, l);
-            session.setAttribute("$uid", (Object)user.getId());
+            session.setAttribute("$uid", user.getId());
             return null;
         }
-        ThirdPartyLoginController.LOGGER.error("Cannot refresh token, error: {}, message: {}", (Object)refreshResult.getInt("errcode"), (Object)refreshResult.getString("errmsg"));
+        ThirdPartyLoginController.LOGGER.error("Cannot refresh token, error: {}, message: {}", refreshResult.getInt("errcode"), refreshResult.getString("errmsg"));
         if (isApp) {
             return ResponseUtils.jsonView(500, "\u767b\u5f55\u5931\u8d25\u3002");
         }

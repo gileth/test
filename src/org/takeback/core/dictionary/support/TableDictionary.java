@@ -89,7 +89,7 @@ public class TableDictionary extends Dictionary
             }
         }
         catch (Exception e) {
-            TableDictionary.LOGGER.error("init dic[{}] items failed, db error \r ", (Object)this.id, (Object)e);
+            TableDictionary.LOGGER.error("init dic[{}] items failed, db error \r ", this.id, e);
         }
         finally {
             if (ss != null && ss.isOpen()) {
@@ -162,7 +162,7 @@ public class TableDictionary extends Dictionary
             }
         }
         catch (Exception e) {
-            TableDictionary.LOGGER.error("query failed from table dic:{}", (Object)this.id, (Object)e);
+            TableDictionary.LOGGER.error("query failed from table dic:{}", this.id, e);
         }
         finally {
             if (ss != null && ss.isOpen()) {
@@ -281,7 +281,7 @@ public class TableDictionary extends Dictionary
                 }
             }
             catch (Exception e) {
-                TableDictionary.LOGGER.error("Get dictionary {} item failed.", (Object)this.id, (Object)e);
+                TableDictionary.LOGGER.error("Get dictionary {} item failed.", this.id, e);
             }
             finally {
                 if (ss.isOpen()) {
@@ -330,7 +330,7 @@ public class TableDictionary extends Dictionary
                 }
             }
             catch (Exception e) {
-                TableDictionary.LOGGER.error("Failed to initialize dictionary {}.", (Object)this.id, (Object)e);
+                TableDictionary.LOGGER.error("Failed to initialize dictionary {}.", this.id, e);
             }
             finally {
                 if (ss.isOpen()) {
@@ -444,7 +444,7 @@ public class TableDictionary extends Dictionary
             }
         }
         catch (Exception e) {
-            TableDictionary.LOGGER.error("get {} dicItem by text[" + text + "] failed.", (Object)this.id, (Object)e);
+            TableDictionary.LOGGER.error("get {} dicItem by text[" + text + "] failed.", this.id, e);
         }
         finally {
             if (ss != null && ss.isOpen()) {
@@ -470,7 +470,7 @@ public class TableDictionary extends Dictionary
             }
         }
         catch (Exception e) {
-            TableDictionary.LOGGER.error("get {} dicItem by key[" + key + "] failed.", (Object)this.id, (Object)e);
+            TableDictionary.LOGGER.error("get {} dicItem by key[" + key + "] failed.", this.id, e);
         }
         finally {
             if (ss != null && ss.isOpen()) {
@@ -498,7 +498,7 @@ public class TableDictionary extends Dictionary
             }
         }
         catch (Exception e) {
-            TableDictionary.LOGGER.error("get {} dicItems by keys[" + keys + "] failed.", (Object)this.id, (Object)e);
+            TableDictionary.LOGGER.error("get {} dicItems by keys[" + keys + "] failed.", this.id, e);
         }
         finally {
             if (ss != null && ss.isOpen()) {
@@ -534,7 +534,7 @@ public class TableDictionary extends Dictionary
             }
         }
         catch (Exception e) {
-            TableDictionary.LOGGER.error("get {} dicItems by parentKey[" + parentKey + "] failed.", (Object)this.id, (Object)e);
+            TableDictionary.LOGGER.error("get {} dicItems by parentKey[" + parentKey + "] failed.", this.id, e);
         }
         finally {
             if (ss != null && ss.isOpen()) {

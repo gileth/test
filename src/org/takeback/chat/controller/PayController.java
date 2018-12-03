@@ -85,7 +85,7 @@ public class PayController
         String identityId = null;
         if (payChannel.equals("YEE_WAP")) {
             identityId = UUID.randomUUID().toString().replace("-", "");
-            session.setAttribute("identityId", (Object)identityId);
+            session.setAttribute("identityId", identityId);
         }
         final Integer totalFee = (int)(double)Double.valueOf(strTotalFee);
         try {
@@ -303,13 +303,13 @@ public class PayController
     @RequestMapping(value = { "feedback/koudai" }, method = { RequestMethod.GET })
     public void koudaiCallback(@RequestParam("P_OrderId") final String tradeNo, @RequestParam("P_UserId") final String partnerId, @RequestParam("P_ErrCode") final int errorCode, @RequestParam(value = "P_ErrMsg", defaultValue = "") final String errorMsg, @RequestParam("P_FaceValue") final double totalFee, @RequestParam("P_ChannelId") final String chanelId, @RequestParam("P_PostKey") final String postKey0, @RequestParam("P_CardId") final String cardId, @RequestParam("P_CardPass") final String cardPass, final HttpServletResponse response) throws IOException {
         if (!partnerId.equals(this.kouDaiConfig.getPartnerId())) {
-            PayController.LOGGER.error("Pay trade [{}] is not mine.", (Object)tradeNo);
+            PayController.LOGGER.error("Pay trade [{}] is not mine.", tradeNo);
             response.getOutputStream().println("errcode=0");
             return;
         }
         final PubRecharge pubRecharge = this.pubRechargeService.getRechargeRecordByTradeNo(tradeNo);
         if (errorCode != 0) {
-            PayController.LOGGER.error("Pay trade [{}] failed: ", (Object)tradeNo, (Object)errorMsg);
+            PayController.LOGGER.error("Pay trade [{}] failed: ", tradeNo, errorMsg);
         }
         else {
             if (pubRecharge.getStatus().equals("2")) {
@@ -354,13 +354,13 @@ public class PayController
             final double totalFee = (double) data.get("P_FaceValue");
             final String chanelId = (String) data.get("P_ChannelId");
             if (pubRecharge.getFee() != totalFee) {
-                PayController.LOGGER.error("Total fee is different with the pay trade, expect: {}, {} in fact", (Object)pubRecharge.getFee(), (Object)totalFee);
+                PayController.LOGGER.error("Total fee is different with the pay trade, expect: {}, {} in fact", pubRecharge.getFee(), totalFee);
                 return;
             }
             final String raw = String.valueOf(partnerId) + "|" + tradeNo + "|||" + String.format("%.2f", totalFee) + "|" + chanelId + "|" + this.kouDaiConfig.getSecretCode();
             final String postKey = MD5StringUtil.MD5Encode(raw);
             if (!postKey.equals(data.get("P_PostKey"))) {
-                PayController.LOGGER.error("Post key not match, expected is: {}, {} in fact", (Object)postKey, data.get("P_PostKey"));
+                PayController.LOGGER.error("Post key not match, expected is: {}, {} in fact", postKey, data.get("P_PostKey"));
                 return;
             }
             pubRecharge.setRealfee(totalFee);
@@ -378,7 +378,7 @@ public class PayController
         final String mySign = MD5StringUtil.MD5EncodeUTF8(text);
         final long timeDifference = System.currentTimeMillis() - timestamp;
         if (!mySign.equals(sign) || timeDifference > 300000L) {
-            PayController.LOGGER.error("Sign validation failed: {}.", (Object)transactionId);
+            PayController.LOGGER.error("Sign validation failed: {}.", transactionId);
             response.getOutputStream().println("fail");
             return;
         }
@@ -450,7 +450,7 @@ public class PayController
         }
         final PubRecharge pubRecharge = this.pubRechargeService.getRechargeRecordByTradeNo(tradeNo);
         if (opstate != 0) {
-            PayController.LOGGER.error("Pay trade [{}] failed: ", (Object)tradeNo, (Object)"\u53c2\u6570\u65e0\u6548\u6216\u7b7e\u540d\u9519\u8bef\uff01");
+            PayController.LOGGER.error("Pay trade [{}] failed: ", tradeNo, "\u53c2\u6570\u65e0\u6548\u6216\u7b7e\u540d\u9519\u8bef\uff01");
         }
         else {
             if (pubRecharge.getStatus().equals("2")) {

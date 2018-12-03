@@ -37,38 +37,38 @@ public class LotteryService extends BaseService
     
     @Transactional(rollbackFor = { Throwable.class })
     public int setLotteryExpired(final String lotteryId) {
-        return this.dao.executeUpdate("update GcLottery a set a.status = '2' where a.id = :id and a.status = '0'", (Map<String, Object>)ImmutableMap.of("id", (Object)lotteryId));
+        return this.dao.executeUpdate("update GcLottery a set a.status = '2' where a.id = :id and a.status = '0'", ImmutableMap.of("id", lotteryId));
     }
     
     @Transactional(rollbackFor = { Throwable.class })
     public int setLotteryFinished(final String lotteryId) {
-        return this.dao.executeUpdate("update GcLottery a set a.status = '1' where a.id = :id and a.status = '0'", (Map<String, Object>)ImmutableMap.of("id", (Object)lotteryId));
+        return this.dao.executeUpdate("update GcLottery a set a.status = '1' where a.id = :id and a.status = '0'", ImmutableMap.of("id", lotteryId));
     }
     
     @Transactional(rollbackFor = { Throwable.class })
     public int setRoomStatus(final String roomId, final String status) {
-        return this.dao.executeUpdate("update GcRoom a set a.status =:status where a.id =:roomId", (Map<String, Object>)ImmutableMap.of("status", (Object)status,"roomId", (Object)roomId));
+        return this.dao.executeUpdate("update GcRoom a set a.status =:status where a.id =:roomId", ImmutableMap.of("status", status,"roomId", roomId));
     }
     
     @Transactional(rollbackFor = { Throwable.class })
     public int moneyDown(final Integer uid, final Double money) {
         System.out.println("uid:" + uid + "  money:" + money);
-        return this.dao.executeUpdate("update PubUser a set a.money = coalesce(a.money,0) - :money,a.exp=coalesce(exp,0)+:exp where a.id=:uid and a.money>=:money", (Map<String, Object>)ImmutableMap.of("money", (Object)money,"exp", (Object)money,"uid", (Object)uid));
+        return this.dao.executeUpdate("update PubUser a set a.money = coalesce(a.money,0) - :money,a.exp=coalesce(exp,0)+:exp where a.id=:uid and a.money>=:money", ImmutableMap.of("money", money,"exp", money,"uid", uid));
     }
     
     @Transactional(rollbackFor = { Throwable.class })
     public int moneyUp(final Integer uid, final Double money) {
-        return this.dao.executeUpdate("update PubUser a set a.money = coalesce(a.money,0) + :money where a.id=:uid ", (Map<String, Object>)ImmutableMap.of("money", (Object)money,"uid", (Object)uid));
+        return this.dao.executeUpdate("update PubUser a set a.money = coalesce(a.money,0) + :money where a.id=:uid ", ImmutableMap.of("money", money,"uid", uid));
     }
     
     @Transactional(rollbackFor = { Throwable.class })
     public int waterDown(final String roomId, final Double money) {
-        return this.dao.executeUpdate("update GcRoom a set a.sumFee = coalesce(a.sumFee,0) - :money where a.id=:roomId ", (Map<String, Object>)ImmutableMap.of("money", (Object)money,"roomId", (Object)roomId));
+        return this.dao.executeUpdate("update GcRoom a set a.sumFee = coalesce(a.sumFee,0) - :money where a.id=:roomId ", ImmutableMap.of("money", money,"roomId", roomId));
     }
     
     @Transactional(rollbackFor = { Throwable.class })
     public int waterUp(final String roomId, final Double money) {
-        return this.dao.executeUpdate("update GcRoom a set a.sumFee = coalesce(a.sumFee,0) + :money,a.sumPack = coalesce(a.sumPack,0)+1 where a.id=:roomId ", (Map<String, Object>)ImmutableMap.of("money", (Object)money,"roomId", (Object)roomId));
+        return this.dao.executeUpdate("update GcRoom a set a.sumFee = coalesce(a.sumFee,0) + :money,a.sumPack = coalesce(a.sumPack,0)+1 where a.id=:roomId ", ImmutableMap.of("money", money,"roomId", roomId));
     }
     
     @Transactional(rollbackFor = { Throwable.class })
@@ -78,7 +78,7 @@ public class LotteryService extends BaseService
         gcLotteryDetail.setLotteryid(lottery.getId());
         this.dao.save(GcLotteryDetail.class, gcLotteryDetail);
         final BigDecimal money = detail.getCoin();
-        this.dao.executeUpdate("update PubUser set money=money+:money where id = :uid", (Map<String, Object>)ImmutableMap.of("money", (Object)money.doubleValue(),"uid", (Object)detail.getUid()));
+        this.dao.executeUpdate("update PubUser set money=money+:money where id = :uid", ImmutableMap.of("money", money.doubleValue(),"uid", detail.getUid()));
     }
     
     @Transactional(rollbackFor = { Throwable.class })
@@ -93,8 +93,8 @@ public class LotteryService extends BaseService
         for (final LotteryDetail ld : c) {
             bd = bd.subtract(ld.getCoin());
         }
-        this.dao.executeUpdate("update PubUser a set a.money =coalesce(a.money,0) + :rest where a.id = :uid ", (Map<String, Object>)ImmutableMap.of("rest", (Object)bd.doubleValue(),"uid", (Object)sender));
-        this.dao.executeUpdate("update GcLottery a set a.status = '2' where a.id = :id and a.status = '0'", (Map<String, Object>)ImmutableMap.of("id", (Object)lottery.getId()));
+        this.dao.executeUpdate("update PubUser a set a.money =coalesce(a.money,0) + :rest where a.id = :uid ", ImmutableMap.of("rest", bd.doubleValue(),"uid", sender));
+        this.dao.executeUpdate("update GcLottery a set a.status = '2' where a.id = :id and a.status = '0'", ImmutableMap.of("id", lottery.getId()));
         return bd;
     }
     
@@ -102,7 +102,7 @@ public class LotteryService extends BaseService
     public void changeMoney(final Map<Integer, Double> data) {
         for (final Integer uid : data.keySet()) {
             final Double v = data.get(uid);
-            this.dao.executeUpdate("update PubUser a set a.money =coalesce(a.money,0) + :money where a.id = :uid ", (Map<String, Object>)ImmutableMap.of("money", (Object)v,"uid", (Object)uid));
+            this.dao.executeUpdate("update PubUser a set a.money =coalesce(a.money,0) + :money where a.id = :uid ", ImmutableMap.of("money", v,"uid", uid));
         }
     }
     
@@ -148,7 +148,7 @@ public class LotteryService extends BaseService
     
     @Transactional(rollbackFor = { Throwable.class })
     public List<GcLottery> loadRecentLottery(final String roomId) {
-        final List<GcLottery> lotteries = this.dao.findByHqlPaging("from GcLottery where  roomId =:roomId and status<>0 order by id desc", (Map<String, Object>)ImmutableMap.of("roomId", (Object)roomId), 10, 1);
+        final List<GcLottery> lotteries = this.dao.findByHqlPaging("from GcLottery where  roomId =:roomId and status<>0 order by id desc", ImmutableMap.of("roomId", roomId), 10, 1);
         return lotteries;
     }
     
@@ -169,13 +169,13 @@ public class LotteryService extends BaseService
         }
         final Double rate = Double.valueOf(SystemConfigService.getInstance().getValue("water"));
         Double restWater = water * rate;
-        final List<GcRoomMember> ls = this.dao.findByProperties(GcRoomMember.class, (Map<String, Object>)ImmutableMap.of("roomId", (Object)roomId,"isPartner", (Object)"1"));
+        final List<GcRoomMember> ls = this.dao.findByProperties(GcRoomMember.class, ImmutableMap.of("roomId", roomId,"isPartner", "1"));
         for (final GcRoomMember grm : ls) {
             final Double partnerRate = grm.getRate();
             if (partnerRate > 0.0) {
                 final Double partnerWater = water * rate * (partnerRate / 100.0);
                 restWater -= partnerWater;
-                this.dao.executeUpdate("update PubUser a set a.money =coalesce(a.money,0) + :money where a.id = :uid ", (Map<String, Object>)ImmutableMap.of("money", (Object)partnerWater, "uid", (Object)grm.getUid()));
+                this.dao.executeUpdate("update PubUser a set a.money =coalesce(a.money,0) + :money where a.id = :uid ", ImmutableMap.of("money", partnerWater, "uid", grm.getUid()));
                 final GcWaterLog gwl = new GcWaterLog();
                 gwl.setUid(child.getId());
                 gwl.setUserId(child.getUserId());
@@ -201,7 +201,7 @@ public class LotteryService extends BaseService
             gwl2.setLotteryId(lotteryId);
             gwl2.setParentId(r.getOwner());
             this.dao.save(GcWaterLog.class, gwl2);
-            this.dao.executeUpdate("update PubUser a set a.money =coalesce(a.money,0) + :money where a.id = :uid ", (Map<String, Object>)ImmutableMap.of("money", (Object)restWater,"uid", (Object)r.getOwner()));
+            this.dao.executeUpdate("update PubUser a set a.money =coalesce(a.money,0) + :money where a.id = :uid ", ImmutableMap.of("money", restWater,"uid", r.getOwner()));
         }
         return water * (1.0 - rate);
     }

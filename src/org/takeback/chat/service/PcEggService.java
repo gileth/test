@@ -115,12 +115,12 @@ public class PcEggService extends BaseService
         }
         final Double curMax = limitConf.get("l_max_cur");
         final String curSumHql = "select coalesce(sum(freeze),0) from PcGameLog where num=:num";
-        final List<Double> curSum = this.dao.findByHql(curSumHql, (Map<String, Object>)ImmutableMap.of("num", (Object)num));
+        final List<Double> curSum = this.dao.findByHql(curSumHql, ImmutableMap.of("num", num));
         if (curSum.get(0) + money > curMax) {
             throw new CodedBaseRuntimeException("\u672c\u671f\u5168\u7ad9\u53ef\u4e0b\u6ce8\u91d1\u989d:" + (curMax - curSum.get(0)));
         }
         final String sumSql = "select coalesce(sum(freeze),0) from PcGameLog where num=:num and uid = :uid";
-        final List<Double> sum = this.dao.findByHql(sumSql, (Map<String, Object>)ImmutableMap.of("num", (Object)num, "uid", (Object)uid));
+        final List<Double> sum = this.dao.findByHql(sumSql, ImmutableMap.of("num", num, "uid", uid));
         if (sum.get(0) + money > max) {
             throw new CodedBaseRuntimeException("\u672c\u671f\u4e2a\u4eba\u53ef\u4e0b\u6ce8\u91d1\u989d:" + (max - sum.get(0)));
         }
@@ -131,7 +131,7 @@ public class PcEggService extends BaseService
         }
         final String betType = rateConf.getCatalog();
         final String moneyHql = "update PubUser set money = COALESCE(money,0) - :money where id=:uid and money>:money";
-        final int effected = this.dao.executeUpdate(moneyHql, (Map<String, Object>)ImmutableMap.of("money", (Object)money, "uid", (Object)uid));
+        final int effected = this.dao.executeUpdate(moneyHql, ImmutableMap.of("money", money, "uid", uid));
         if (effected == 0) {
             throw new CodedBaseRuntimeException("\u8d26\u6237\u91d1\u989d\u4e0d\u8db3,\u8bf7\u53ca\u65f6\u5145\u503c!");
         }
@@ -184,10 +184,10 @@ public class PcEggService extends BaseService
         for (final PcGameLog log : list) {
             money += log.getFreeze();
             final String logHql = "update PcGameLog set status = '3' where id = :id and status ='0' ";
-            final int effected = this.dao.executeUpdate(logHql, (Map<String, Object>)ImmutableMap.of("id", (Object)log.getId()));
+            final int effected = this.dao.executeUpdate(logHql, ImmutableMap.of("id", log.getId()));
             if (effected == 1) {
                 final String moneyHql = "update PubUser set money = COALESCE(money,0) + :money where id=:uid";
-                this.dao.executeUpdate(moneyHql, (Map<String, Object>)ImmutableMap.of("money", (Object)log.getFreeze(), "uid", (Object)uid));
+                this.dao.executeUpdate(moneyHql, ImmutableMap.of("money", log.getFreeze(), "uid", uid));
             }
         }
         return money;
@@ -195,7 +195,7 @@ public class PcEggService extends BaseService
     
     @Transactional
     public List<PcGameLog> getGameLog(final Integer num) {
-        return this.dao.findByHql("from PcGameLog where num =:num and status =0", (Map<String, Object>)ImmutableMap.of("num", (Object)num));
+        return this.dao.findByHql("from PcGameLog where num =:num and status =0", ImmutableMap.of("num", num));
     }
     
     @Transactional
@@ -205,14 +205,14 @@ public class PcEggService extends BaseService
         final double[] steps = getSteps(additionalConfig.get("r_depart").toString());
         final double[] steps2 = getSteps(additionalConfig.get("r_depart2").toString());
         final Integer intVal = Integer.valueOf(val);
-        final List<PcGameLog> gameRecs = this.dao.findByHql("from PcGameLog where num =:num and status =0", (Map<String, Object>)ImmutableMap.of("num", (Object)num));
+        final List<PcGameLog> gameRecs = this.dao.findByHql("from PcGameLog where num =:num and status =0", ImmutableMap.of("num", num));
         final List<String> otherLucky = this.getSpecialLucky(val, exp);
         for (final PcGameLog l : gameRecs) {
             Double rate = 0.0;
             final String betType = l.getBetType();
             l.setLuckyNumber(exp);
             final String hql = "select coalesce(sum(freeze),0) from PcGameLog where num = :num and  uid = :uid";
-            final List<Double> res = this.dao.findByHql(hql, (Map<String, Object>)ImmutableMap.of("num", (Object)num, "uid", (Object)l.getUid()));
+            final List<Double> res = this.dao.findByHql(hql, ImmutableMap.of("num", num, "uid", l.getUid()));
             final Double sum = res.get(0);
             l.setOpenTime(new Date());
             if ("num".equals(betType)) {
@@ -260,7 +260,7 @@ public class PcEggService extends BaseService
                 l.setBonus(bonus);
                 l.setUserInout(bonus - betMoney);
                 l.setStatus("1");
-                this.dao.executeUpdate("update PubUser set money = money +:bonus where id =:uid", (Map<String, Object>)ImmutableMap.of("bonus", (Object)bonus, "uid", (Object)l.getUid()));
+                this.dao.executeUpdate("update PubUser set money = money +:bonus where id =:uid", ImmutableMap.of("bonus", bonus, "uid", l.getUid()));
             }
             else {
                 final Integer uid = l.getUid();

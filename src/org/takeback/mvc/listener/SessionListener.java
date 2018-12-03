@@ -65,7 +65,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
                 SessionListener.users.remove(uid);
             }
         }
-        SessionListener.log.info("user {} left, online users is {} now", (Object)uid, (Object)getOnlineNumber());
+        SessionListener.log.info("user {} left, online users is {} now", uid, getOnlineNumber());
     }
     
     public void attributeAdded(final HttpSessionBindingEvent se) {

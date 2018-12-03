@@ -1,0 +1,51 @@
+<ion-view view-title="群成员管理" need-login xmlns="http://java.sun.com/jsf/html">
+    <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+        <ion-nav-back-button>返回</ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content>
+        <ion-list>
+            <ion-item>
+
+
+                <table style="font-size: 14px;">
+                    <tr>
+                        <td width="80">昵称</td><td><strong>{{member.nickName}}</strong></td>
+                    </tr>
+
+                    <tr>
+                        <td>入群</td><td><span>{{member.joinDate}}</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>身份</td><td><strong ng-show="member.isPartner==1" style="color: red">股东</strong><span ng-show="member.isPartner!=1" >玩家</span></td>
+                    </tr>
+
+
+                    <tr ng-show="member.isPartner==1">
+                        <td>股份</td><td> <input ng-model="member.rate" style="width: 100px;" type="numeric" placeholder="股份百分数">%</td>
+                    </tr>
+
+                </table>
+
+            </ion-item>
+
+
+            <button class="button button-block button-positive button-green" ng-click="kick(member.id,member.nickName)">
+                踢出房间
+            </button>
+
+            <button class="button button-block button-positive button-green" ng-if="member.isPartner==1" ng-click="cancelPartner(member.id,member.nickName)">
+                取消股东
+            </button>
+
+            <button class="button button-block button-positive button-green" ng-if="member.isPartner==1" ng-click="saveRate(member.id,member.rate)">
+                保存设置
+            </button>
+
+            <button class="button button-block button-positive button-green" ng-if="member.isPartner!=1" ng-click="setPartner(member.id,member.nickName)">
+                设为股东
+            </button>
+
+        </ion-list>
+    </ion-content>
+</ion-view>

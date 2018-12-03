@@ -1,0 +1,19 @@
+<ion-popover-view class="lottery-cover-view">
+    <ion-content scroll="false" class="lottery-cover">
+        <div class="north">
+            <div class="close" ng-click="closeLottery()">+</div>
+            <div class="avatar">
+                <div class="avatar-wrap">
+                    <img ng-src="{{lottery.headImg}}">
+                </div>
+            </div>
+            <div class="nickName">
+                <span>{{lottery.nickName}}</span>
+            </div>
+            <div class="msg">手慢了, 红包派完了</div>
+            <div class="show-result" ng-click="openDetailModal(lottery.content.id)">
+                看看大家的手气&gt;
+            </div>
+        </div>
+    </ion-content>
+</ion-popover-view>

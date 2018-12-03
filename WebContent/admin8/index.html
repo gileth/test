@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>app</title>
+    <link rel="stylesheet" type="text/css" href="ext/build/classic/resources/app-all.css">
+    <link rel="stylesheet" type="text/css" href="ext/build/classic/theme-neptune/resources/theme-neptune-all.css">
+    <script type="text/javascript" src="ext/build/ext-all.js"></script>
+    <script type="text/javascript" src="ext/build/classic/theme-neptune/theme-neptune.js"></script>
+    <script type="text/javascript" src="ext/build/packages/ux/classic/ux.js"></script>
+
+    <script type="text/javascript" src="ext/build/packages/charts/classic/charts.js"></script>
+    <script type="text/javascript" src="app/app.js"></script>
+</head>
+<body>
+</body>
+<script type="text/javascript">
+    //提示音代码
+    if(-1 != navigator.userAgent.indexOf("MSIE")) {
+        //不是微软IE浏览器，则调用Flash来播放音乐
+        document.write(' <OBJECT id="Player"');
+        document.write(' classid="clsid:6BF52A52-394A-11d3-B153-00C04F79FAA6"');
+        document.write(' width=0 height=0 > <param name="URL" value="ding.wav" /> <param name="AutoStart" value="false" /> </OBJECT>');
+    } else {
+        //是微软IE浏览器，则调用微软的Player对象来直接播放音乐
+        document.write(' <OBJECT id="Player"');
+        document.write(' type="application/x-ms-wmp"');
+        document.write(' autostart="false" src= "ding.wav" width=0 height=0> </OBJECT>');
+    }
+</script>
+</html>

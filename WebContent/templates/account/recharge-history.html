@@ -1,0 +1,23 @@
+<ion-view view-title="我的充值记录" need-login>
+    <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+        <ion-nav-back-button>返回</ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content>
+        <ion-refresher pulling-text="下拉刷新列表..." on-refresh="doRefresh()">
+        </ion-refresher>
+        <div class="list">
+            <div ng-if="records.length==0" style="margin: 10px;color: grey">
+                没有任何记录.
+            </div>
+
+            <div class="item rec-history" ng-repeat="r in records">
+                <div class="row clearfix">
+                    <div class="left">{{r.finishtime}}</div>
+                    <div class="right" style="color: #039603;">￥{{r.realfee.toFixed(2)}}</div>
+                </div>
+            </div>
+        </div>
+        <ion-infinite-scroll on-infinite="loadMore()" ng-if="!noMoreItemsAvailable">
+        </ion-infinite-scroll>
+    </ion-content>
+</ion-view>

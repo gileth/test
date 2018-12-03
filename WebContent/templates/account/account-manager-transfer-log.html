@@ -1,0 +1,31 @@
+<ion-view view-title="站内转账" need-login>
+  <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+    <ion-nav-back-button>返回</ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content>
+    <ion-refresher pulling-text="下拉刷新列表..." on-refresh="doRefresh()">
+    </ion-refresher>
+    <div class="list">
+      <div ng-if="records.length==0" style="margin: 10px;color: grey">
+        没有任何记录.
+      </div>
+      <div class="item card" ng-repeat="r in records">
+        <div class="row clearfix" ng-show="r.toUid==user.id">
+          <div class="left"><span style="color:grey;font-weight: bold">{{r.fromNickName}} </span></div>
+          <div class="right"><span style="color:grey">{{r.transferDate}}</span></div>
+          <br>
+          <div class="left"><span style="color:orangered;">[转入] {{r.money}}金币</span></div>
+        </div>
+
+        <div class="row clearfix" ng-show="r.fromUid==user.id">
+          <div class="left"><span style="color:grey;font-weight: bold">{{r.toNickName}}</span></div>
+          <div class="right"><span style="color:grey">{{r.transferDate}}</span></div>
+          <br>
+          <div class="left"><span style="color:forestgreen;">[转出] {{r.money}}金币</span></div>
+        </div>
+      </div>
+    </div>
+    <ion-infinite-scroll on-infinite="loadMore()" ng-if="!noMoreItemsAvailable">
+    </ion-infinite-scroll>
+  </ion-content>
+</ion-view>

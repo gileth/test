@@ -1,0 +1,31 @@
+CACHE MANIFEST
+# 2016-09-28:v1.10.1
+# 2016-09-08:v1.9.8
+# 2016-09-04:v1.9.7
+# 2016-08-04:v1.9.3
+# 2016-08-04:v1.9
+# 2016-07-14:v1.8
+# 2016-07-13:v1.7
+# 2016-07-10:v1.6
+# 2016-05-17:v1.5
+# 2016-05-16:v1.4
+
+CACHE:
+lib/ionic/fonts/ionicons.ttf
+# img/cursor/finger.png
+img/avatar.png
+css/style.css
+lib/ionic/css/ionic.min.css
+lib/ionic/css/ionic.css
+lib/ionic/js/ionic.bundle.js
+lib/ionic/js/ionic.bundle.min.js
+# js/app.js
+# js/directives.js
+# js/services.js
+# js/controllers.js
+index.html
+
+NETWORK:
+*
+
+FALLBACK:

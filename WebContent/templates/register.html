@@ -1,0 +1,44 @@
+﻿<ion-view view-title="注册">
+  <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+      <ion-nav-back-button>返回</ion-nav-back-button>
+  </ion-nav-bar>
+
+  <ion-content class="login-main">
+    <div class="list list-inset">
+        <label class="item item-input">
+          <i class="icon ion-person placeholder-icon"></i>
+          <input type="text" placeholder="请输入帐号" ng-model="data.username">
+        </label>
+        <label class="item item-input">
+          <i class="icon ion-key placeholder-icon"></i>
+          <input type="password" placeholder="请设置密码" ng-model="data.password" >
+        </label>
+        <label class="item item-input">
+          <i class="icon ion-key placeholder-icon"></i>
+          <input type="password" placeholder="请再次输入密码" ng-model="data.password_c">
+        </label>
+
+        <!--<label class="item item-input">
+            <i class="icon ion-person placeholder-icon"></i>
+            <input type="number" placeholder="推荐人帐号ID(邀请用户的数字ID,可不填写)" ng-model="data.parentId" >
+        </label>
+		<label class="item item-input">
+            <i class="icon ion-person placeholder-icon"></i>
+            <input type="number" placeholder="注册码" ng-model="data.codex" >
+        </label>
+        <label class="item item-input">
+            <i class="icon ion-person placeholder-icon"></i>
+            <input type="text" placeholder="微信账号/QQ号/手机号（随便填1个）" ng-model="data.wx" >
+        </label> -->
+
+
+
+        <button class="button button-block button-positive button-green" ng-click="doRegister()">注册</button>
+       <!-- <div class="item item-borderless">
+            <span ui-sref="tab.rooms" class="item-note">暂不注册，先随便看看</span>
+        </div> -->
+    </div>
+  </ion-content>
+
+</ion-view>
+

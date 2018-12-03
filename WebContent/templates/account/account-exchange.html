@@ -1,0 +1,30 @@
+<ion-view view-title="礼品兑换" need-login>
+  <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+    <ion-nav-back-button>返回</ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content>
+    <ion-refresher pulling-text="下拉刷新列表..." on-refresh="doRefresh()">
+    </ion-refresher>
+    <div class="list">
+      <div ng-if="records.length==0" style="margin: 10px;color: grey">
+        没有任何记录.
+      </div>
+
+      </div>
+
+      <div class="item card" ng-repeat="r in records">
+        <div class="row clearfix" >
+          <div class="left"><span style="color:darkgoldenrod;font-weight: bold">{{r.shopName}} </span></div>
+          <div class="right"><span style="color:grey">{{r.exchangeTime}}</span></div>
+          <br>
+          <div class="left"><span style="color:#555555">{{r.address}}</span></div>
+          <div class="right" ng-if="r.status=='0'"><span style="color: #555555">({{r.statusText}}) </span></div>
+          <div class="right" ng-if="r.status=='1'"><span style="color: darkgreen">({{r.statusText}}) {{r.dealInfo}}</span></div>
+          <div class="right" ng-if="r.status=='2'"><span style="color: #aa1111">({{r.statusText}}) {{r.dealInfo}}</span></div>
+        </div>
+      </div>
+    </div>
+    <ion-infinite-scroll on-infinite="loadMore()" ng-if="!noMoreItemsAvailable">
+    </ion-infinite-scroll>
+  </ion-content>
+</ion-view>

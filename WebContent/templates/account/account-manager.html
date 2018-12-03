@@ -1,0 +1,44 @@
+<ion-view view-title="我的账户" need-login>
+    <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+        <ion-nav-back-button>返回</ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content>
+        <ion-list>
+            <ion-item class="item-divider"></ion-item>
+
+            <ion-item class="item-icon-left item-icon-right">
+                <i class="icon ion-person"></i>
+                {{user.userId}}
+                <i class="icon ion-locked item-note"></i>
+            </ion-item>
+
+            <ion-item class="item-icon-left item-icon-right" ui-sref="tab.account-manager-updateName">
+                <i class="icon ion-ios-paw"></i>
+                {{user.nickName}}
+                <span class="item-note">修改昵称</span>
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item>
+            <ion-item class="item-divider"></ion-item>
+            <ion-item class="">
+                <b>账户安全</b>
+                <span class="item-note">请设置以下项目保护账号</span>
+            </ion-item>
+            <ion-item class="item-icon-left item-icon-right" ui-sref="tab.account-manager-updatePhone">
+                <i class="icon ion-iphone"></i>
+                绑定手机 <span ng-if="user.mobile" style="color:darkgray;font-style: italic;">{{user.mobile}}</span>
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item>
+            <ion-item class="item-icon-left item-icon-right" ui-sref="tab.account-manager-updatePsw">
+                <i class="icon ion-ios-unlocked-outline"></i>
+                修改密码
+                <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item>
+            <!--
+            <ion-item class="item-icon-left item-icon-right">
+              <i class="icon ion-ios-locked-outline"></i>
+              安保问题
+              <i class="icon ion-ios-arrow-right item-note"></i>
+            </ion-item> -->
+        </ion-list>
+    </ion-content>
+</ion-view>

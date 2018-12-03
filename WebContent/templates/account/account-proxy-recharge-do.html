@@ -1,0 +1,18 @@
+<ion-view view-title="代理上分" need-login>
+  <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+    <ion-nav-back-button>代理上分
+    </ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content>
+    <div class="list list-inset">
+      <label class="item item-input">
+        <input type="number" placeholder="请输入账户ID(数字ID)" ng-model="userId">
+      </label>
+      <label class="item item-input">
+        <input type="number" placeholder="请输入上分金额" ng-model="money">
+      </label>
+      <button class="button button-block button-positive button-green" ng-click="prixyRecharge(userId,money)">确定</button>
+      <button class="button button-block button-positive button-green" ng-click="checkRecharge(userId)">查询余额</button>
+    </div>
+  </ion-content>
+</ion-view>

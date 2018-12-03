@@ -1,0 +1,22 @@
+<ion-view view-title="PC返点日志" need-login>
+  <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+    <ion-nav-back-button>返回</ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content>
+    <ion-refresher pulling-text="下拉刷新列表..." on-refresh="doRefresh()">
+    </ion-refresher>
+    <div class="list">
+      <div ng-if="records.length==0" style="margin: 10px;color: grey">
+        没有任何记录.
+      </div>
+      <div class="item card" ng-repeat="r in records">
+        <div class="row clearfix">
+            <div class="left"><span style="color:forestgreen;"> {{r.total}}金币</span><span style="color:orangered;"> (+{{r.vote}}金币)</span></div>
+          <div class="right"><span style="color:grey">{{r.cacuDate}}</span></div>
+        </div>
+      </div>
+    </div>
+    <ion-infinite-scroll on-infinite="loadMore()" ng-if="!noMoreItemsAvailable">
+    </ion-infinite-scroll>
+  </ion-content>
+</ion-view>

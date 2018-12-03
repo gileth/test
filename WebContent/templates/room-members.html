@@ -1,0 +1,19 @@
+<ion-modal-view>
+    <ion-header-bar align-title="left" class="bar-dark bar-header-black">
+        <h1 class="title">房间成员({{members.length}})</h1>
+        <div class="buttons">
+            <button class="button button-clear" ng-click="closeMembersModal()">关闭</button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <div class="row row-wrap">
+            <div class="col col-20" ng-repeat="member in members" ng-click="openPopover($event, member, 1)">
+                <img ng-src="{{member.headImg}}" style="width: 100%;"/>
+                <div class="member-name" ng-class="{'room-owner': room.owner == member.id}">
+                    {{member.nickName}}
+                    <div ng-show="room.owner == member.id">(房主)</div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>

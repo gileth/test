@@ -1,0 +1,226 @@
+
+<html>
+<head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <script src="lib/jquery-3.1.0.min.js"></script>
+</head>
+
+<body>
+<script>
+    $.ajax({
+        url: '/pk',
+        success: function(data) {
+            var newInfo = data.body["new"];
+            if (newInfo) {
+                document.write("<table border='1'><tr><th>期号</th><th>开奖时间</th><th>开奖号码</th></tr>")
+                document.write("<tr><td>"+newInfo[0][0]+"</td><td>"+newInfo[0][2]+"</td><td>"+newInfo[0][1]+"</td></tr>")
+                document.write("</table>")
+            }
+            var rows = 6;
+            var cols = 30 ;
+            //大小
+            var dx = data.body["daxiao"];
+            for(var v =0;v<10;v++) {
+                var arr = dx[v];
+
+                document.write("<table >")
+                document.write("<tr><td colspan='" + (cols+1) + "' bgcolor='#cccccc' align='center'>第"+(v+1)+"名(大小)</td></tr>");
+                for (var i = 0; i < rows; i++) {
+                    document.write("<tr>");
+                    for (var j = 0; j < cols && i==0; j++) {
+                        if(j==23){
+                            document.write("<td width='5' style='background-color:  #aa1111'></td>")
+                        }
+                        document.write("<td width='30' bgcolor='#cccccc'>" + (i + rows * j + 1) + "</td>");
+                    }
+                    document.write("</tr>");
+
+                    document.write("<tr>");
+                    for (var j = 0; j < cols; j++) {
+                        var key = arr[i + rows * j ];
+                        if(j==23){
+                            document.write("<td width='5' style='background-color:  #aa1111'></td>")
+                        }
+                        if(!key){
+                            document.write("<td></td>");
+                            continue ;
+                        }
+
+                        if (key.indexOf("大")>=0) {
+                            document.write("<td bgcolor='#ffcc99'> 大 </td>");
+                        } else if(key.indexOf("小")>=0){
+                            document.write("<td bgcolor='#ccff99'> 小 </td>");
+                        }else{
+                            document.write("<td></td>");
+                        }
+                    }
+                    document.write("</tr>");
+                }
+                document.write("</table>");
+            }
+
+
+
+            //单双
+            var dx = data.body["danshuang"];
+            for(var v =0;v<10;v++) {
+                var arr = dx[v];
+
+                document.write("<table >")
+                document.write("<tr><td colspan='" +(cols+1)+ "' bgcolor='#cccccc' align='center'>第"+(v+1)+"名(单双)</td></tr>");
+                for (var i = 0; i < rows; i++) {
+                    document.write("<tr>");
+                    for (var j = 0; j < cols && i==0; j++) {
+                        if(j==23){
+                            document.write("<td width='5' style='background-color:  #aa1111'></td>")
+                        }
+
+                        document.write("<td width='30' bgcolor='#cccccc'>" + (i + rows * j + 1) + "</td>");
+                    }
+                    document.write("</tr>");
+                    document.write("<tr>");
+                    for (var j = 0; j < cols; j++) {
+                        var key = arr[i + rows * j ];
+                        if(j==23){
+                            document.write("<td style='background-color:  #aa1111'></td>")
+                        }
+
+                        if(!key){
+                            document.write("<td></td>");
+                            continue ;
+                        }
+                        if (key.indexOf("单")>=0) {
+                            document.write("<td bgcolor='#ffcc99'>单 </td>");
+                        } else if(key.indexOf("双")>=0){
+                            document.write("<td bgcolor='#ccff99'>双</td>");
+                        }else{
+                            document.write("<td></td>");
+                        }
+                    }
+                    document.write("</tr>");
+                }
+                document.write("</table>");
+            }
+
+
+            //龙虎
+            var dx = data.body["longhu"];
+            for(var v =0;v<5;v++) {
+                var arr = dx[v];
+                document.write("<table >")
+                document.write("<tr><td colspan='" +(cols+1)+ "' bgcolor='#cccccc' align='center'>龙虎"+(v+1)+"</td></tr>");
+                for (var i = 0; i < rows; i++) {
+                    document.write("<tr>");
+                    for (var j = 0; j < cols && i==0; j++) {
+                        if(j==23){
+                            document.write("<td width='5' style='background-color:  #aa1111'></td>")
+                        }
+                        document.write("<td width='30' bgcolor='#cccccc'>" + (i + rows * j + 1) + "</td>");
+                    }
+                    document.write("</tr>");
+
+                    document.write("<tr>");
+                    for (var j = 0; j < cols; j++) {
+                        var key = arr[i + rows * j ];
+                        if(j==23){
+                            document.write("<td width='5' style='background-color:  #aa1111'></td>")
+                        }
+                        if(!key){
+                            document.write("<td></td>");
+                            continue ;
+                        }
+                        if (key.indexOf("龙")>=0) {
+                            document.write("<td bgcolor='#ffcc99'> 龙 </td>");
+                        } else if(key.indexOf("虎")>=0){
+                            document.write("<td bgcolor='#ccff99'> 虎 </td>");
+                        }else{
+                            document.write("<td></td>");
+                        }
+                    }
+                    document.write("</tr>");
+                }
+                document.write("</table>");
+            }
+
+            //和值
+            var he = data.body["he"];
+            var arr = he[0];
+            document.write("<table >");
+            document.write("<tr><td colspan='" +(cols+1)+ "' bgcolor='#cccccc' align='center'>和值(单双)</td></tr>");
+            for (var i = 0; i < rows; i++) {
+                document.write("<tr>");
+                for (var j = 0; j < cols && i==0; j++) {
+                    if(j==23){
+                        document.write("<td width='5' style='background-color:  #aa1111'></td>")
+                    }
+                    document.write("<td width='30' bgcolor='#cccccc'>" + (i + rows * j + 1) + "</td>");
+                }
+                document.write("</tr>");
+
+                document.write("<tr>");
+                for (var j = 0; j < cols; j++) {
+                    var key = arr[i + rows * j ];
+                    if(j==23){
+                        document.write("<td width='5' style='background-color:  #aa1111'></td>")
+                    }
+                    if(!key){
+                        document.write("<td></td>");
+                        continue ;
+                    }
+                    if (key.indexOf("单")>=0) {
+                        document.write("<td bgcolor='#ffcc99'> 单 </td>");
+                    } else if(key.indexOf("双")>=0){
+                        document.write("<td bgcolor='#ccff99'> 双 </td>");
+                    }else{
+                        document.write("<td></td>");
+                    }
+                }
+                document.write("</tr>");
+            }
+            document.write("</table>");
+
+            //和值
+            var he = data.body["he"];
+            var arr = he[1];
+            document.write("<table >")
+            document.write("<tr><td colspan='" +(cols+1)+ "' bgcolor='#cccccc' align='center'>和值(大小)</td></tr>");
+            for (var i = 0; i < rows; i++) {
+                document.write("<tr>");
+                for (var j = 0; j < cols && i==0; j++) {
+                    if(j==23){
+                        document.write("<td width='5' style='background-color:  #aa1111'></td>")
+                    }
+                    document.write("<td width='30' bgcolor='#cccccc'>" + (i + rows * j + 1) + "</td>");
+                }
+                document.write("</tr>");
+
+                document.write("<tr>");
+                for (var j = 0; j < cols; j++) {
+                    var key = arr[i + rows * j ];
+                    if(j==23){
+                        document.write("<td width='5' style='background-color:  #aa1111'></td>")
+                    }
+                    if(!key){
+                        document.write("<td></td>");
+                        continue ;
+                    }
+                    if (key.indexOf("大")>=0) {
+                        document.write("<td bgcolor='#ffcc99'> 大 </td>");
+                    } else if(key.indexOf("小")>=0){
+                        document.write("<td bgcolor='#ccff99'> 小 </td>");
+                    }else{
+                        document.write("<td></td>");
+                    }
+                }
+                document.write("</tr>");
+            }
+            document.write("</table>");
+
+
+        }
+    });
+</script>
+
+</body>
+</html>

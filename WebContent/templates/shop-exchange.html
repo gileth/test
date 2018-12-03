@@ -1,0 +1,26 @@
+<ion-view view-title="{{shop.name}}" need-login>
+  <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+    <ion-nav-back-button>返回</ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content>
+      <div style="margin-left: 5px;margin-right: 5px;">
+          <img style="width: 100%" src="{{shop.img1}}"><br>
+          <div style="background-color: #EEE">
+              <span style="color:orangered;font-size: 26px;font-weight:bold;font-style: italic;">{{shop.money}}</span>
+              <span style="color:green;font-size: 11px;">金币</span>
+              <span style="color:darkred;font-size: 11px;">{{shop.storage}}库存</span>
+              <span class="item-buys">{{shop.exchanged}}人兑换</span>
+          </div>
+          <label class="item item-input">
+            <input type="text" placeholder="收货人" ng-model="contact.name">
+          </label>
+          <label class="item item-input">
+            <input type="text" placeholder="联系电话" ng-model="contact.mobile">
+          </label>
+          <label class="item item-input">
+            <input type="text" placeholder="地址" ng-model="contact.address">
+          </label>
+          <button class="button button-block button-positive button-green" ng-click="step2(shop,contact)">确认兑换</button>
+    </div>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,30 @@
+<ion-modal-view class="lottery-detail-view">
+    <ion-header-bar class="bar-assertive lottery-detail-header" align-title="center">
+        <div class="buttons">
+            <button class="button button-clear" ng-click="closeDetailModal()">关闭</button>
+        </div>
+        <h1 class="title">红包详情</h1>
+    </ion-header-bar>
+    <ion-content>
+        <div class="list">
+            <div ng-if="records.length==0" style="margin: 10px;color: grey">
+                没有任何记录.
+            </div>
+            <div class="item card" ng-repeat="r in details">
+                <div class="row clearfix" ng-show="r.inoutNum>0">
+                    <div class="left"><span style="color:grey;font-weight: bold">{{r.nickName}} </span></div>
+                    <div class="right"><span style="color:grey">{{r.createTime}}</span></div>
+                    <br>
+                    <div class="left"><span style="color:grey">金币：{{r.money.toFixed(2)}}({{r.desc1}})</span></div>
+                </div>
+
+                <div class="row clearfix" ng-show="r.inoutNum<=0">
+                    <div class="left"><span style="color:grey;font-weight: bold">{{r.nickName}}</span></div>
+                    <div class="right"><span style="color:grey">{{r.createTime}}</span></div>
+                    <br>
+                    <div class="left"><span style="color:forestgreen">金币：{{r.money.toFixed(2)}}({{r.desc1}})</span></div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>

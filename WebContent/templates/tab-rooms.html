@@ -1,0 +1,78 @@
+﻿
+<ion-view need-login>
+    <ion-content class="home-body">
+        <div class="main_wrap">
+          
+<div style="position: relative; height:100px; width:100%; margin-left:0px; margin-top:0px; background-color:#13161D;">
+  <div style="position: absolute; text-align:center; width:100%;vertical-align: middle; margin-top:9px;margin-left:0%"> 
+   
+   	<img ng-src="{{user?user.headImg:'/img/users.png'}}"  style=" height:83px;border: 5px solid #333; border-radius:50%;; overflow:hidden;" ui-sref='tab.account' /></img>
+  </div>  
+<div style="position: absolute; text-align: left; width:100%; vertical-align: middle; margin-top:25px;; margin-left:25px; left:20;  height: 19px; color:#FFFFFF; font-family: '微软雅黑', '黑体','新宋体';"><b>ID:{{user.id?user.id:""}} </b></div>  
+<div style="position: absolute; text-align: left; width:35%;; vertical-align: middle; margin-top:25px; margin-left:25px; left:20;  height: 19px; top: 33px; color:#FFFFFF; font-family: '微软雅黑', '黑体','新宋体';"><b>昵称：{{(user.nickName?user.nickName:"游客") | limitTo:6 }} </b></div>
+<div style="position: absolute; text-align: left; width:100%; vertical-align: middle; margin-top:27px; margin-left:70%;  height: 19px; left: 3px; "><img height="16" src="img/gold.png" /></div>
+<div style="position: absolute; text-align: left; width:100%; vertical-align: middle; margin-top:25px; margin-left:70%;  height: 19px; left: 22px; color:#FFFFFF; font-family: '微软雅黑', '黑体','新宋体';"><b>{{user.money}}</b></div>
+<div style="position: absolute; text-align: left; width:100%; vertical-align: middle; margin-top:27px; margin-left:70%;  height: 19px; left: 3px; top: 33px;"><img height="14" src="img/icon/users.png" />{{onlineCount}}</div>
+<div style="position: absolute; text-align: left; width:100%; vertical-align: middle; margin-top:25px; margin-left:70%;  height: 19px; left: 22px; top: 33px; color:#FFFFFF; font-family:  '微软雅黑', '黑体','新宋体';"><b>{{onlineCount}}</b></div>
+</div>
+             <div class="notice">
+                <div class="notice_inner">
+                    <ul>
+                        <li style="line-height: 30px;    height: 30px;">
+                            <marquee behavior="scroll">欢迎来到[快乐8] 程序仅供学习研究，请勿非法运营！</marquee>
+                            <div id="scrollobj" style="white-space:nowrap;overflow:hidden;"><span></span></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+ 
+           <div class="home-cover">
+                <div class="wrapper">
+                    <div class="marquee" ng-class="{'run':run}">
+                        <img ng-src="{{img}}" ng-repeat="img in marquee">
+                    </div>
+                </div>
+            </div> 
+            
+            
+             <div class="list list-inset" style="display: none;">
+      <label class="item item-input">
+        <input type="text" placeholder="请输入房间号查找房间" ng-model="roomId">
+      </label>
+      <button class="button button-block button-positive button-green" ng-click="searchRoom(roomId)">进入</button>
+    </div>
+    
+    
+            <div class="module game"  ng-repeat="gameType in gameTypes" ng-if="rooms[gameType.key] && rooms[gameType.key].length">
+                <div class="inner">					
+                    <div class="game_img" ng-click="showGameType(gameType.key)">
+                        <a href="">
+                            <img ng-src="{{'img/home/game_'+ gameType.key  +'.png'}}"/>
+                            <div class="text">
+                               
+                            </div>
+                        </a>
+                    </div>
+                    <div class="details clearfix"  ng-show="gameTypeHideStatus.showType == gameType.key">
+                        <div class="row" ng-repeat="row in rooms[gameType.key]">
+                            <div class="col" ng-repeat="room in row" ng-click=join(room)>
+                                <div class="col_inner">
+                                    <img ng-src="{{room.roomimg}}" />
+                                    <!--<img ng-src="{{'img/home/game_icon_'+ gameType.key  +'.png'}}"/> -->
+                                    <h3>{{room.name}}</h3>
+<p>在线:{{room.position}}/{{room.limitNum}}人</p> 
+                                </div>
+                            </div>
+                            <div class="col" ng-if="row.length < 2">
+                            </div>
+                            <div class="col" ng-if="row.length < 3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+ 
+
+ </div>
+    </ion-content>
+</ion-view>

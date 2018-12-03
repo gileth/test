@@ -1,0 +1,42 @@
+<ion-view view-title="走势图">
+  <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+    <ion-nav-back-button>返回</ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content>
+    <ion-refresher pulling-text="下拉刷新列表..." on-refresh="doRefresh()">
+    </ion-refresher>
+    <div class="list">
+      <div ng-if="records.length==0" style="margin: 10px;color: grey">
+        没有任何记录.
+      </div>
+        <div class="row clearfix" >
+            <div class="col col-30"><span style="color:grey;font-weight: bold">期号</span></div>
+            <div class="col"><span style="color:grey;font-weight: bold">开奖号</span></div>
+            <div class="col"><span style="color:grey;font-weight: bold">单双</span></div>
+            <div class="col"><span style="color:grey;font-weight: bold">大小</span></div>
+            <div class="col"><span style="color:grey;font-weight: bold">波</span></div>
+        </div>
+        <div ng-repeat="r in records">
+            <div class="row">
+                <div class="col col-30"><span style="color:grey;font-weight: bold">{{r.id}}</span></div>
+                <div class="col"><span style="color:grey;font-weight: bold">{{r.lucky}}</span></div>
+                <div class="col">
+                    <button class="button button-stable" style="font-weight: bold" ng-if="r.dan == true">单</button>
+                    <button class="button button-dark" style="font-weight: bold" ng-if="r.dan == false">双</button>
+                </div>
+                <div class="col">
+                    <button class="button button-energized" style="font-weight: bold" ng-if="r.da == true">大</button>
+                    <button class="button button-royal" style="font-weight: bold" ng-if="r.da == false">小</button>
+                </div>
+                <div class="col">
+                    <button class="button button-balanced" style="font-weight: bold" ng-if="r.color == 'green'">绿</button>
+                    <button class="button button-calm" style="font-weight: bold" ng-if="r.color == 'blue'">蓝</button>
+                    <button class="button button-assertive" style="font-weight: bold" ng-if="r.color == 'red'">红</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ion-infinite-scroll on-infinite="loadMore()" ng-if="!noMoreItemsAvailable">
+    </ion-infinite-scroll>
+  </ion-content>
+</ion-view>

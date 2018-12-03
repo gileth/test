@@ -1,0 +1,21 @@
+<ion-view view-title="创建牛牛房间">
+    <ion-header-bar align-title="center" class="bar-positive bar-header-black">
+        <h1 class="title">创建牛牛房间</h1>
+        <div class="buttons"><!--
+            <a class="button button-icon icon ion-ios-telephone-outline" href="http://www.baidu.com"></a>-->
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <div style="margin-left: 5px;margin-right: 5px;">
+            <img style="width: 100%" src="img/proxy.png"><br>
+            <div style="background-color: #EEE;padding: 5px;" >
+                <span style="color:darkorange;font-size: 16px;font-weight:bold;">牛牛房间申请</span><br><br>
+                使用<span style="color:orangered;font-size: 18px;font-weight:bold;font-style: italic">{{data.price}}</span>金币创建房间<br>
+                <br>
+            </div>
+            <button class="button button-block button-positive button-green" ng-click="applyRoom()">
+                我要创建
+            </button>
+        </div>
+    </ion-content>
+</ion-view>

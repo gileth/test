@@ -1,0 +1,19 @@
+<ion-view view-title="群成员管理" need-login xmlns="http://java.sun.com/jsf/html">
+    <ion-nav-bar class="bar-positive bar-header-black" align-title="center">
+        <ion-nav-back-button>返回</ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content>
+        <ion-list>
+            <ion-item ng-repeat="member in members" class="item-icon-right" ui-sref="tab.account-room-my-member-detail({id:member.id})">
+                <div style="font-size: 14px;">
+                    <span>{{member.nickName}}</span>
+                    (<span>ID:{{member.id}}</span>)<strong ng-show="member.isPartner==1" style="color: red">[{{member.rate}}%股]</strong>
+                    <i class="icon ion-ios-compose-outline item-note"></i>
+                </div>
+                <div style="font-size: 14px;text-align:right">
+
+                </div>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

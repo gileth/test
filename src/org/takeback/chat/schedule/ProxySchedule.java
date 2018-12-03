@@ -21,7 +21,7 @@ import org.takeback.chat.entity.PcBackRecord;
 import java.util.List;
 import org.takeback.chat.entity.PubConfig;
 import org.takeback.chat.service.admin.SystemConfigService;
-import org.takeback.chat.utils.SmsUtil2;
+import org.takeback.chat.utils.SmsUtil;
 import org.takeback.chat.entity.PubUser;
 import java.util.Map;
 import com.google.common.collect.ImmutableMap;
@@ -63,7 +63,7 @@ public class ProxySchedule
                 if (u.getMobile() == null) {
                     continue;
                 }
-                SmsUtil2.send(u.getMobile(), "\u60a8\u7684\u623f\u95f4\u4f59\u989d:" + grm.getRestMoney() + ",\u5f53\u4f4e\u4e8e50\u65f6\u623f\u95f4\u5c06\u88ab\u5220\u9664,\u8bf7\u53ca\u65f6\u5145\u503c!");
+                SmsUtil.send(u.getMobile(), "\u60a8\u7684\u623f\u95f4\u4f59\u989d:" + grm.getRestMoney() + ",\u5f53\u4f4e\u4e8e50\u65f6\u623f\u95f4\u5c06\u88ab\u5220\u9664,\u8bf7\u53ca\u65f6\u5145\u503c!");
             }
         }
         final Map<String, List<Double>> waterConfigs = this.getWaterConfig();

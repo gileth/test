@@ -143,11 +143,11 @@ public class ThirdPartyLoginController
             LocalDateTime expire = new LocalDateTime();
             expire = expire.plusDays(7);
             user.setTokenExpireTime(expire.toDate());
-            this.userService.updateUser(uid, new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of((Object)"accessToken", (Object)user.getAccessToken(), (Object)"tokenExpireTime", (Object)user.getTokenExpireTime())*/);
+            this.userService.updateUser(uid,  ImmutableMap.of( "accessToken",  user.getAccessToken(),  "tokenExpireTime",  user.getTokenExpireTime()));
             if (isApp) {
-                return ResponseUtils.jsonView( new HashMap<String,Object>()/*(Map<String, Object>)ImmutableMap.of((Object)"uid", (Object)uid, (Object)"username", (Object)user.getUserId(), (Object)"accessToken", (Object)user.getAccessToken())*/);
+                return ResponseUtils.jsonView(ImmutableMap.of("uid", uid,  "username", user.getUserId(), "accessToken", user.getAccessToken()));
             }
-            return ResponseUtils.modelView("jump",new HashMap<String,Object>() /*(Map<String, Object>)ImmutableMap.of((Object)"url", (Object)redirectUrl, (Object)"uid", (Object)uid, (Object)"username", (Object)user.getUserId(), (Object)"accessToken", (Object)user.getAccessToken())*/);
+            return ResponseUtils.modelView("jump",ImmutableMap.of("url", redirectUrl,  "uid", uid,  "username", user.getUserId(),  "accessToken",  user.getAccessToken()));
         }
     }
     
@@ -214,7 +214,7 @@ public class ThirdPartyLoginController
         if (isApp) {
             return ResponseUtils.jsonView(500, "\u767b\u5f55\u5931\u8d25\u3002");
         }
-        return ResponseUtils.modelView("jump", new HashMap<String,Object>() /*(Map<String, Object>)ImmutableMap.of((Object)"url", (Object)"/#/tab/login", (Object)"message", (Object)"\u767b\u5f55\u5931\u8d25\u3002")*/);
+        return ResponseUtils.modelView("jump",  ImmutableMap.of("url", "/#/tab/login", "message", "\u767b\u5f55\u5931\u8d25\u3002"));
     }
     
     private String getRedirectUrl(final HttpSession session) {

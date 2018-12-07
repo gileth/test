@@ -234,7 +234,7 @@ public class Room implements Item
     public void setOwner(final Integer owner) {
         this.owner = owner;
         if (0 == owner) {
-            this.ownerText = "\u7cfb\u7edf\u623f\u95f4";
+            this.ownerText = "系统房间";
         }
         else {
             this.ownerText = DictionaryController.instance().get("dic.pubuser").getText(String.valueOf(owner));

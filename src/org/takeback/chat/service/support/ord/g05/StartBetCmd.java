@@ -20,12 +20,12 @@ public class StartBetCmd implements Command
     @Override
     public void exec(final Map<String, Object> data, final Message message, final WebSocketSession session, final Room room, final User user) {
         if (!user.getId().equals(room.getOwner())) {
-            MessageUtils.sendCMD(session, "alert", "\u975e\u6cd5\u64cd\u4f5c!");
+            MessageUtils.sendCMD(session, "alert", "非法操作!");
             return;
         }
         if (room.getStep() == Room.STEP_CHECK3 || room.getStep() == Room.STEP_PLAY_FINISHED || room.getStep() == Room.STEP_START_BET) {
             room.setStep(Room.STEP_START_BET);
-            final Message msg = new Message("TXT_SYS", user.getId(), "<span style='color:red'>\u5f00\u59cb\u4e0b\u6ce8!</span>");
+            final Message msg = new Message("TXT_SYS", user.getId(), "<span style='color:red'>开始下注!</span>");
             MessageUtils.broadcast(room, msg);
             MessageUtils.sendCMD(session, "roomStep", Room.STEP_START_BET);
         }

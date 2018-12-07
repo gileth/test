@@ -78,7 +78,7 @@ public class ChongQingSpider
             final LotteryLog lotteryLog = ChongQingSpider.cache.get(0);
         }
         ChongQingSpider.cache.add(log);
-        System.out.println("\u6293\u53d6\u5230\u5f00\u5956\u53f7\u7801\uff1a" + log);
+        System.out.println("抓取到开奖号码：" + log);
         Collections.sort(ChongQingSpider.cache);
     }
     

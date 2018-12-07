@@ -64,7 +64,7 @@ public class MonitorService extends MyListServiceInt
         final Long id = Long.valueOf(pkey.toString());
         final ControlModel c = this.gameMonitor.getById(id);
         if (c == null) {
-            throw new CodedBaseRuntimeException("\u8bb0\u5f55\u4e22\u5931!");
+            throw new CodedBaseRuntimeException("记录丢失!");
         }
         this.afterLoad(c);
         return c;
@@ -79,7 +79,7 @@ public class MonitorService extends MyListServiceInt
         final String suggests = (data.get("suggests") == null) ? "" : data.get("suggests").toString();
         final ControlModel c = this.gameMonitor.getById(id);
         if (c == null) {
-            throw new CodedBaseRuntimeException("\u8bb0\u5f55\u4e22\u5931!");
+            throw new CodedBaseRuntimeException("记录丢失!");
         }
         c.setTargetRate(NumberUtil.round(targetRate / 100.0));
         c.setSuggests(suggests);

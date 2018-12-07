@@ -68,7 +68,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter
     }
     
     private void writeAuthorizeFailResponse(final HttpServletResponse response) throws IOException {
-        final String json = JSONUtils.toString(ImmutableMap.of("code", 401, "msg", "\u8bf7\u767b\u5f55\u8d26\u53f7\u3002"));
+        final String json = JSONUtils.toString(ImmutableMap.of("code", 401, "msg", "请登录账号。"));
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);

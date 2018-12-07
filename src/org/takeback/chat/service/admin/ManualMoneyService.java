@@ -26,7 +26,7 @@ public class ManualMoneyService extends MyListServiceInt
         final String userIdText = (String) data.get("userIdText");
         final PubUser user = this.dao.getUnique(PubUser.class, "userId", userIdText);
         if (user == null) {
-            throw new CodedBaseRuntimeException("\u7528\u6237\u4e0d\u5b58\u5728!");
+            throw new CodedBaseRuntimeException("用户不存在!");
         }
         Double money;
         try {
@@ -34,7 +34,7 @@ public class ManualMoneyService extends MyListServiceInt
         }
         catch (Exception e) {
             e.printStackTrace();
-            throw new CodedBaseRuntimeException("\u91d1\u989d\u4e0d\u6b63\u786e");
+            throw new CodedBaseRuntimeException("金额不正确");
         }
         final String hql = "update PubUser a set a.money = Coalesce(a.money,0) + :money where a.id=:uid";
         final Map<String, Object> param = new HashMap<String, Object>();
@@ -49,6 +49,6 @@ public class ManualMoneyService extends MyListServiceInt
             super.save(req);
             return;
         }
-        throw new CodedBaseRuntimeException("\u4f59\u989d\u589e\u52a0\u5931\u8d25!");
+        throw new CodedBaseRuntimeException("余额增加失败!");
     }
 }

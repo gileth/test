@@ -87,7 +87,7 @@ public class AppModuleLocator
     
     public Document toDic() {
         final Document doc = DocumentHelper.createDocument();
-        final Element root = doc.addElement("dic").addAttribute("name", "\u5e94\u7528\u83dc\u5355");
+        final Element root = doc.addElement("dic").addAttribute("name", "应用菜单");
         final List<Application> apps = this.getApps();
         for (final Application app : apps) {
             final Element eleA = root.addElement("item");

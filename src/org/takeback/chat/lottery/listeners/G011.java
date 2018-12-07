@@ -38,7 +38,7 @@ public class G011 extends DefaultGameListener
     
     @Override
     public boolean onBeforeRed(final LotteryFactory.DefaultLotteryBuilder builder) throws GameException {
-        throw new GameException(500, "\u4e0d\u5141\u8bb8\u53d1\u5305!");
+        throw new GameException(500, "不允许发包!");
     }
     
     public void processExpireEvent(final Lottery lottery) throws GameException {
@@ -46,7 +46,7 @@ public class G011 extends DefaultGameListener
         final Room room = this.roomStore.get(lottery.getRoomId());
         room.setStatus("0");
         this.game01Service.gameLotteryExpired(lottery, room);
-        final Message msg = new Message("TXT_SYS", 0, "<span style='color:#B22222'>\u6e38\u620f\u5305\u8fc7\u671f,\u6e38\u620f\u505c\u6b62</span>");
+        final Message msg = new Message("TXT_SYS", 0, "<span style='color:#B22222'>游戏包过期,游戏停止</span>");
         MessageUtils.broadcast(room, msg);
     }
     
@@ -71,14 +71,14 @@ public class G011 extends DefaultGameListener
         final Integer number = Integer.valueOf(this.getConifg(room.getId(), "conf_size"));
         final Double money = Double.valueOf(this.getConifg(room.getId(), "conf_money_start"));
         final Integer expreid = Integer.valueOf(this.getConifg(room.getId(), "conf_expired"));
-        final Lottery lottery = LotteryFactory.getDefaultBuilder(BigDecimal.valueOf(money), number).setDescription("\u6e38\u620f\u5f00\u59cb,\u795d\u4f60\u597d\u8fd0!").setSender(0).setType("2").setExpiredSeconds(expreid).setRoom(room).build();
+        final Lottery lottery = LotteryFactory.getDefaultBuilder(BigDecimal.valueOf(money), number).setDescription("游戏开始,祝你好运!").setSender(0).setType("2").setExpiredSeconds(expreid).setRoom(room).build();
         final GcLottery gcLottery = BeanUtils.map(lottery, GcLottery.class);
         this.lotteryService.save(GcLottery.class, gcLottery);
         this.lotteryService.setRoomStatus(room.getId(), "1");
         room.setStatus("1");
         final Message message = new Message("RED", 0, lottery);
         message.setHeadImg("img/system.png");
-        message.setNickName("\u7cfb\u7edf");
+        message.setNickName("系统");
         MessageUtils.broadcast(room, message);
     }
     
@@ -89,18 +89,18 @@ public class G011 extends DefaultGameListener
             String sendNickName = null;
             final User opener = this.userStore.get(lotteryDetail.getUid());
             if (0 == lottery.getSender()) {
-                sendNickName = "\u7cfb\u7edf";
+                sendNickName = "系统";
             }
             else {
                 final User sender = this.userStore.get(lottery.getSender());
                 if (opener.getId().equals(sender.getId())) {
-                    sendNickName = "\u81ea\u5df1";
+                    sendNickName = "自己";
                 }
                 else {
                     sendNickName = sender.getNickName();
                 }
             }
-            final String msg = "<span style='color:#F89C4C'>" + opener.getNickName() + "</span> \u9886\u53d6\u4e86<span style='color:#F89C4C'>" + sendNickName + "</span>\u53d1\u7684\u7ea2\u5305";
+            final String msg = "<span style='color:#F89C4C'>" + opener.getNickName() + "</span> 领取了<span style='color:#F89C4C'>" + sendNickName + "</span>发的红包";
             final Message notice = new Message("TXT_SYS", 0, msg);
             MessageUtils.broadcast(this.roomStore.get(lottery.getRoomId()), notice);
         }

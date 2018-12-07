@@ -144,7 +144,7 @@ public class PcEggStore
             datas = loadDateFromUrl(config.getDataSourceUrl());
         }
         catch (IOException e2) {
-            System.out.println("\u6570\u636e\u6e90\u6b47\u83dc!");
+            System.out.println("数据源歇菜!");
             return false;
         }
         this.lock.writeLock().lock();
@@ -267,7 +267,7 @@ public class PcEggStore
             data = loadDateFromUrl(config.getDataSourceUrl()).get(0);
         }
         catch (IOException e) {
-            System.out.println("\u6570\u636e\u6e90\u6b47\u83dc!");
+            System.out.println("数据源歇菜!");
             return null;
         }
         final String latest_id = (String) data.get("expect");
@@ -333,16 +333,16 @@ public class PcEggStore
         el.setOpenTime(new Date());
         String spc = "";
         if (luckyNum > 13) {
-            spc += "\u5927,";
+            spc += "大,";
         }
         else {
-            spc += "\u5c0f,";
+            spc += "小,";
         }
         if (luckyNum % 2 == 0) {
-            spc += "\u53cc";
+            spc += "双";
         }
         else {
-            spc += "\u5355";
+            spc += "单";
         }
         el.setSpecial(spc);
         return el;
@@ -400,7 +400,7 @@ public class PcEggStore
             System.out.println(loadDateFromUrl("http://c.apiplus.net/newly.do?token=632de92b6eed30ce&code=bjkl8&format=json"));
         }
         catch (IOException e) {
-            System.out.println("\u6570\u636e\u6e90\u6b47\u83dc!");
+            System.out.println("数据源歇菜!");
         }
     }
     
@@ -497,7 +497,7 @@ public class PcEggStore
                     logs = PcEggStore.this.pcEggService.getGameLog(latest.getId());
                     if (logs.size() != 0) {
                         content = new StringBuilder();
-                        content.append("<p><strong>\u672c\u671f\u4e0b\u6ce8\uff1a</strong></p>");
+                        content.append("<p><strong>本期下注：</strong></p>");
                         logs.iterator();
                         while (iterator.hasNext()) {
                             log = iterator.next();

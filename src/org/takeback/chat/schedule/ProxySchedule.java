@@ -63,7 +63,7 @@ public class ProxySchedule
                 if (u.getMobile() == null) {
                     continue;
                 }
-                SmsUtil.send(u.getMobile(), "\u60a8\u7684\u623f\u95f4\u4f59\u989d:" + grm.getRestMoney() + ",\u5f53\u4f4e\u4e8e50\u65f6\u623f\u95f4\u5c06\u88ab\u5220\u9664,\u8bf7\u53ca\u65f6\u5145\u503c!");
+                SmsUtil.send(u.getMobile(), "您的房间余额:" + grm.getRestMoney() + ",当低于50时房间将被删除,请及时充值!");
             }
         }
         final Map<String, List<Double>> waterConfigs = this.getWaterConfig();
@@ -177,11 +177,11 @@ public class ProxySchedule
     
     private List<Double> getValues(final String text) {
         final List<Double> res = new ArrayList<Double>();
-        final String pattern = "\u3010[0-9]+\u3011";
+        final String pattern = "【[0-9]+】";
         final Pattern p = Pattern.compile(pattern);
         final Matcher m = p.matcher(text);
         while (m.find()) {
-            res.add(Double.valueOf(m.group().replaceAll("[\u3010\u3011]", "")));
+            res.add(Double.valueOf(m.group().replaceAll("[【】]", "")));
         }
         return res;
     }

@@ -30,7 +30,7 @@ public class SystemDicProcessor
 {
     public Document getUsers() {
         final Document doc = DocumentHelper.createDocument();
-        final Element root = doc.addElement("dic").addAttribute("name", "\u7528\u6237\u5217\u8868");
+        final Element root = doc.addElement("dic").addAttribute("name", "用户列表");
         final SessionFactory sf = ApplicationContextHolder.getBean("sessionFactory", SessionFactory.class);
         Session ss = null;
         try {
@@ -54,7 +54,7 @@ public class SystemDicProcessor
     
     public Document getRoles() {
         final Document doc = DocumentHelper.createDocument();
-        final Element root = doc.addElement("dic").addAttribute("name", "\u89d2\u8272\u5217\u8868");
+        final Element root = doc.addElement("dic").addAttribute("name", "角色列表");
         try {
             final Resource r = ResourceCenter.load("roles");
             if (r.exists()) {
@@ -75,7 +75,7 @@ public class SystemDicProcessor
     
     public Document getUnits() {
         final Document doc = DocumentHelper.createDocument();
-        final Element root = doc.addElement("dic").addAttribute("name", "\u673a\u6784\u5217\u8868");
+        final Element root = doc.addElement("dic").addAttribute("name", "机构列表");
         final Organization unit = OrganController.getRoot();
         final Collection<Organization> units = unit.getChildren();
         for (final Organization u : units) {

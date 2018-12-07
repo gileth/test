@@ -59,7 +59,7 @@ public class Game01Service extends LotteryService
         }
         this.noticeResult(room, lottery, looserId, delay);
         this.sendNew(room, looser, delay);
-        final String msg = new StringBuffer("<span style='color:#B22222'>\u4f60\u624b\u6c14\u7cdf\u7cd5,\u4e0b\u4e2a\u7ea2\u5305\u7531\u4f60\u53d1\u51fa!</span>").toString();
+        final String msg = new StringBuffer("<span style='color:#B22222'>你手气糟糕,下个红包由你发出!</span>").toString();
         MessageUtils.send(looserId, room, new Message("TXT_SYS", looserId, msg));
     }
     
@@ -69,13 +69,13 @@ public class Game01Service extends LotteryService
         final User looser = this.userStore.get(looserId);
         final User lucky = this.userStore.get(luckyId);
         final LotteryDetail badLuckDetail = lottery.getDetail().get(looserId);
-        final String msg = new StringBuffer("\u6700\u4f73\u624b\u6c14 <span style='color:red'>").append(lucky.getNickName()).append(" (").append(luckyDetail.getCoin()).append("\u91d1\u5e01)</span><br>").append("\u624b\u6c14\u6700\u5dee <span style='color:green'>").append(looser.getNickName()).append("(").append(badLuckDetail.getCoin()).append("\u91d1\u5e01)</span>").toString();
+        final String msg = new StringBuffer("最佳手气 <span style='color:red'>").append(lucky.getNickName()).append(" (").append(luckyDetail.getCoin()).append("金币)</span><br>").append("手气最差 <span style='color:green'>").append(looser.getNickName()).append("(").append(badLuckDetail.getCoin()).append("金币)</span>").toString();
         MessageUtils.broadcast(room, new Message("TXT_SYS", 0, msg));
-        final String msg2 = new StringBuffer("<span style='color:red'><strong>").append(delay).append("\u79d2\u540e\u53d1\u51fa\u7ea2\u5305,\u51c6\u5907\u5f00\u62a2!</strong></span>").toString();
+        final String msg2 = new StringBuffer("<span style='color:red'><strong>").append(delay).append("秒后发出红包,准备开抢!</strong></span>").toString();
         MessageUtils.broadcast(room, new Message("TXT_SYS", 0, msg2));
         if (delay > 5) {
             final Integer half = delay / 2;
-            final String msg3 = new StringBuffer("<span style='color:red'><strong>").append(delay - half).append("\u79d2\u5012\u8ba1\u65f6,\u8896\u5b50\u62a1\u8d77!</strong></span>").toString();
+            final String msg3 = new StringBuffer("<span style='color:red'><strong>").append(delay - half).append("秒倒计时,袖子抡起!</strong></span>").toString();
             MessageUtils.broadcastDelay(room, new Message("TXT_SYS", 0, msg3), half);
         }
     }
@@ -84,7 +84,7 @@ public class Game01Service extends LotteryService
     public void open(final Lottery lottery, final User user, final Double money) {
         final int effected = this.dao.executeUpdate("update PubUser a set a.money = coalesce(a.money,0) - :money,a.exp=coalesce(exp,0)+:exp where a.id=:uid and a.money>=:money",  ImmutableMap.of("money", money, "exp", money, "uid", user.getId()));
         if (effected == 0) {
-            throw new CodedBaseRuntimeException("\u91d1\u5e01\u4e0d\u80fd\u5c11\u4e8e" + money + ",\u8bf7\u53ca\u65f6\u5145\u503c!");
+            throw new CodedBaseRuntimeException("金币不能少于" + money + ",请及时充值!");
         }
         final Room room = this.roomStore.get(lottery.getRoomId());
         final GcLotteryDetail gcLotteryDetail = new GcLotteryDetail();
@@ -116,7 +116,7 @@ public class Game01Service extends LotteryService
             money = money.subtract(new BigDecimal(room.getFeeAdd()));
         }
         final Integer number = Integer.valueOf(properties.get("conf_size").toString());
-        final String description = StringUtils.isEmpty((CharSequence)properties.get("conf_title").toString()) ? "\u606d\u559c\u53d1\u8d22" : properties.get("conf_title").toString();
+        final String description = StringUtils.isEmpty((CharSequence)properties.get("conf_title").toString()) ? "恭喜发财" : properties.get("conf_title").toString();
         final Integer expired = Integer.valueOf(properties.get("conf_expired").toString());
         final Map<String, Object> content = new HashMap<String, Object>();
         content.put("money", money);
@@ -124,7 +124,7 @@ public class Game01Service extends LotteryService
         content.put("description", description);
         message.setContent(content);
         final Map<String, Object> body = (Map<String, Object>)message.getContent();
-        final Lottery red = LotteryFactory.getDefaultBuilder(money, number).setDescription("\u606d\u559c\u53d1\u8d22,\u5927\u5409\u5927\u5229").setSender(looser.getId()).setType("2").setRoom(room).setExpiredSeconds(expired).build();
+        final Lottery red = LotteryFactory.getDefaultBuilder(money, number).setDescription("恭喜发财,大吉大利").setSender(looser.getId()).setType("2").setRoom(room).setExpiredSeconds(expired).build();
         final GcLottery gcLottery = BeanUtils.map(red, GcLottery.class);
         this.dao.save(GcLottery.class, gcLottery);
         final Message redMessage = BeanUtils.map(message, Message.class);
@@ -177,14 +177,14 @@ public class Game01Service extends LotteryService
                 final Double value = Double.valueOf(romProps.get(key).toString());
                 this.dao.executeUpdate("update GcRoom set sumPool = COALESCE(sumPool,0)-:bonus where id =:roomId ",  ImmutableMap.of( "bonus", value, "roomId", room.getId()));
                 money = money.add(new BigDecimal(value));
-                final String msg = new StringBuffer("<span style='color:#B22222'>").append(user.getNickName()).append(" \u624b\u6c14\u8d85\u597d,\u83b7\u5f97\u5956\u91d1</span><span style='font-size:16;color:red'>\uffe5").append(value).append("</span>").toString();
+                final String msg = new StringBuffer("<span style='color:#B22222'>").append(user.getNickName()).append(" 手气超好,获得奖金</span><span style='font-size:16;color:red'>￥").append(value).append("</span>").toString();
                 MessageUtils.broadcast(room, new Message("TXT_SYS", uid, msg));
             }
-            String desc = "\u5e78\u8fd0";
+            String desc = "幸运";
             Double inout = NumberUtil.round(money.subtract(redMoney).doubleValue());
             if (user.getId().equals(looserId)) {
                 inout = NumberUtil.round(money.subtract(redMoney).doubleValue());
-                desc = "\u6700\u5dee\u624b\u6c14";
+                desc = "最差手气";
             }
             final Map param = new HashMap();
             param.put("coin", d.getCoin());
@@ -252,7 +252,7 @@ public class Game01Service extends LotteryService
     private Integer who(final Lottery lottery, final Room room) {
         final Map<String, Object> romProps = room.getProperties();
         if (romProps.get("conf_looser") == null) {
-            throw new CodedBaseRuntimeException("\u914d\u7f6e\u4e22\u5931!");
+            throw new CodedBaseRuntimeException("配置丢失!");
         }
         final Integer unDead = room.getUnDead();
         final String rule = romProps.get("conf_looser").toString();

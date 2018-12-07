@@ -61,30 +61,30 @@ public class LogonManager
         final String uid = req.get("account");
         final String psw = req.get("password");
         if (StringUtils.isEmpty((CharSequence)uid) || StringUtils.isEmpty((CharSequence)psw)) {
-            return ResponseUtils.createBody(501, "\u7528\u6237\u540d\u6216\u8005\u5bc6\u7801\u4e0d\u80fd\u4e3a\u7a7a\uff01");
+            return ResponseUtils.createBody(501, "用户名或者密码不能为空！");
         }
         final String verifycode = req.get("verifycode");
         if (StringUtils.isEmpty((CharSequence)verifycode) || !verifycode.equalsIgnoreCase((String)WebUtils.getSessionAttribute(request, "verifycode"))) {
-            return ResponseUtils.createBody(504, "\u9a8c\u8bc1\u7801\u4e0d\u6b63\u786e");
+            return ResponseUtils.createBody(504, "验证码不正确");
         }
         WebUtils.setSessionAttribute(request, "verifycode", null);
         final User user = AccountCenter.getUser(uid);
         if (user == null) {
-            return ResponseUtils.createBody(503, "\u7528\u6237\u4e0d\u5b58\u5728");
+            return ResponseUtils.createBody(503, "用户不存在");
         }
         if (!user.validatePassword(psw)) {
-            return ResponseUtils.createBody(502, "\u5bc6\u7801\u4e0d\u6b63\u786e");
+            return ResponseUtils.createBody(502, "密码不正确");
         }
         final Collection<UserRoleToken> urts = user.getUserRoleTokens();
         if (urts.size() < 1) {
-            return ResponseUtils.createBody(505, "\u6ca1\u6709\u8bbe\u7f6e\u89d2\u8272");
+            return ResponseUtils.createBody(505, "没有设置角色");
         }
         final UserRoleToken urt = urts.iterator().next();
         if (urt.getRole() == null) {
-            return ResponseUtils.createBody(506, "\u6240\u5c5e\u89d2\u8272\u4e0d\u5b58\u5728");
+            return ResponseUtils.createBody(506, "所属角色不存在");
         }
         if (urt.getOrgan() == null) {
-            return ResponseUtils.createBody(507, "\u6240\u5c5e\u673a\u6784\u4e0d\u5b58\u5728");
+            return ResponseUtils.createBody(507, "所属机构不存在");
         }
         final HashMap urtMap = ConversionUtils.convert(urt, HashMap.class);
         final Organization organ = OrganController.getRoot();
@@ -181,21 +181,21 @@ public class LogonManager
             response.setContentType("text/html;charset=gbk");
             final PrintWriter pw = response.getWriter();
             if (this.initializeService.queryInitialized()) {
-                throw new CodedBaseRuntimeException("Illegal operate \uff01");
+                throw new CodedBaseRuntimeException("Illegal operate ！");
             }
             if (!passwd.equals(repasswd)) {
                 pw.println("<html><body>");
-                pw.println("<h2>\u9519\u8bef:\u5bc6\u7801\u4e0d\u4e00\u81f4</h2>");
+                pw.println("<h2>错误:密码不一致</h2>");
                 pw.println("<body/><html/>");
             }
             else if (passwd.length() < 6) {
                 pw.println("<html><body>");
-                pw.println("<h2>\u9519\u8bef:\u5bc6\u7801\u957f\u5ea6\u4e0d\u5408\u6cd5</h2>");
+                pw.println("<h2>错误:密码长度不合法</h2>");
                 pw.println("<body/><html/>");
             }
             else if (username.trim().length() < 4) {
                 pw.println("<html><body>");
-                pw.println("<h2>\u9519\u8bef:\u7528\u6237\u540d\u957f\u5ea6\u4e0d\u5408\u6cd5,\u957f\u5ea6\u5e94\u5927\u4e8e4\uff01</h2>");
+                pw.println("<h2>错误:用户名长度不合法,长度应大于4！</h2>");
                 pw.println("<body/><html/>");
             }
             else {

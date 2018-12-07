@@ -191,7 +191,7 @@ public class RobotService extends MyListService
             }
         }
         if (this.freeRobots.size() < num) {
-            throw new CodedBaseRuntimeException("\u7a7a\u95f2\u673a\u5668\u4eba:" + this.freeRobots.size() + "\u4e2a");
+            throw new CodedBaseRuntimeException("空闲机器人:" + this.freeRobots.size() + "个");
         }
         final List<RobotUser> robots = new ArrayList<RobotUser>();
         for (int j = 0; j < num; ++j) {

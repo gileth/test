@@ -103,13 +103,13 @@ public class ShowLotteryDetailCmd implements Command
         String sendNickName = null;
         String headImg = null;
         if (0 == lottery.getSender()) {
-            sendNickName = "\u7cfb\u7edf";
+            sendNickName = "系统";
             headImg = "img/avatar.png";
         }
         else {
             headImg = sender.getHeadImg();
             if (Objects.equals(message.getSender(), sender.getId())) {
-                sendNickName = "\u81ea\u5df1";
+                sendNickName = "自己";
             }
             else {
                 sendNickName = sender.getNickName();

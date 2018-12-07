@@ -113,7 +113,7 @@ public class RoomThread implements Runnable
         final User master = this.userStore.get(this.room.getMaster());
         if (this.room.getStep() == Room.STEP_FREE) {
             this.room.setStep(Room.STEP_MASTER);
-            final Message msg = new Message("TXT_SYS", manager.getId(), "<span style='color:red'>=====\u5f00\u59cb\u6807\u5e84=====</span>");
+            final Message msg = new Message("TXT_SYS", manager.getId(), "<span style='color:red'>=====开始标庄=====</span>");
             MessageUtils.broadcast(this.room, msg);
             return;
         }
@@ -137,7 +137,7 @@ public class RoomThread implements Runnable
             if (this.room.getStep() == Room.STEP_CHECK1) {
                 this.room.setStep(Room.STEP_CHECK2);
                 final GcMasterRecord masterRecord = this.gameG05Service.get(GcMasterRecord.class, this.room.getMasterRecordId());
-                final Message msg2 = new Message("TXT", manager.getId(), "<span style='color:green'>\u786e\u8ba4\u2460\u6b21</span> <span style='color:#B22222'>" + master.getNickName() + " <span style='color:orange;font-size:20px;font-weight:bold;font-style:italic'>" + masterRecord.getFreeze() + "</span>\u7ade\u6807,\u6709\u6ca1\u6709\u66f4\u9ad8?</span>");
+                final Message msg2 = new Message("TXT", manager.getId(), "<span style='color:green'>确认①次</span> <span style='color:#B22222'>" + master.getNickName() + " <span style='color:orange;font-size:20px;font-weight:bold;font-style:italic'>" + masterRecord.getFreeze() + "</span>竞标,有没有更高?</span>");
                 msg2.setHeadImg(manager.getHeadImg());
                 msg2.setNickName(manager.getNickName());
                 MessageUtils.broadcast(this.room, msg2);
@@ -146,7 +146,7 @@ public class RoomThread implements Runnable
             if (this.room.getStep() == Room.STEP_CHECK2) {
                 this.room.setStep(Room.STEP_CHECK3);
                 final GcMasterRecord masterRecord = this.gameG05Service.get(GcMasterRecord.class, this.room.getMasterRecordId());
-                final Message msg2 = new Message("TXT", manager.getId(), "<span style='color:green'>\u786e\u8ba4\u2461\u6b21</span> <span style='color:#B22222'>" + master.getNickName() + " <span style='color:orange;font-size:20px;font-weight:bold;font-style:italic'>" + masterRecord.getFreeze() + "</span>\u7ade\u6807,\u6709\u6ca1\u6709\u66f4\u9ad8?</span>");
+                final Message msg2 = new Message("TXT", manager.getId(), "<span style='color:green'>确认②次</span> <span style='color:#B22222'>" + master.getNickName() + " <span style='color:orange;font-size:20px;font-weight:bold;font-style:italic'>" + masterRecord.getFreeze() + "</span>竞标,有没有更高?</span>");
                 msg2.setHeadImg(manager.getHeadImg());
                 msg2.setNickName(manager.getNickName());
                 MessageUtils.broadcast(this.room, msg2);
@@ -158,7 +158,7 @@ public class RoomThread implements Runnable
                 final Double betable = NumberUtil.round(gmr.getFreeze() / maxTypes);
                 this.room.setMasterRecordId(gmr.getId());
                 this.room.setMaster(gmr.getUid());
-                final String txt = "<table style='color:#B22222'><tr><td colspan=2 align='center'><span style='color:red;font-weight:bold;font-size:20px;'>\u6807\u5e84\u7ed3\u675f!</span></td></tr><tr><td style='font-style:italic;font-weight:bold;font-size:18px;color:green' colspan=2>" + master.getNickName() + " <strong style='color:orange;font-style:italic;font-weight:bold;'>" + gmr.getFreeze() + " \u593a\u6807</strong></tr><tr><td >\u6700\u4f4e\u4e0b\u6ce8</td><td style='color:green'><strong>" + 10 + "</strong></td></tr><tr><td>\u6700\u9ad8\u4e0b\u6ce8</td><td style='color:red'><strong>" + 100 + "</strong></td></tr><tr><td>\u53ef\u62bc\u6ce8\u91d1\u989d</td><td style='color:orange'><strong>" + betable + "</strong></td></tr></table>";
+                final String txt = "<table style='color:#B22222'><tr><td colspan=2 align='center'><span style='color:red;font-weight:bold;font-size:20px;'>标庄结束!</span></td></tr><tr><td style='font-style:italic;font-weight:bold;font-size:18px;color:green' colspan=2>" + master.getNickName() + " <strong style='color:orange;font-style:italic;font-weight:bold;'>" + gmr.getFreeze() + " 夺标</strong></tr><tr><td >最低下注</td><td style='color:green'><strong>" + 10 + "</strong></td></tr><tr><td>最高下注</td><td style='color:red'><strong>" + 100 + "</strong></td></tr><tr><td>可押注金额</td><td style='color:orange'><strong>" + betable + "</strong></td></tr></table>";
                 final Message msg3 = new Message("TXT", manager.getId(), txt);
                 msg3.setHeadImg(manager.getHeadImg());
                 msg3.setNickName(manager.getNickName());
@@ -169,7 +169,7 @@ public class RoomThread implements Runnable
                 catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                final Message msg4 = new Message("TXT_SYS", manager.getId(), "<span style='color:red'>\u5f00\u59cb\u4e0b\u6ce8!</span>");
+                final Message msg4 = new Message("TXT_SYS", manager.getId(), "<span style='color:red'>开始下注!</span>");
                 MessageUtils.broadcast(this.room, msg4);
             }
             else if (this.room.getStep() == Room.STEP_START_BET) {
@@ -193,7 +193,7 @@ public class RoomThread implements Runnable
                 final Double deposit = money * maxTypes2;
                 final Integer masterRecordId = this.room.getMasterRecordId();
                 this.gameG05Service.bet(this.room, user, money, deposit, masterRecordId, "1");
-                final String txt2 = "<span style='color:#B22222'>[\u6ce8] </span><span style='color:orange;font-style:italic;font-weight:bold;font-size:18px;'>" + money + "</span> ";
+                final String txt2 = "<span style='color:#B22222'>[注] </span><span style='color:orange;font-style:italic;font-weight:bold;font-size:18px;'>" + money + "</span> ";
                 final Message msg5 = new Message("TXT", user.getId(), txt2);
                 msg5.setHeadImg(user.getHeadImg());
                 msg5.setNickName(user.getNickName());
@@ -203,7 +203,7 @@ public class RoomThread implements Runnable
                 if (this.gameG05Service.getBetRecords(this.room.getMasterRecordId()).size() == 0) {
                     final GcMasterRecord gmr2 = this.gameG05Service.get(GcMasterRecord.class, this.room.getMasterRecordId());
                     this.gameG05Service.restoreMasterMoney(this.room.getMasterRecordId());
-                    final Message msg2 = new Message("TXT_SYS", manager.getId(), "<span style='color:#B22222'>\u65e0\u4eba\u4e0b\u6ce8," + gmr2.getFreeze() + " \u5df2\u9000\u8fd8\u5e84\u4e3b\u8d26\u6237!</span>");
+                    final Message msg2 = new Message("TXT_SYS", manager.getId(), "<span style='color:#B22222'>无人下注," + gmr2.getFreeze() + " 已退还庄主账户!</span>");
                     MessageUtils.broadcast(this.room, msg2);
                     this.room.setStep(Room.STEP_FREE);
                     this.room.setMaster(0);
@@ -212,7 +212,7 @@ public class RoomThread implements Runnable
                     return;
                 }
                 this.room.setStep(Room.STEP_SEND_RED);
-                final Message msg = new Message("TXT_SYS", manager.getId(), "<span style='color:red'>\u622a\u6b62\u4e0b\u6ce8!</span>");
+                final Message msg = new Message("TXT_SYS", manager.getId(), "<span style='color:red'>截止下注!</span>");
                 MessageUtils.broadcast(this.room, msg);
             }
             else if (this.room.getStep() == Room.STEP_SEND_RED) {
@@ -246,7 +246,7 @@ public class RoomThread implements Runnable
                 final GcMasterRecord gmr2 = this.gameG05Service.get(GcMasterRecord.class, this.room.getMasterRecordId());
                 if (gmr2.getFreeze() < 8000.0) {
                     this.gameG05Service.restoreMasterMoney(this.room.getMasterRecordId());
-                    final Message msg2 = new Message("TXT_SYS", master.getId(), "<span style='color:#B22222'>" + master.getNickName() + "\u5df2\u4e0b\u5e84,\u5269\u4f59\u91d1\u5e01\u5df2\u9000\u8fd8\u8d26\u6237!</span>");
+                    final Message msg2 = new Message("TXT_SYS", master.getId(), "<span style='color:#B22222'>" + master.getNickName() + "已下庄,剩余金币已退还账户!</span>");
                     MessageUtils.broadcast(this.room, msg2);
                     this.room.setMaster(0);
                     this.room.setStep(Room.STEP_FREE);
@@ -255,14 +255,14 @@ public class RoomThread implements Runnable
                 }
                 if (RandomUtils.nextInt(10) % 3 == 0) {
                     this.gameG05Service.restoreMasterMoney(this.room.getMasterRecordId());
-                    final Message msg2 = new Message("TXT_SYS", master.getId(), "<span style='color:#B22222'>" + master.getNickName() + "\u5df2\u4e0b\u5e84,\u5269\u4f59\u91d1\u5e01\u5df2\u9000\u8fd8\u8d26\u6237!</span>");
+                    final Message msg2 = new Message("TXT_SYS", master.getId(), "<span style='color:#B22222'>" + master.getNickName() + "已下庄,剩余金币已退还账户!</span>");
                     MessageUtils.broadcast(this.room, msg2);
                     this.room.setMaster(0);
                     this.room.setStep(Room.STEP_FREE);
                     this.room.setMasterRecordId(0);
                     return;
                 }
-                final Message msg2 = new Message("TXT_SYS", manager.getId(), "<span style='color:red'>\u5f00\u59cb\u4e0b\u6ce8!</span>");
+                final Message msg2 = new Message("TXT_SYS", manager.getId(), "<span style='color:red'>开始下注!</span>");
                 MessageUtils.broadcast(this.room, msg2);
                 this.room.setStep(Room.STEP_START_BET);
                 try {
@@ -334,7 +334,7 @@ public class RoomThread implements Runnable
             for (final GcMasterRecord rec : masterRecords) {
                 if (rec.getUid().equals(user.getId())) {
                     this.gameG05Service.addMasterFreeze(user, rec.getId(), freeze - rec.getFreeze());
-                    final String txt = "<span style='color:orange;font-style:italic;font-weight:bold;font-size:26px;'>" + freeze + "</span> <span style='color:#B22222;'>\u53c2\u4e0e\u7ade\u6807</span>";
+                    final String txt = "<span style='color:orange;font-style:italic;font-weight:bold;font-size:26px;'>" + freeze + "</span> <span style='color:#B22222;'>参与竞标</span>";
                     final Message msg = new Message("TXT", user.getId(), txt);
                     msg.setHeadImg(user.getHeadImg());
                     msg.setNickName(user.getNickName());
@@ -348,7 +348,7 @@ public class RoomThread implements Runnable
         final GcMasterRecord gmr = this.gameG05Service.newMasterRecord(user, this.room, freeze);
         this.room.setMaster(user.getId());
         this.room.setMasterRecordId(gmr.getId());
-        final String txt2 = "<span style='color:orange;font-style:italic;font-weight:bold;font-size:26px;'>" + freeze + "</span> <span style='color:#B22222;'>\u53c2\u4e0e\u7ade\u6807</span>";
+        final String txt2 = "<span style='color:orange;font-style:italic;font-weight:bold;font-size:26px;'>" + freeze + "</span> <span style='color:#B22222;'>参与竞标</span>";
         final Message msg2 = new Message("TXT", user.getId(), txt2);
         msg2.setHeadImg(user.getHeadImg());
         msg2.setNickName(user.getNickName());
@@ -476,7 +476,7 @@ public class RoomThread implements Runnable
                     }
                     final Integer num = Integer.valueOf(this.room.getProperties().get("conf_size").toString());
                     final BigDecimal money = new BigDecimal(1 * num + 0.5);
-                    final Lottery lottery2 = LotteryFactory.getDefaultBuilder(money, num).setType("2").setSender(master.getId()).setDescription("\u606d\u559c\u53d1\u8d22,\u5927\u5409\u5927\u5229!").setRoom(this.room).build();
+                    final Lottery lottery2 = LotteryFactory.getDefaultBuilder(money, num).setType("2").setSender(master.getId()).setDescription("恭喜发财,大吉大利!").setRoom(this.room).build();
                     this.room.setMasterStamp(System.currentTimeMillis());
                     final GcLottery gcLottery = BeanUtils.map(lottery2, GcLottery.class);
                     final Double conf_money = Double.valueOf(this.room.getProperties().get("conf_money").toString());
@@ -563,7 +563,7 @@ public class RoomThread implements Runnable
         }
         final int d = (int)Math.round(Math.random() * 10.0) + 1;
         final Double money = Math.random() * 100.0;
-        final Lottery lottery = LotteryFactory.getDefaultBuilder(new BigDecimal(money), 1).setExpiredSeconds(1).setType("2").setTitle(key + " " + NumberUtil.round(d * 5) + "\u91d1\u5e01").setSender(robot.getId()).setDescription(log.getId() + "\u671f").build();
+        final Lottery lottery = LotteryFactory.getDefaultBuilder(new BigDecimal(money), 1).setExpiredSeconds(1).setType("2").setTitle(key + " " + NumberUtil.round(d * 5) + "金币").setSender(robot.getId()).setDescription(log.getId() + "期").build();
         try {
             lottery.open(0);
         }
@@ -603,7 +603,7 @@ public class RoomThread implements Runnable
             final Integer expired = Integer.valueOf(this.room.getProperties().get("conf_expired").toString());
             final Integer raidPoint = RandomUtils.nextInt(9);
             final DecimalFormat df = new DecimalFormat("0.00");
-            final Lottery lottery2 = LotteryFactory.getDefaultBuilder(new BigDecimal(money * (1.0 - rate)), size).setType("2").setSender(u.getId()).setExpiredSeconds(expired).setDescription(df.format(money * (1.0 - rate)) + "\u91d1/\u96f7" + raidPoint + "/" + perRate + "\u500d").setRoom(this.room).build();
+            final Lottery lottery2 = LotteryFactory.getDefaultBuilder(new BigDecimal(money * (1.0 - rate)), size).setType("2").setSender(u.getId()).setExpiredSeconds(expired).setDescription(df.format(money * (1.0 - rate)) + "金/雷" + raidPoint + "/" + perRate + "倍").setRoom(this.room).build();
             this.room.setMasterStamp(System.currentTimeMillis());
             this.room.getProperties().put("raid", raidPoint);
             final GcLottery gcLottery = BeanUtils.map(lottery2, GcLottery.class);
@@ -636,14 +636,14 @@ public class RoomThread implements Runnable
     static {
         level = 0;
         RoomThread.eggGroups = (Map<String, String[]>)new HashedMap();
-        RoomThread.group1 = new String[] { "\u5927", "\u5355", "\u5927\u5355", "\u6781\u5927", "\u7ea2", "\u9ec4", "\u84dd" };
-        RoomThread.group2 = new String[] { "\u5927", "\u53cc", "\u5927\u53cc", "\u6781\u5927", "\u7ea2", "\u9ec4", "\u84dd" };
-        RoomThread.group3 = new String[] { "\u5c0f", "\u5355", "\u5c0f\u5355", "\u6781\u5c0f", "\u7ea2", "\u9ec4", "\u84dd" };
-        RoomThread.group4 = new String[] { "\u5c0f", "\u53cc", "\u5c0f\u53cc", "\u6781\u5c0f", "\u7ea2", "\u9ec4", "\u84dd" };
+        RoomThread.group1 = new String[] { "大", "单", "大单", "极大", "红", "黄", "蓝" };
+        RoomThread.group2 = new String[] { "大", "双", "大双", "极大", "红", "黄", "蓝" };
+        RoomThread.group3 = new String[] { "小", "单", "小单", "极小", "红", "黄", "蓝" };
+        RoomThread.group4 = new String[] { "小", "双", "小双", "极小", "红", "黄", "蓝" };
         RoomThread.eggGroups.put("group1", RoomThread.group1);
         RoomThread.eggGroups.put("group2", RoomThread.group2);
         RoomThread.eggGroups.put("group3", RoomThread.group3);
         RoomThread.eggGroups.put("group4", RoomThread.group4);
-        RoomThread.talkList = new String[] { "\u6765\u4e2a\u8c79\u5b50...", "\u5367\u69fd,\u4eca\u5929\u624b\u6c14\u597d\u50cf\u5dee\u4e86\u70b9", "\u7ed9\u6211\u56de\u70b9\u8840\u5427!!!!!", "\u6211\u6253\u7b97\u6536\u624b\u4e86,\u8349 \u518d\u62a2\u5241\u624b\u4e86", "\u5475\u5475 \u6211\u770b\u7740\u4f60\u5241\u4e86", "\u6211\u4eca\u5929\u770b\u5230\u4e2a\u59b9\u5b50,\u5927\u8857\u4e0a\u5c31\u5618\u5618\u4e86\u8d77\u6765,\u57ce\u91cc\u4eba\u771f\u4f1a\u73a9", "\u611f\u89c9\u6709\u70b9\u6076\u641e", "\u5988\u7684\u8001\u662f\u6211,,", "\u8c01\u5141\u8bb8\u6211\u5531\u9996\u6b4c\u554a  \u8fd9\u4e2a\u8f6f\u4ef6\u5565\u90fd\u597d,\u5c31\u662f\u4e0d\u80fd\u8bed\u97f3", "\u74e6\u91cc\u683c\u6c14 \u6211\u80fd\u8bf4\u7684\u53ea\u6709\u5708\u5708\u548c\u53c9\u53c9\u4e86", "\u6211\u662f\u4e00\u4e2a\u5c0f\u6bdb\u9a74\u6211\u4ece\u6765\u90fd\u4e0d\u9f50", "\u597d\u65e0\u804a\u554a........." };
+        RoomThread.talkList = new String[] { "来个豹子...", "卧槽,今天手气好像差了点", "给我回点血吧!!!!!", "我打算收手了,草 再抢剁手了", "呵呵 我看着你剁了", "我今天看到个妹子,大街上就嘘嘘了起来,城里人真会玩", "感觉有点恶搞", "妈的老是我,,", "谁允许我唱首歌啊  这个软件啥都好,就是不能语音", "瓦里格气 我能说的只有圈圈和叉叉了", "我是一个小毛驴我从来都不齐", "好无聊啊........." };
     }
 }

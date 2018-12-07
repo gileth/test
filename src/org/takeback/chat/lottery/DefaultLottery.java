@@ -287,7 +287,7 @@ public class DefaultLottery implements Lottery
     
     @Override
     public String getDescription() {
-        return StringUtils.isEmpty((CharSequence)this.description) ? "\u606d\u559c\u53d1\u8d22,\u5927\u5409\u5927\u5229!" : this.description;
+        return StringUtils.isEmpty((CharSequence)this.description) ? "恭喜发财,大吉大利!" : this.description;
     }
     
     @Override

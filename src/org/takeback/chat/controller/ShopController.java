@@ -74,6 +74,6 @@ public class ShopController
             e.printStackTrace();
             return ResponseUtils.jsonView(500, e.getMessage());
         }
-        return ResponseUtils.jsonView(200, "\u5151\u6362\u6210\u529f");
+        return ResponseUtils.jsonView(200, "兑换成功");
     }
 }

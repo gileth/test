@@ -25,7 +25,7 @@ public class BetCmd implements Command
     public void exec(final Map<String, Object> data, final Message message, final WebSocketSession session, final Room room, final User user) {
         if (room.getStep() == Room.STEP_START_BET) {
             if (room.getMaster().equals(user.getId())) {
-                MessageUtils.sendCMD(session, "alert", "\u5e84\u5bb6\u65e0\u9700\u4e0b\u6ce8!");
+                MessageUtils.sendCMD(session, "alert", "庄家无需下注!");
                 return;
             }
             final String type = (String) data.get("type");
@@ -37,7 +37,7 @@ public class BetCmd implements Command
             }
             else {
                 if (!"2".equals(type)) {
-                    MessageUtils.sendCMD(session, "alert", "\u9519\u8bef\u7684\u4e0b\u6ce8\u547d\u4ee4!");
+                    MessageUtils.sendCMD(session, "alert", "错误的下注命令!");
                     return;
                 }
                 deposit = money;
@@ -45,7 +45,7 @@ public class BetCmd implements Command
             final Integer masterRecordId = room.getMasterRecordId();
             try {
                 this.gameG05Service.bet(room, user, money, deposit, masterRecordId, type);
-                MessageUtils.sendCMD(session, "alert", "\u4e0b\u6ce8\u6210\u529f!");
+                MessageUtils.sendCMD(session, "alert", "下注成功!");
                 final Message msg = new Message("TXT", user.getId(), this.buildMessage(money));
                 msg.setHeadImg(user.getHeadImg());
                 msg.setNickName(user.getNickName());
@@ -56,11 +56,11 @@ public class BetCmd implements Command
             }
         }
         else {
-            MessageUtils.sendCMD(session, "alert", "\u975e\u6295\u6ce8\u65f6\u95f4!");
+            MessageUtils.sendCMD(session, "alert", "非投注时间!");
         }
     }
     
     private String buildMessage(final Double money) {
-        return "<span style='color:#B22222'>[\u6ce8] </span><span style='color:orange;font-style:italic;font-weight:bold;font-size:18px;'>" + money + "</span> ";
+        return "<span style='color:#B22222'>[注] </span><span style='color:orange;font-style:italic;font-weight:bold;font-size:18px;'>" + money + "</span> ";
     }
 }

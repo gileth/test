@@ -45,11 +45,11 @@ public class UserService extends BaseService
     public void createRoom(final int uid) {
         final Double price = Double.valueOf(SystemConfigService.getInstance().getValue("conf_room_money").toString());
         if (price < 0.0) {
-            throw new CodedBaseRuntimeException("\u8d2d\u4e70\u914d\u7f6e\u51fa\u9519!");
+            throw new CodedBaseRuntimeException("购买配置出错!");
         }
         final String hql = "update PubUser set money=money - :price where money>:price and  id=:uid";
         if (0 == this.dao.executeUpdate(hql,  ImmutableMap.of( "price", price,  "uid", uid))) {
-            throw new CodedBaseRuntimeException("\u91d1\u5e01\u4e0d\u8db3,\u65e0\u6cd5\u521b\u5efa\u623f\u95f4!");
+            throw new CodedBaseRuntimeException("金币不足,无法创建房间!");
         }
         final GcRoom rm = new GcRoom();
         rm.setCatalog("");
@@ -57,7 +57,7 @@ public class UserService extends BaseService
         rm.setFeeAdd(0.05);
         rm.setHot(1);
         rm.setLimitNum(5000);
-        rm.setName("\u725b\u725b\u623f\u95f4");
+        rm.setName("牛牛房间");
         rm.setOwner(uid);
         rm.setPsw("");
         rm.setStatus("0");
@@ -102,18 +102,18 @@ public class UserService extends BaseService
     @Transactional(rollbackFor = { Throwable.class })
     public void transfer(final Integer uid, final Integer account, final double money) {
         if (!"1".equals(SystemConfigService.getInstance().getValue("conf_transfer"))) {
-            throw new CodedBaseRuntimeException("\u7cfb\u7edf\u8f6c\u8d26\u529f\u80fd\u5df2\u5173\u95ed!");
+            throw new CodedBaseRuntimeException("系统转账功能已关闭!");
         }
         final PubUser target = this.dao.get(PubUser.class, account);
         if (target == null) {
-            throw new CodedBaseRuntimeException("\u76ee\u6807\u8d26\u53f7\u4e0d\u5b58\u5728!");
+            throw new CodedBaseRuntimeException("目标账号不存在!");
         }
         if (target.getId().equals(uid)) {
-            throw new CodedBaseRuntimeException("\u4e0d\u5141\u8bb8\u7ed9\u81ea\u5df1\u8f6c\u8d26!");
+            throw new CodedBaseRuntimeException("不允许给自己转账!");
         }
         final int effected = this.dao.executeUpdate("update PubUser set money=money -:money where money >:money and  id=:uid", ImmutableMap.of( "money", (money + 0.0),  "uid",  uid));
         if (effected == 0) {
-            throw new CodedBaseRuntimeException("\u91d1\u989d\u4e0d\u8db3!");
+            throw new CodedBaseRuntimeException("金额不足!");
         }
         this.dao.executeUpdate("update PubUser set money=money +:money where id=:uid",  ImmutableMap.of( "money",  (money + 0.0),  "uid",  target.getId()));
         final PubUser fromUser = this.dao.get(PubUser.class, uid);
@@ -130,31 +130,31 @@ public class UserService extends BaseService
     @Transactional(rollbackFor = { Throwable.class })
     public void prixyRecharge(final Integer uid, final Integer account, final Integer money) {
         if (!"1".equals(SystemConfigService.getInstance().getValue("conf_proxyRecharge"))) {
-            throw new CodedBaseRuntimeException("\u529f\u80fd\u5df2\u5173\u95ed!");
+            throw new CodedBaseRuntimeException("功能已关闭!");
         }
         final PubUser target = this.dao.get(PubUser.class, account);
         if (target == null) {
-            throw new CodedBaseRuntimeException("\u76ee\u6807\u8d26\u53f7\u4e0d\u5b58\u5728!");
+            throw new CodedBaseRuntimeException("目标账号不存在!");
         }
         if (target.getId().equals(uid)) {
-            throw new CodedBaseRuntimeException("\u4e0d\u5141\u8bb8\u7ed9\u81ea\u5df1\u5145\u503c!");
+            throw new CodedBaseRuntimeException("不允许给自己充值!");
         }
         if (!uid.equals(target.getParent())) {
-            throw new CodedBaseRuntimeException("\u53ea\u80fd\u7ed9\u76f4\u63a5\u4e0b\u7ebf\u4e0a\u5206!");
+            throw new CodedBaseRuntimeException("只能给直接下线上分!");
         }
         if (money <= 0) {
-            throw new CodedBaseRuntimeException("\u8bf7\u8f93\u5165\u5927\u4e8e0\u7684\u91d1\u989d!");
+            throw new CodedBaseRuntimeException("请输入大于0的金额!");
         }
         final int effected = this.dao.executeUpdate("update PubUser set money=money -:money where money >:money and  id=:uid",  ImmutableMap.of( "money",  (money + 0.0), "uid",  uid));
         if (effected == 0) {
-            throw new CodedBaseRuntimeException("\u91d1\u989d\u4e0d\u8db3!");
+            throw new CodedBaseRuntimeException("金额不足!");
         }
         this.dao.executeUpdate("update PubUser set money=money +:money where  id=:uid", ImmutableMap.of( "money",  (money + 0.0),  "uid", target.getId()));
         final PubRecharge pubRecharge = new PubRecharge();
         pubRecharge.setStatus("1");
-        pubRecharge.setDescpt("\u4e0a\u5206");
+        pubRecharge.setDescpt("上分");
         pubRecharge.setFee(money + 0.0);
-        pubRecharge.setGoodsname("\u4e0a\u5206");
+        pubRecharge.setGoodsname("上分");
         pubRecharge.setTradeno(UUIDGenerator.get());
         pubRecharge.setTradetime(new Date());
         pubRecharge.setGift(0.0);
@@ -168,31 +168,31 @@ public class UserService extends BaseService
     @Transactional(rollbackFor = { Throwable.class })
     public void prixyUnRecharge(final Integer uid, final Integer account, final Integer money) {
         if (!"1".equals(SystemConfigService.getInstance().getValue("conf_proxyWithdraw"))) {
-            throw new CodedBaseRuntimeException("\u529f\u80fd\u5df2\u5173\u95ed!");
+            throw new CodedBaseRuntimeException("功能已关闭!");
         }
         final PubUser target = this.dao.get(PubUser.class, account);
         if (target == null) {
-            throw new CodedBaseRuntimeException("\u76ee\u6807\u8d26\u53f7\u4e0d\u5b58\u5728!");
+            throw new CodedBaseRuntimeException("目标账号不存在!");
         }
         if (target.getId().equals(uid)) {
-            throw new CodedBaseRuntimeException("\u4e0d\u5141\u8bb8\u7ed9\u81ea\u5df1\u5145\u503c!");
+            throw new CodedBaseRuntimeException("不允许给自己充值!");
         }
         if (!uid.equals(target.getParent())) {
-            throw new CodedBaseRuntimeException("\u53ea\u80fd\u7ed9\u76f4\u63a5\u4e0b\u7ebf\u4e0b\u5206!");
+            throw new CodedBaseRuntimeException("只能给直接下线下分!");
         }
         if (money <= 0) {
-            throw new CodedBaseRuntimeException("\u8bf7\u8f93\u5165\u5927\u4e8e0\u7684\u91d1\u989d!");
+            throw new CodedBaseRuntimeException("请输入大于0的金额!");
         }
         final int effected = this.dao.executeUpdate("update PubUser set money=money -:money where  id=:uid  and  money >:money",  ImmutableMap.of( "money",  (money + 0.0),  "uid",  target.getId()));
         if (effected == 0) {
-            throw new CodedBaseRuntimeException("\u91d1\u989d\u4e0d\u8db3!");
+            throw new CodedBaseRuntimeException("金额不足!");
         }
         this.dao.executeUpdate("update PubUser set money=money+:money where  id=:uid", ImmutableMap.of( "money",  (money + 0.0), "uid",  uid));
         final PubRecharge pubRecharge = new PubRecharge();
         pubRecharge.setStatus("1");
-        pubRecharge.setDescpt("\u4e0b\u5206");
+        pubRecharge.setDescpt("下分");
         pubRecharge.setFee(money + 0.0);
-        pubRecharge.setGoodsname("\u4e0b\u5206");
+        pubRecharge.setGoodsname("下分");
         pubRecharge.setTradeno(UUIDGenerator.get());
         pubRecharge.setTradetime(new Date());
         pubRecharge.setGift(0.0);
@@ -208,11 +208,11 @@ public class UserService extends BaseService
         final PubUser u = this.dao.get(PubUser.class, uid);
         final PubShop s = this.dao.get(PubShop.class, goodId);
         if (s.getStorage() < 1) {
-            throw new CodedBaseRuntimeException("\u5e93\u5b58\u5546\u54c1!");
+            throw new CodedBaseRuntimeException("库存商品!");
         }
         final int effected = this.dao.executeUpdate("update PubUser set money = coalesce(money,0) - :money where money>:money  and uid = :uid", ImmutableMap.of("money", s.getMoney(), "uid", uid));
         if (effected < 1) {
-            throw new CodedBaseRuntimeException("\u8d26\u6237\u91d1\u5e01\u4e0d\u8db3!");
+            throw new CodedBaseRuntimeException("账户金币不足!");
         }
         final PubExchangeLog pel = new PubExchangeLog();
         pel.setStatus("0");
@@ -289,7 +289,7 @@ public class UserService extends BaseService
     public PubUser register(final String username, final String password, final String mobile, final String wx, final String alipay, final Integer parent, final String ip) {
         PubUser user = this.dao.getUnique(PubUser.class, "userId", username);
         if (user != null) {
-            throw new CodedBaseRuntimeException("\u7528\u6237\u540d\u5df2\u5b58\u5728!");
+            throw new CodedBaseRuntimeException("用户名已存在!");
         }
         user = new PubUser();
         final String salt = CryptoUtils.getSalt();
@@ -354,12 +354,12 @@ public class UserService extends BaseService
     public void proxyApply(final Integer uid, final Map<String, Object> conf) {
         final PubUser u = this.dao.get(PubUser.class, uid);
         if ("2".equals(u.getUserType())) {
-            throw new CodedBaseRuntimeException("\u4f60\u5df2\u7ecf\u662f\u4ee3\u7406,\u65e0\u9700\u7533\u8bf7!");
+            throw new CodedBaseRuntimeException("你已经是代理,无需申请!");
         }
         final Double limit = Double.valueOf(conf.get("money").toString());
         final int effected = this.dao.executeUpdate("update PubUser set money=coalesce(money,0)-:money where money>=:money and  id =:uid ",  ImmutableMap.of( "money",  limit, "uid", uid));
         if (effected == 0) {
-            throw new CodedBaseRuntimeException("\u8d26\u6237\u91d1\u5e01\u4e0d\u8db3,\u7533\u8bf7\u5931\u8d25!");
+            throw new CodedBaseRuntimeException("账户金币不足,申请失败!");
         }
         this.dao.executeUpdate("update PubUser set userType = '2' where id =:uid ", ImmutableMap.of( "uid",  uid));
     }
@@ -368,30 +368,30 @@ public class UserService extends BaseService
     public void withdraw(final Map<String, Object> data, final int uid) {
         final double money = Double.valueOf(data.get("money").toString());
         if (money < 100.0) {
-            throw new CodedBaseRuntimeException("\u6700\u4f4e\u63d0\u73b0\u91d1\u989d100");
+            throw new CodedBaseRuntimeException("最低提现金额100");
         }
         final List<PubWithdraw> wl = this.dao.findByHql("from PubWithdraw where uid=:uid and tradetime>:startDate and tradetime<=:endDate", ImmutableMap.of( "uid",  uid,  "startDate", DateUtil.getStartOfToday(), "endDate", DateUtil.getEndOfToday()));
         if (wl.size() >= 3) {
-            throw new CodedBaseRuntimeException("\u6bcf\u5929\u63d0\u73b0\u6b21\u6570\u5df2\u8fbe\u4e0a\u9650:" + wl.size() + "\u6b21");
+            throw new CodedBaseRuntimeException("每天提现次数已达上限:" + wl.size() + "次");
         }
         final String bankName = data.get("bankName").toString();
         if (!ValidateUtil.instance().isChinese(bankName)) {
-            throw new CodedBaseRuntimeException("\u63d0\u6b3e\u94f6\u884c\u5fc5\u987b\u662f\u4e2d\u6587");
+            throw new CodedBaseRuntimeException("提款银行必须是中文");
         }
         final String account = data.get("account").toString();
         final String branch = data.get("branch").toString();
         if (branch != null && !"".equals(branch) && !ValidateUtil.instance().isChinese(bankName)) {
-            throw new CodedBaseRuntimeException("\u63d0\u6b3e\u94f6\u884c\u5206\u652f\u5fc5\u987b\u662f\u4e2d\u6587");
+            throw new CodedBaseRuntimeException("提款银行分支必须是中文");
         }
         final String ownerName = data.get("ownerName").toString();
         if (!ValidateUtil.instance().isChinese(bankName)) {
-            throw new CodedBaseRuntimeException("\u63d0\u6b3e\u59d3\u540d\u5fc5\u987b\u662f\u4e2d\u6587");
+            throw new CodedBaseRuntimeException("提款姓名必须是中文");
         }
         final String mobile = data.get("mobile").toString();
         final String hql = "update PubUser set money = money - :money where id=:id and money > :money";
         final int effect = this.dao.executeUpdate(hql,  ImmutableMap.of( "money", money, "id",  uid));
         if (effect == 0) {
-            throw new CodedBaseRuntimeException("\u91d1\u989d\u4e0d\u8db3");
+            throw new CodedBaseRuntimeException("金额不足");
         }
         final PubWithdraw pw = new PubWithdraw();
         pw.setAccount(account);

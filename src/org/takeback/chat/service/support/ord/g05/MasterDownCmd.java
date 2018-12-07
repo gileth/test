@@ -29,13 +29,13 @@ public class MasterDownCmd implements Command
     @Override
     public void exec(final Map<String, Object> data, final Message message, final WebSocketSession session, final Room room, final User user) {
         if (!user.getId().equals(room.getOwner())) {
-            MessageUtils.sendCMD(session, "alert", "\u975e\u6cd5\u64cd\u4f5c!");
+            MessageUtils.sendCMD(session, "alert", "非法操作!");
             return;
         }
         if (room.getStep() == Room.STEP_CHECK3 || room.getStep() == Room.STEP_PLAY_FINISHED) {
             this.gameG05Service.restoreMasterMoney(room.getMasterRecordId());
             final PubUser master = this.gameG05Service.get(PubUser.class, room.getMaster());
-            final Message msg = new Message("TXT_SYS", user.getId(), "<span style='color:#B22222'>" + master.getNickName() + "\u5df2\u4e0b\u5e84,\u5269\u4f59\u91d1\u5e01\u5df2\u9000\u8fd8\u8d26\u6237!</span>");
+            final Message msg = new Message("TXT_SYS", user.getId(), "<span style='color:#B22222'>" + master.getNickName() + "已下庄,剩余金币已退还账户!</span>");
             MessageUtils.broadcast(room, msg);
             room.setMaster(0);
             room.setStep(Room.STEP_FREE);
@@ -47,6 +47,6 @@ public class MasterDownCmd implements Command
     }
     
     private String buildMessage(final Double money) {
-        return "<span style='color:#B22222'>[\u6ce8] </span><span style='color:orange;font-style:italic;font-weight:bold;font-size:18px;'>" + money + "</span> ";
+        return "<span style='color:#B22222'>[注] </span><span style='color:orange;font-style:italic;font-weight:bold;font-size:18px;'>" + money + "</span> ";
     }
 }

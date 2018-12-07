@@ -23,7 +23,7 @@ public class SmsUtil3
     
 
 	public static void main(final String[] args) {
-        send("13625974105", "\u542c\u95fb,\u5b89\u6eaa\u6709\u4e2a\u59d3\u674e\u76842XD!");
+        send("13625974105", "听闻,安溪有个姓李的2XD!");
     }
     
     public static boolean send(final String phone, final String content) {
@@ -108,6 +108,6 @@ public class SmsUtil3
         SmsUtil3.httpUrl = "http://api.smsbao.com/sms";
         SmsUtil3.testUsername = "test02";
         SmsUtil3.testPassword = "test02";
-        SmsUtil3.sign = "\u3010\u75af\u72c2\u7684\u7ea2\u5305\u3011";
+        SmsUtil3.sign = "【疯狂的红包】";
     }
 }

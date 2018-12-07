@@ -51,16 +51,16 @@ public class PK10Service extends BaseService
                 final String lucky = pk.getLucky().split(",")[i];
                 final Integer num = Integer.parseInt(lucky);
                 if (num > 5) {
-                    bsData.add("\u5927[" + pk.getNumber() + ":" + lucky + "]");
+                    bsData.add("大[" + pk.getNumber() + ":" + lucky + "]");
                 }
                 else {
-                    bsData.add("\u5c0f[" + pk.getNumber() + ":" + lucky + "]");
+                    bsData.add("小[" + pk.getNumber() + ":" + lucky + "]");
                 }
                 if (num % 2 == 0) {
-                    dsData.add("\u53cc[" + pk.getNumber() + ":" + lucky + "]");
+                    dsData.add("双[" + pk.getNumber() + ":" + lucky + "]");
                 }
                 else {
-                    dsData.add("\u5355[" + pk.getNumber() + ":" + lucky + "]");
+                    dsData.add("单[" + pk.getNumber() + ":" + lucky + "]");
                 }
             }
             bs1.add(bsData);
@@ -74,10 +74,10 @@ public class PK10Service extends BaseService
                 final String lucky3 = pk2.getLucky().split(",")[9 - i];
                 final Integer num3 = Integer.parseInt(lucky3);
                 if (num2 > num3) {
-                    lhData.add("\u9f99");
+                    lhData.add("龙");
                 }
                 else {
-                    lhData.add("\u864e");
+                    lhData.add("虎");
                 }
             }
             lh1.add(lhData);
@@ -90,16 +90,16 @@ public class PK10Service extends BaseService
             final Integer num4 = Integer.parseInt(lucky2);
             final Integer num3 = Integer.parseInt(lucky4);
             if ((num4 + num3) % 2 == 0) {
-                dshe.add("\u53cc");
+                dshe.add("双");
             }
             else {
-                dshe.add("\u5355");
+                dshe.add("单");
             }
             if (num4 + num3 >= 11) {
-                dxhe.add("\u5927");
+                dxhe.add("大");
             }
             else {
-                dxhe.add("\u5c0f");
+                dxhe.add("小");
             }
         }
         he.add(dshe);

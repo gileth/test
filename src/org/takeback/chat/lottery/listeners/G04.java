@@ -33,7 +33,7 @@ public class G04 extends DefaultGameListener
             return true;
         }
         if (this.lotteryService.moneyDown(uid, money) < 1) {
-            throw new GameException(500, "\u91d1\u5e01\u4e0d\u80fd\u5c11\u4e8e" + money + ",\u8bf7\u53ca\u65f6\u5145\u503c!");
+            throw new GameException(500, "金币不能少于" + money + ",请及时充值!");
         }
         return true;
     }
@@ -44,9 +44,9 @@ public class G04 extends DefaultGameListener
         final Room room = this.roomStore.get(lottery.getRoomId());
         final User sender = this.userStore.get(lottery.getSender());
         final Integer tailPoint = NumberUtil.getTailPoint(lotteryDetail.getCoin());
-        final String raidStr = lottery.getDescription().charAt(lottery.getDescription().indexOf("\u96f7") + 1) + "";
+        final String raidStr = lottery.getDescription().charAt(lottery.getDescription().indexOf("雷") + 1) + "";
         final Integer raidPoint = Integer.valueOf(raidStr);
-        String msg = opener.getNickName() + " \u62a2\u4e86\u4f60\u7684\u7ea2\u5305,\u5e78\u8fd0\u8eb2\u8fc7\u4e86\u5730\u96f7!";
+        String msg = opener.getNickName() + " 抢了你的红包,幸运躲过了地雷!";
         if (lottery.getSender().equals(lotteryDetail.getUid())) {
             this.lotteryService.moneyUp(opener.getId(), lotteryDetail.getCoin().doubleValue());
             this.game04Service.saveDetail(lottery, lotteryDetail, lotteryDetail.getCoin().doubleValue());
@@ -56,7 +56,7 @@ public class G04 extends DefaultGameListener
             this.game04Service.saveDetail(lottery, lotteryDetail, lotteryDetail.getCoin().doubleValue());
         }
         else if (tailPoint.equals(raidPoint)) {
-            msg = "<span style='color:#F89C4C'>" + opener.getNickName() + "</span>\u4e0d\u5e78\u8e29\u4e2d\u4f60\u57cb\u4e0b\u7684\u5730\u96f7!</span>";
+            msg = "<span style='color:#F89C4C'>" + opener.getNickName() + "</span>不幸踩中你埋下的地雷!</span>";
             this.lotteryService.moneyUp(sender.getId(), this.getDeposit(room, lottery));
             this.lotteryService.moneyUp(opener.getId(), lotteryDetail.getCoin().doubleValue());
             this.game04Service.saveDetail(lottery, lotteryDetail, lotteryDetail.getCoin().doubleValue() - this.getDeposit(room, lottery));
@@ -78,12 +78,12 @@ public class G04 extends DefaultGameListener
         final int maxSize = Integer.valueOf(this.getConifg(room.getId(), "conf_max_size"));
         final int minSize = Integer.valueOf(this.getConifg(room.getId(), "conf_min_size"));
         if (builder.getNumber() > maxSize || builder.getNumber() < minSize) {
-            throw new GameException(500, "\u623f\u95f4\u9650\u5236\u7ea2\u5305\u4e2a\u6570:" + minSize + "-" + maxSize + "\u4e2a");
+            throw new GameException(500, "房间限制红包个数:" + minSize + "-" + maxSize + "个");
         }
         final Double maxMoney = Double.valueOf(this.getConifg(room.getId(), "conf_max_money"));
         final Double minMoney = Double.valueOf(this.getConifg(room.getId(), "conf_min_money"));
         if (builder.getMoney().doubleValue() > maxMoney || builder.getMoney().doubleValue() < minMoney) {
-            throw new GameException(500, "\u7ea2\u5305\u91d1\u5e01\u9650\u5236:" + minMoney + "-" + maxMoney);
+            throw new GameException(500, "红包金币限制:" + minMoney + "-" + maxMoney);
         }
         builder.setType("2");
         final int expired = Integer.valueOf(this.getConifg(room.getId(), "conf_expired"));
@@ -93,10 +93,10 @@ public class G04 extends DefaultGameListener
             raidPoint = Integer.valueOf(raid);
         }
         catch (Exception e) {
-            throw new GameException(500, "\u96f7\u70b9\u6570\u4e3a0-9\u7684\u4e2a\u4f4d\u6570\u5b57");
+            throw new GameException(500, "雷点数为0-9的个位数字");
         }
         if (raidPoint > 9 || raidPoint < 0) {
-            throw new GameException(500, "\u96f7\u70b9\u6570\u4e3a0-9\u7684\u4e2a\u4f4d\u6570\u5b57");
+            throw new GameException(500, "雷点数为0-9的个位数字");
         }
         double perRate = Double.valueOf(this.getConifg(room.getId(), "conf_rate"));
         if (room.getProperties().containsKey("p_" + builder.getNumber())) {
@@ -105,11 +105,11 @@ public class G04 extends DefaultGameListener
         final double water = this.getWater(room, builder.getMoney().doubleValue());
         final double cutMoney = builder.getMoney().doubleValue();
         builder.setMoney(NumberUtil.round(builder.getMoney().subtract(new BigDecimal(water))));
-        builder.setDescription(builder.getMoney() + "\u91d1/\u96f7" + raidPoint + "/" + perRate + "\u500d");
+        builder.setDescription(builder.getMoney() + "金/雷" + raidPoint + "/" + perRate + "倍");
         builder.setExpiredSeconds(expired);
         final int affected = this.lotteryService.moneyDown(sender, cutMoney);
         if (affected == 0) {
-            throw new GameException(500, "\u91d1\u5e01\u4e0d\u8db3!\u4f59\u989d\u5fc5\u987b\u5927\u4e8e" + cutMoney);
+            throw new GameException(500, "金币不足!余额必须大于" + cutMoney);
         }
         return true;
     }
@@ -121,7 +121,7 @@ public class G04 extends DefaultGameListener
         room.setStatus("1");
         MessageUtils.broadcast(room, new Message("gameBegin", null));
         if (room.getUnDead() != null && room.getUnDead() > 0) {
-            System.out.println("\u514d\u6b7b\u865f\uff1a" + room.getUnDead());
+            System.out.println("免死號：" + room.getUnDead());
             final BigDecimal b = l.fakeOpen(room.getUnDead());
             this.lotteryService.moneyUp(room.getUnDead(), b.doubleValue());
         }
@@ -138,7 +138,7 @@ public class G04 extends DefaultGameListener
         if (!"9".equals(sender.getUserType())) {
             this.game04Service.setWater(room.getId(), sender, water, lottery.getId());
         }
-        final Message rmsg = new Message("TXT_SYS", 0, sender.getUserId() + "\u6e38\u620f\u5305\u5df2\u88ab\u62a2\u5149!");
+        final Message rmsg = new Message("TXT_SYS", 0, sender.getUserId() + "游戏包已被抢光!");
         MessageUtils.broadcast(room, rmsg);
         this.game04Service.setMasterMonitorData(lottery);
         this.showLotteryResult(lottery);
@@ -153,16 +153,16 @@ public class G04 extends DefaultGameListener
             final LotteryDetail ld = lottery.getDetail().get(uid);
             final User player = this.userStore.get(ld.getUid());
             if (uid.equals(lottery.getSender())) {
-                msg.append("<tr style='color:#0493b2'><td>\u3016\u53d1\u3017</td><td class='g021-nick-name'>").append(player.getNickName()).append("</td><td>\u514d\u6b7b</td></tr>");
+                msg.append("<tr style='color:#0493b2'><td>〖发〗</td><td class='g021-nick-name'>").append(player.getNickName()).append("</td><td>免死</td></tr>");
             }
             else {
-                final String raidStr = lottery.getDescription().charAt(lottery.getDescription().indexOf("\u96f7") + 1) + "";
+                final String raidStr = lottery.getDescription().charAt(lottery.getDescription().indexOf("雷") + 1) + "";
                 final Integer tailPoint = NumberUtil.getTailPoint(ld.getCoin());
                 if (tailPoint.toString().equals(raidStr)) {
-                    msg.append("<tr  style='color:#B22222'><td>\u3016\u62a2\u3017</td><td class='g021-nick-name'>").append(player.getNickName()).append("</td><td>\u4e2d\u96f7</td></tr>");
+                    msg.append("<tr  style='color:#B22222'><td>〖抢〗</td><td class='g021-nick-name'>").append(player.getNickName()).append("</td><td>中雷</td></tr>");
                 }
                 else {
-                    msg.append("<tr><td>\u3016\u62a2\u3017</td><td class='g021-nick-name'>").append(player.getNickName()).append("</td><td>\u65e0\u96f7</td></tr>");
+                    msg.append("<tr><td>〖抢〗</td><td class='g021-nick-name'>").append(player.getNickName()).append("</td><td>无雷</td></tr>");
                 }
             }
         }
@@ -183,12 +183,12 @@ public class G04 extends DefaultGameListener
             }
             this.lotteryService.moneyUp(lottery.getSender(), money);
         }
-        final Message rmsg = new Message("TXT_SYS", 0, sender.getUserId() + " \u7684\u96f7\u5305\u5df2\u8fc7\u671f!");
+        final Message rmsg = new Message("TXT_SYS", 0, sender.getUserId() + " 的雷包已过期!");
         MessageUtils.broadcast(room, rmsg);
         this.lotteryService.setLotteryExpired(lottery.getId());
         this.game04Service.setMasterMonitorData(lottery);
         if (lottery.getRestMoney().doubleValue() > 0.0) {
-            final Message notcie = new Message("TXT_SYS", 0, "\u4f60\u7684\u96f7\u5305\u5df2\u8fc7\u671f!" + NumberUtil.round(lottery.getRestMoney().doubleValue()) + "\u91d1\u5e01\u5df2\u7ecf\u9000\u5165\u8d26\u6237!");
+            final Message notcie = new Message("TXT_SYS", 0, "你的雷包已过期!" + NumberUtil.round(lottery.getRestMoney().doubleValue()) + "金币已经退入账户!");
             MessageUtils.send(lottery.getSender(), room, notcie);
         }
         this.showLotteryResult(lottery);

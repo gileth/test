@@ -71,7 +71,7 @@ public class Chat implements WebSocketMessageBrokerConfigurer
     }
     
     public void configureMessageBroker(final MessageBrokerRegistry messageBrokerRegistry) {
-        System.out.println("\u670d\u52a1\u5668\u542f\u52a8\u6210\u529f");
+        System.out.println("服务器启动成功");
         messageBrokerRegistry.enableSimpleBroker(new String[] { "/userChat" });
         messageBrokerRegistry.setApplicationDestinationPrefixes(new String[] { "/app" });
     }

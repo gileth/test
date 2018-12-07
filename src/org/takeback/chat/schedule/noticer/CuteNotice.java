@@ -32,7 +32,7 @@ public class CuteNotice extends Thread
                     final Long timeLeft = lub.getNextOpenRestTime();
                     TimeUnit.SECONDS.sleep(timeLeft + 1L);
                     lub = new LotteryUtilBean();
-                    final String txt = new StringBuffer("<span style='color:#B22222'>").append(lub.getCurrentStage()).append("\u671f\u505c\u6b62\u4e0b\u6ce8,").append(lub.getNextStage()).append("\u5f00\u59cb\u4e0b\u6ce8\uff01</span>").toString();
+                    final String txt = new StringBuffer("<span style='color:#B22222'>").append(lub.getCurrentStage()).append("期停止下注,").append(lub.getNextStage()).append("开始下注！</span>").toString();
                     final Message msg = new Message("TXT_SYS", 0, txt);
                     for (final String roomId : this.rooms) {
                         final Room r = this.roomStore.get(roomId);

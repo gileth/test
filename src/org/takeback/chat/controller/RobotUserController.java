@@ -62,7 +62,7 @@ public class RobotUserController
                 }
                 final List<RobotUser> robots = this.robotService.load(8);
                 if (robots.size() == 0) {
-                    return ResponseUtils.jsonView(500, "error", "\u673a\u5668\u4eba\u4e0d\u591f\u7528");
+                    return ResponseUtils.jsonView(500, "error", "机器人不够用");
                 }
                 for (int i = 0; i < robots.size(); ++i) {
                     final RobotUser r = robots.get(i);

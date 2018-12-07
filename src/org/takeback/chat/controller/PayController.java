@@ -81,7 +81,7 @@ public class PayController
     public ModelAndView payApply(@RequestBody final Map<String, String> data, final HttpSession session) {
         final String payChannel = data.get("payChannel");
         final String strTotalFee = data.get("totalFee");
-        final String title = "\u5145\u503c";
+        final String title = "充值";
         String identityId = null;
         if (payChannel.equals("YEE_WAP")) {
             identityId = UUID.randomUUID().toString().replace("-", "");
@@ -97,7 +97,7 @@ public class PayController
         }
         catch (PaymentException e) {
             PayController.LOGGER.error("Failed to apply payment transaction", (Throwable)e);
-            return ResponseUtils.jsonView(500, "\u652f\u4ed8\u5931\u8d25.");
+            return ResponseUtils.jsonView(500, "支付失败.");
         }
     }
     
@@ -105,7 +105,7 @@ public class PayController
     @RequestMapping(value = { "apply/wx" }, method = { RequestMethod.POST })
     public ModelAndView payApplyWx(@RequestBody final Map<String, String> data) {
         final String strTotalFee = data.get("totalFee");
-        final String title = "\u5145\u503c";
+        final String title = "充值";
         final double totalFee = Double.valueOf(strTotalFee);
         final String url = "";//PayOrderFactory.getInstance().getWxAuthorizeUrl(title, totalFee);
         return ResponseUtils.jsonView(url);
@@ -114,7 +114,7 @@ public class PayController
     @AuthPassport
     @RequestMapping(value = { "apply/wx" }, method = { RequestMethod.GET })
     public ModelAndView payApplyWxRedirected(@RequestParam final double totalFee, @RequestParam final String code, final HttpServletRequest request) {
-        final String title = "\u5145\u503c";
+        final String title = "充值";
         BCOrder bcOrder = null;
         try {
             bcOrder = PayOrderFactory.getInstance().getWxJSPayOrder((int)totalFee, title, code);
@@ -148,7 +148,7 @@ public class PayController
     
     @RequestMapping(value = { "hrefbackurl" }, method = { RequestMethod.GET })
     public void hrefbackurl(final HttpServletRequest request, final HttpServletResponse response) {
-        System.out.println("\u8fdb\u6765hrefbackurl");
+        System.out.println("进来hrefbackurl");
         final String md5key = "";//StringUtils.formatString(EkaPayConfig.key);
         final String orderid = request.getParameter("orderid");
         final String opstate = request.getParameter("opstate");
@@ -159,31 +159,31 @@ public class PayController
         final String attach =request.getParameter("attach");
         final String msg = request.getParameter("msg");
         if (!StringUtils.isBlank(orderid) || !StringUtils.isBlank(opstate) || !StringUtils.isBlank(ovalue) || !StringUtils.isBlank(sign)) {
-            System.out.println("\u51fa\u95ee\u9898\u4e86orderid=" + orderid + "&opstate=" + opstate + "&ovalue=" + ovalue + "&sign=" + sign);
+            System.out.println("出问题了orderid=" + orderid + "&opstate=" + opstate + "&ovalue=" + ovalue + "&sign=" + sign);
             this.getOut(response).println("opstate=-1");
             return;
         }
-        System.out.println("\u6b63\u786e\u7684");
+        System.out.println("正确的");
         final String checksign = "";//EkaPayEncrypt.obaopayCardBackMd5Sign(orderid, opstate, ovalue, md5key);
         if (checksign.equals(sign)) {
-            System.out.println("\u9a8c\u8bc1\u901a\u8fc7");
+            System.out.println("验证通过");
             if (opstate.equals("0") || opstate.equals("-3")) {
                 final PubRecharge pubRecharge = this.pubRechargeService.getRechargeRecordByTradeNo(orderid);
                 System.out.println("///////////////////////////////////////////////////" + pubRecharge.getStatus());
                 if (pubRecharge.getStatus().equals("1")) {
-                    System.out.println("\u8fdb\u6765\u8fd9\u91cc" + Double.valueOf(ovalue));
+                    System.out.println("进来这里" + Double.valueOf(ovalue));
                     pubRecharge.setRealfee((double)Double.valueOf(ovalue));
                     this.pubRechargeService.setRechargeFinished(pubRecharge);
                 }
-                this.getOut(response).println("<script>alert('\u5145\u503c\u6210\u529f');location.href='http://www.6556hb.com/#/tab/account';</script>");
+                this.getOut(response).println("<script>alert('充值成功');location.href='http://www.6556hb.com/#/tab/account';</script>");
             }
             else {
-                this.getOut(response).println("<script>alert('\u5145\u503c\u5931\u8d25');location.href='http://www.6556hb.com/#/tab/account';</script>");
+                this.getOut(response).println("<script>alert('充值失败');location.href='http://www.6556hb.com/#/tab/account';</script>");
             }
         }
         else {
-            System.out.println("\u9a8c\u8bc1\u5931\u8d25");
-            this.getOut(response).println("<script>alert('\u5145\u503c\u5931\u8d25');location.href='http://www.6556hb.com/#/tab/account';</script>");
+            System.out.println("验证失败");
+            this.getOut(response).println("<script>alert('充值失败');location.href='http://www.6556hb.com/#/tab/account';</script>");
         }
     }
     
@@ -227,7 +227,7 @@ public class PayController
         final String md5key = "";//StringUtils.formatString(EkaPayConfig.key);
         final String api_url = "";//StringUtils.formatString(EkaPayConfig.bank_url);
         final Integer uid = (Integer)WebUtils.getSessionAttribute(request, "$uid");
-        final String title = "\u5145\u503c";
+        final String title = "充值";
         String orderid = new StringBuilder().append(uid).append(new Date().getTime()).toString();
         final PubRecharge pubRecharge = new PubRecharge();
         pubRecharge.setStatus("1");
@@ -267,13 +267,13 @@ public class PayController
     public ModelAndView payApplyKoudai(@RequestBody final Map<String, String> params, final HttpServletRequest request) {
         final Object totalFee = params.get("totalFee");
         if (totalFee == null || !NumberUtils.isNumber(totalFee.toString())) {
-            return ResponseUtils.jsonView(500, "\u5145\u503c\u91d1\u989d\u4e0d\u5bf9\u3002");
+            return ResponseUtils.jsonView(500, "充值金额不对。");
         }
         final Double fee = NumberUtils.createDouble(totalFee.toString());
         if (fee < 2.0) {
-            return ResponseUtils.jsonView(500, "\u5145\u503c\u91d1\u989d\u4e0d\u80fd\u5c0f\u4e8e\uffe52.00\u3002");
+            return ResponseUtils.jsonView(500, "充值金额不能小于￥2.00。");
         }
-        String title = "\u5145\u503c";
+        String title = "充值";
         if (params.get("title") != null) {
             title = params.get("title");
         }
@@ -408,10 +408,10 @@ public class PayController
     public ModelAndView payApplyXintong(@RequestBody final Map<String, String> params, final HttpServletRequest request) {
         final Object totalFee = params.get("totalFee");
         if (totalFee == null || !NumberUtils.isNumber(totalFee.toString())) {
-            return ResponseUtils.jsonView(500, "\u5145\u503c\u91d1\u989d\u4e0d\u5bf9\u3002");
+            return ResponseUtils.jsonView(500, "充值金额不对。");
         }
         final Double fee = NumberUtils.createDouble(totalFee.toString());
-        String title = "\u5145\u503c";
+        String title = "充值";
         if (params.get("title") != null) {
             title = params.get("title");
         }
@@ -450,7 +450,7 @@ public class PayController
         }
         final PubRecharge pubRecharge = this.pubRechargeService.getRechargeRecordByTradeNo(tradeNo);
         if (opstate != 0) {
-            PayController.LOGGER.error("Pay trade [{}] failed: ", tradeNo, "\u53c2\u6570\u65e0\u6548\u6216\u7b7e\u540d\u9519\u8bef\uff01");
+            PayController.LOGGER.error("Pay trade [{}] failed: ", tradeNo, "参数无效或签名错误！");
         }
         else {
             if (pubRecharge.getStatus().equals("2")) {

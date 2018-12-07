@@ -26,6 +26,6 @@ public class PyConverter
     }
     
     public static void main(final String[] args) {
-        System.out.println(getPinYinWithoutTone("\u4e2d\u534e\u4eba\u6c11\u5171\u548c\u56fd"));
+        System.out.println(getPinYinWithoutTone("中华人民共和国"));
     }
 }

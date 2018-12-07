@@ -59,8 +59,8 @@ public class MD5StringUtil
     }
     
     public static void main(final String[] args) {
-        System.err.println(MD5Encode("123123\u5f20\u4e09"));
-        System.err.println(MD5EncodeUTF8("123123\u5f20\u4e09"));
+        System.err.println(MD5Encode("123123张三"));
+        System.err.println(MD5EncodeUTF8("123123张三"));
     }
     
     static {

@@ -31,23 +31,23 @@ public class RoomFeeService extends MyListServiceInt
         final Map<String, Object> data = (Map<String, Object>) req.get("data");
         final String roomId = (String) data.get("roomId");
         if (roomId == null) {
-            throw new CodedBaseRuntimeException("\u623f\u95f4\u53f7\u4e0d\u80fd\u4e3a\u7a7a");
+            throw new CodedBaseRuntimeException("房间号不能为空");
         }
         final GcRoom rm = this.dao.get(GcRoom.class, roomId);
         if (rm == null) {
-            throw new CodedBaseRuntimeException("\u9519\u8bef\u7684\u623f\u95f4\u53f7");
+            throw new CodedBaseRuntimeException("错误的房间号");
         }
         Double fee = 0.0;
         try {
             fee = Double.valueOf((String) data.get("val"));
         }
         catch (Exception e) {
-            throw new CodedBaseRuntimeException("\u9519\u8bef\u7684\u6570\u503c");
+            throw new CodedBaseRuntimeException("错误的数值");
         }
         final String hql = "update GcRoom set sumfee = COALESCE(sumfee,0) - :val where sumfee>:val and  id=:roomId";
         final int effected = this.dao.executeUpdate(hql, ImmutableMap.of("val", fee, "roomId", roomId));
         if (effected == 0) {
-            throw new CodedBaseRuntimeException("\u8d85\u51fa\u53ef\u7528\u989d\u5ea6\uff1a" + rm.getSumFee());
+            throw new CodedBaseRuntimeException("超出可用额度：" + rm.getSumFee());
         }
         final HttpServletRequest request = (HttpServletRequest)ContextUtils.get("$httpRequest");
         final String admin = (String)WebUtils.getSessionAttribute(request, "$uid");

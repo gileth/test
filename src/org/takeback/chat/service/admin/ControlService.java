@@ -40,12 +40,12 @@ public class ControlService extends MyListServiceInt
         final String roomId = (String) data.get("roomId");
         final GcRoom r = this.dao.get(GcRoom.class, roomId);
         if (r == null) {
-            throw new CodedBaseRuntimeException("\u9519\u8bef\u7684\u623f\u95f4\u53f7!");
+            throw new CodedBaseRuntimeException("错误的房间号!");
         }
         final Integer uid = Integer.valueOf(data.get("uid").toString());
         final PubUser u = this.dao.get(PubUser.class, uid);
         if (u == null) {
-            throw new CodedBaseRuntimeException("\u9519\u8bef\u7684\u7528\u6237ID!");
+            throw new CodedBaseRuntimeException("错误的用户ID!");
         }
         final Double value = Double.valueOf(data.get("value").toString());
         ValueControl.setValue(roomId, uid, new BigDecimal(value));

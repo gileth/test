@@ -29,7 +29,7 @@ public class MessageService extends MyListServiceInt
         }
         final PubUser user = this.dao.getUnique(PubUser.class, "userId", userName);
         if (user == null) {
-            throw new CodedBaseRuntimeException("\u7528\u6237\u4e0d\u5b58\u5728!");
+            throw new CodedBaseRuntimeException("用户不存在!");
         }
         data.put("userId", user.getId());
         data.put("createTime", new Date());

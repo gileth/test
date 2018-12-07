@@ -31,13 +31,13 @@ public class SendRedCmd implements Command
     @Override
     public void exec(final Map<String, Object> data, final Message message, final WebSocketSession session, final Room room, final User user) {
         if (!user.getId().equals(room.getOwner())) {
-            MessageUtils.sendCMD(session, "alert", "\u975e\u6cd5\u64cd\u4f5c!");
+            MessageUtils.sendCMD(session, "alert", "非法操作!");
             return;
         }
         if (room.getStep() == Room.STEP_FINISH_BET) {
             final Integer masterRecordId = room.getMasterRecordId();
             if (this.gameG05Service.getBetRecords(masterRecordId).size() == 0) {
-                MessageUtils.sendCMD(session, "alert", "\u65e0\u4e0b\u6ce8\u8bb0\u5f55");
+                MessageUtils.sendCMD(session, "alert", "无下注记录");
                 return;
             }
             final Integer number = this.gameG05Service.getBetNumbers(masterRecordId) + 1;
@@ -93,6 +93,6 @@ public class SendRedCmd implements Command
     }
     
     private String buildMessage(final Double money) {
-        return "<span style='color:#B22222'>[\u6ce8] </span><span style='color:orange;font-style:italic;font-weight:bold;font-size:18px;'>" + money + "</span> ";
+        return "<span style='color:#B22222'>[注] </span><span style='color:orange;font-style:italic;font-weight:bold;font-size:18px;'>" + money + "</span> ";
     }
 }

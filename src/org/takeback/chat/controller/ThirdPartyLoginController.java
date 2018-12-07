@@ -70,7 +70,7 @@ public class ThirdPartyLoginController
                 return ResponseUtils.jsonView(url);
             }
             default: {
-                return ResponseUtils.jsonView(400, "\u767b\u5f55\u65b9\u5f0f\u4e0d\u652f\u6301.");
+                return ResponseUtils.jsonView(400, "登录方式不支持.");
             }
         }
     }
@@ -79,19 +79,19 @@ public class ThirdPartyLoginController
     public ModelAndView autoLogin(@RequestBody final Map<String, Object> params, final HttpServletRequest request, final HttpSession session) {
         final Integer uid = (Integer) params.get("uid");
         if (uid == null) {
-            return ResponseUtils.jsonView(500, "\u7528\u6237id\u4e3a\u7a7a\u3002");
+            return ResponseUtils.jsonView(500, "用户id为空。");
         }
         final PubUser user = this.userService.get(PubUser.class, uid);
         if (user == null) {
-            return ResponseUtils.jsonView(404, "\u7528\u6237\u4e0d\u5b58\u5728\u3002");
+            return ResponseUtils.jsonView(404, "用户不存在。");
         }
         if ("2".equals(user.getStatus()) || "3".equals(user.getStatus())) {
-            return ResponseUtils.jsonView(404, "\u8d26\u53f7\u88ab\u9501\u5b9a\u6216\u6ce8\u9500,\u8bf7\u8054\u7cfb\u5ba2\u670d\u54a8\u8be2\u5904\u7406!");
+            return ResponseUtils.jsonView(404, "账号被锁定或注销,请联系客服咨询处理!");
         }
         final Boolean inWeixin = (Boolean) params.get("inWeixin");
         if (user.getWbOpenId() != null) {
             if (!inWeixin) {
-                return ResponseUtils.jsonView(500, "\u53ea\u80fd\u5728\u5fae\u4fe1\u6d4f\u89c8\u5668\u4e2d\u767b\u5f55\u3002");
+                return ResponseUtils.jsonView(500, "只能在微信浏览器中登录。");
             }
             final ModelAndView mav = this.doWxLogin(user.getWxRefreshToken(), user.getWxOpenId(), false, request, session);
             if (mav != null) {
@@ -101,10 +101,10 @@ public class ThirdPartyLoginController
         else {
             final String token = (String) params.get("accessToken");
             if (token == null || !token.equals(user.getAccessToken())) {
-                return ResponseUtils.jsonView(402, "\u7528\u6237\u6388\u6743\u5931\u8d25, \u8bf7\u91cd\u65b0\u767b\u5f55\u3002");
+                return ResponseUtils.jsonView(402, "用户授权失败, 请重新登录。");
             }
             if (user.getTokenExpireTime().compareTo(new Date()) < 0) {
-                return ResponseUtils.jsonView(401, "\u767b\u5f55\u5df2\u8fc7\u671f\u8bf7\u91cd\u65b0\u767b\u5f55\u3002");
+                return ResponseUtils.jsonView(401, "登录已过期请重新登录。");
             }
         }
         session.setAttribute("$uid", user.getId());
@@ -127,9 +127,9 @@ public class ThirdPartyLoginController
         if (resultObject.containsKey("errcode")) {
             ThirdPartyLoginController.LOGGER.error("Failed to get open id, error code: {}, caused by: {}", resultObject.getInt("errcode"), resultObject.get("errmsg"));
             if (isApp) {
-                return ResponseUtils.jsonView(500, "\u767b\u5f55\u5931\u8d25");
+                return ResponseUtils.jsonView(500, "登录失败");
             }
-            return ResponseUtils.modelView("jump", new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of("url", "/#/tab/login", "message", "\u767b\u5f55\u5931\u8d25\u3002")*/);
+            return ResponseUtils.modelView("jump", ImmutableMap.of("url", "/#/tab/login", "message", "登录失败。"));
         }
         else {
             final ModelAndView mav = this.doWxLogin(resultObject.getString("refresh_token"), resultObject.getString("openid"), isApp, request, session);
@@ -212,9 +212,9 @@ public class ThirdPartyLoginController
         }
         ThirdPartyLoginController.LOGGER.error("Cannot refresh token, error: {}, message: {}", refreshResult.getInt("errcode"), refreshResult.getString("errmsg"));
         if (isApp) {
-            return ResponseUtils.jsonView(500, "\u767b\u5f55\u5931\u8d25\u3002");
+            return ResponseUtils.jsonView(500, "登录失败。");
         }
-        return ResponseUtils.modelView("jump",  ImmutableMap.of("url", "/#/tab/login", "message", "\u767b\u5f55\u5931\u8d25\u3002"));
+        return ResponseUtils.modelView("jump",  ImmutableMap.of("url", "/#/tab/login", "message", "登录失败。"));
     }
     
     private String getRedirectUrl(final HttpSession session) {

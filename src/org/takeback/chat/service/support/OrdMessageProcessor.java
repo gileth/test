@@ -27,7 +27,7 @@ public class OrdMessageProcessor extends RedMessageProcessor
         }
         catch (Exception e) {
             e.printStackTrace();
-            MessageUtils.sendCMD(session, "alert", "\u975e\u6cd5\u6307\u4ee4");
+            MessageUtils.sendCMD(session, "alert", "非法指令");
         }
     }
 }

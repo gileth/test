@@ -110,7 +110,7 @@ public class UserController
             final ImageInputStream iis = ImageIO.createImageInputStream(file);
             final Iterator<ImageReader> iter = ImageIO.getImageReaders(iis);
             if (!iter.hasNext()) {
-                return ResponseUtils.jsonView(300, "\u6587\u4ef6\u683c\u5f0f\u9519\u8bef!");
+                return ResponseUtils.jsonView(300, "文件格式错误!");
             }
             iis.close();
         }
@@ -131,7 +131,7 @@ public class UserController
         final Map<String, Object> res = new HashMap<String, Object>();
         res.put("headImage", String.valueOf(headImage) + "?t=" + Math.random());
         this.userStore.reload(uid);
-        return ResponseUtils.jsonView(200, "\u4e0a\u4f20\u6210\u529f!", res);
+        return ResponseUtils.jsonView(200, "上传成功!", res);
     }
     
     @RequestMapping(value = { "/user/update" }, method = { RequestMethod.POST })
@@ -146,11 +146,11 @@ public class UserController
             }
             final PubUser pubUser = this.userService.updateUser(userId, data);
             this.userStore.reload(userId);
-            return ResponseUtils.jsonView(200, "\u4fee\u6539\u6210\u529f!");
+            return ResponseUtils.jsonView(200, "修改成功!");
         }
         catch (Exception e) {
             e.printStackTrace();
-            return ResponseUtils.jsonView(500, "\u4fee\u6539\u5931\u8d25!");
+            return ResponseUtils.jsonView(500, "修改失败!");
         }
     }
     
@@ -167,26 +167,26 @@ public class UserController
             }
             final Object oldPwd = data.get("oldPwd");
             if (oldPwd == null || oldPwd.toString().length() == 0) {
-                return ResponseUtils.jsonView(500, "\u539f\u5bc6\u7801\u4e0d\u80fd\u4e3a\u7a7a!");
+                return ResponseUtils.jsonView(500, "原密码不能为空!");
             }
             final Object newPwd = data.get("newPwd");
             final Object confirmPwd = data.get("confirmPwd");
             if (newPwd == null || newPwd.toString().length() == 0) {
-                return ResponseUtils.jsonView(500, "\u65b0\u5bc6\u7801\u4e0d\u80fd\u4e3a\u7a7a!");
+                return ResponseUtils.jsonView(500, "新密码不能为空!");
             }
             if (!newPwd.equals(confirmPwd)) {
-                return ResponseUtils.jsonView(500, "\u4e24\u6b21\u8f93\u5165\u65b0\u5bc6\u7801\u4e0d\u4e00\u81f4!");
+                return ResponseUtils.jsonView(500, "两次输入新密码不一致!");
             }
             final PubUser user = this.userService.get(userId, oldPwd.toString());
             if (user == null) {
-                return ResponseUtils.jsonView(500, "\u539f\u5bc6\u7801\u4e0d\u6b63\u786e!");
+                return ResponseUtils.jsonView(500, "原密码不正确!");
             }
             this.userService.updatePwd(userId, CryptoUtils.getHash(newPwd.toString(), StringUtils.reverse(user.getSalt())));
-            return ResponseUtils.jsonView(200, "\u5bc6\u7801\u4fee\u6539\u6210\u529f!");
+            return ResponseUtils.jsonView(200, "密码修改成功!");
         }
         catch (Exception e) {
             e.printStackTrace();
-            return ResponseUtils.jsonView(500, "\u4fee\u6539\u5931\u8d25!");
+            return ResponseUtils.jsonView(500, "修改失败!");
         }
     }
     
@@ -202,18 +202,18 @@ public class UserController
             final Date d2 = new Date();
             final Long deep = (d2.getTime() - d1.getTime()) / 1000L;
             if (deep <= 120L) {
-                return ResponseUtils.jsonView(500, "\u8bf7" + (120L - deep) + "\u79d2\u540e\u518d\u5c1d\u8bd5!");
+                return ResponseUtils.jsonView(500, "请" + (120L - deep) + "秒后再尝试!");
             }
         }
         if (data.get("mobile") == null) {
-            return ResponseUtils.jsonView(500, "\u624b\u673a\u53f7\u4e0d\u80fd\u4e3a\u7a7a!");
+            return ResponseUtils.jsonView(500, "手机号不能为空!");
         }
         final String mobile = (String) data.get("mobile");
         if (!ValidateUtil.instance().validatePhone(mobile)) {
-            return ResponseUtils.jsonView(500, "\u624b\u673a\u53f7\u7801\u683c\u5f0f\u4e0d\u6b63\u786e!");
+            return ResponseUtils.jsonView(500, "手机号码格式不正确!");
         }
         final Long rand = Math.round(Math.random() * 1000000.0);
-        final String msg = "\u60a8\u7684\u9a8c\u8bc1\u7801\u4e3a:" + rand.toString();
+        final String msg = "您的验证码为:" + rand.toString();
         try {
             SmsUtil3.send(mobile, msg);
             WebUtils.setSessionAttribute(request, "mobile", mobile);
@@ -222,9 +222,9 @@ public class UserController
         }
         catch (Exception e) {
             e.printStackTrace();
-            return ResponseUtils.jsonView(500, "\u9a8c\u8bc1\u7801\u53d1\u9001\u5931\u8d25!");
+            return ResponseUtils.jsonView(500, "验证码发送失败!");
         }
-        return ResponseUtils.jsonView(200, "\u9a8c\u8bc1\u7801\u5df2\u6210\u529f\u53d1\u9001!");
+        return ResponseUtils.jsonView(200, "验证码已成功发送!");
     }
     
     @AuthPassport
@@ -235,24 +235,24 @@ public class UserController
             return ResponseUtils.jsonView(403, "notLogin");
         }
         if (WebUtils.getSessionAttribute(request, "mobile") == null || WebUtils.getSessionAttribute(request, "mobileCode") == null) {
-            return ResponseUtils.jsonView(500, "\u624b\u673a\u53f7\u7801\u7ed1\u5b9a\u5931\u8d25!");
+            return ResponseUtils.jsonView(500, "手机号码绑定失败!");
         }
         final String sMobile = (String)WebUtils.getSessionAttribute(request, "mobile");
         final Object smsCode = data.get("smsCode");
         final String sCode = (String)WebUtils.getSessionAttribute(request, "mobileCode");
         if (!sCode.equals(smsCode)) {
-            return ResponseUtils.jsonView(500, "\u9a8c\u8bc1\u7801\u4e0d\u6b63\u786e!");
+            return ResponseUtils.jsonView(500, "验证码不正确!");
         }
         try {
             this.userService.bindMobile(uid, sMobile);
             WebUtils.setSessionAttribute(request, "mobile", null);
             WebUtils.setSessionAttribute(request, "mobileCode", null);
             WebUtils.setSessionAttribute(request, "mobileCodeTime", null);
-            return ResponseUtils.jsonView(200, "\u624b\u673a\u53f7\u7801\u7ed1\u5b9a\u6210\u529f!");
+            return ResponseUtils.jsonView(200, "手机号码绑定成功!");
         }
         catch (Exception e) {
             e.printStackTrace();
-            return ResponseUtils.jsonView(500, "\u624b\u673a\u53f7\u7801\u7ed1\u5b9a\u5931\u8d25!");
+            return ResponseUtils.jsonView(500, "手机号码绑定失败!");
         }
     }
     
@@ -316,20 +316,20 @@ public class UserController
         final String ip = IPUtil.getIp(request);
         final List<PubUser> ulist = this.userService.findByProperty(PubUser.class, "userId", user_wx_username);
         if (ulist == null || ulist.isEmpty()) {
-            return ResponseUtils.jsonView(404, "\u7528\u6237\u4e0d\u5b58\u5728\u6216\u8005\u5bc6\u7801\u9519\u8bef");
+            return ResponseUtils.jsonView(404, "用户不存在或者密码错误");
         }
         final PubUser user = ulist.get(0);
         if ("9".equals(user.getUserType())) {
-            return ResponseUtils.jsonView(404, "\u4e0d\u80fd\u767b\u9646\u975e\u73a9\u5bb6\u8d26\u53f7!");
+            return ResponseUtils.jsonView(404, "不能登陆非玩家账号!");
         }
         if ("2".equals(user.getStatus()) || "3".equals(user.getStatus())) {
-            return ResponseUtils.jsonView(404, "\u8d26\u53f7\u88ab\u9501\u5b9a\u6216\u6ce8\u9500,\u8bf7\u8054\u7cfb\u5ba2\u670d\u54a8\u8be2\u5904\u7406!");
+            return ResponseUtils.jsonView(404, "账号被锁定或注销,请联系客服咨询处理!");
         }
         WebUtils.setSessionAttribute(request, "$uid", user.getId());
         user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
         final LocalDateTime expire = new LocalDateTime().plusDays(7);
         user.setTokenExpireTime(expire.toDate());
-        this.userService.updateUser(user.getId(), new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of("accessToken", user.getAccessToken(), "tokenExpireTime", user.getTokenExpireTime())*/);
+        this.userService.updateUser(user.getId(),  ImmutableMap.of("accessToken", user.getAccessToken(), "tokenExpireTime", user.getTokenExpireTime()));
         this.userService.setLoginInfo(ip, user.getId());
         final LoginLog l = new LoginLog();
         l.setIp(ip);
@@ -368,7 +368,7 @@ public class UserController
             System.out.println("tk.getOpenid():" + tk.getOpenid());
             List<PubUser> pulist = this.userService.findByProperty(PubUser.class, "wxOpenId", tk.getOpenid());
             if (pulist == null || pulist.isEmpty()) {
-                System.out.println("\u6570\u636e\u5e93\u4e2d\u6ca1\u6709\u6570\u636e");
+                System.out.println("数据库中没有数据");
                 httpost = HttpClientConnectionManager.getPostMethod("https://api.weixin.qq.com/sns/userinfo?access_token=" + tk.getAccess_token() + "&openid=" + tk.getOpenid() + "&lang=zh_CN");
                 response_http = (HttpResponse)httpclient.execute((HttpUriRequest)httpost);
                 jsonStr = EntityUtils.toString(response_http.getEntity(), "UTF-8");
@@ -417,7 +417,7 @@ public class UserController
                 }
             }
             else {
-                System.out.println("\u6570\u636e\u5e93\u4e2d\u6709\u6570\u636e1111");
+                System.out.println("数据库中有数据1111");
                 final PubUser user3 = pulist.get(0);
                 request.getSession().setAttribute("user_wx_username", user3.getUserId());
                 this.getOut(response).println("<script>location.href='/wxLoginCheck.jsp';</script>");
@@ -435,13 +435,13 @@ public class UserController
         final String password = (String) data.get("password");
         final PubUser user = this.userService.login(username, password);
         if (user == null) {
-            return ResponseUtils.jsonView(404, "\u7528\u6237\u4e0d\u5b58\u5728\u6216\u8005\u5bc6\u7801\u9519\u8bef");
+            return ResponseUtils.jsonView(404, "用户不存在或者密码错误");
         }
         if ("9".equals(user.getUserType())) {
-            return ResponseUtils.jsonView(404, "\u4e0d\u80fd\u767b\u9646\u975e\u73a9\u5bb6\u8d26\u53f7!");
+            return ResponseUtils.jsonView(404, "不能登陆非玩家账号!");
         }
         if ("2".equals(user.getStatus()) || "3".equals(user.getStatus())) {
-            return ResponseUtils.jsonView(404, "\u8d26\u53f7\u88ab\u9501\u5b9a\u6216\u6ce8\u9500,\u8bf7\u8054\u7cfb\u5ba2\u670d\u54a8\u8be2\u5904\u7406!");
+            return ResponseUtils.jsonView(404, "账号被锁定或注销,请联系客服咨询处理!");
         }
         WebUtils.setSessionAttribute(request, "$uid", user.getId());
         user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
@@ -477,13 +477,13 @@ public class UserController
             final String ip = IPUtil.getIp(request);
             final PubUser user = this.userService.register(username, password, mobile, wx, alipay, parentId, ip);
             if (user == null) {
-                return ResponseUtils.jsonView(500, "\u6ce8\u518c\u5931\u8d25");
+                return ResponseUtils.jsonView(500, "注册失败");
             }
             user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
             final LocalDateTime expire = new LocalDateTime().plusDays(7);
             user.setTokenExpireTime(expire.toDate());
             this.userService.updateUser(user.getId(), ImmutableMap.of( "accessToken",  user.getAccessToken(), "tokenExpireTime",  user.getTokenExpireTime()) );
-            return ResponseUtils.jsonView(200, "\u521b\u5efa\u6210\u529f!");
+            return ResponseUtils.jsonView(200, "创建成功!");
         }
         catch (CodedBaseRuntimeException e) {
             return ResponseUtils.jsonView(e.getCode(), e.getMessage());
@@ -507,7 +507,7 @@ public class UserController
             final String ip = IPUtil.getIp(request);
             final PubUser user = this.userService.register(username, password, mobile, wx, alipay, parentId, ip);
             if (user == null) {
-                return ResponseUtils.jsonView(500, "\u6ce8\u518c\u5931\u8d25");
+                return ResponseUtils.jsonView(500, "注册失败");
             }
             WebUtils.setSessionAttribute(request, "$uid", user.getId());
             user.setAccessToken(UUID.randomUUID().toString().replace("-", ""));
@@ -548,7 +548,7 @@ public class UserController
             map.put("createTime", gcLottery.getCreateTime());
             map.put("money", gcLottery.getMoney());
             final Room room = this.roomStore.get(gcLottery.getRoomId());
-            map.put("roomName", (room == null) ? "\u4e0d\u660e" : room.getName());
+            map.put("roomName", (room == null) ? "不明" : room.getName());
             records.add(map);
         }
         return ResponseUtils.jsonView(records);
@@ -567,7 +567,7 @@ public class UserController
             e.printStackTrace();
             return ResponseUtils.jsonView(500, e.getMessage());
         }
-        return ResponseUtils.jsonView(200, "\u8f6c\u8d26\u6210\u529f");
+        return ResponseUtils.jsonView(200, "转账成功");
     }
     
     @AuthPassport
@@ -583,7 +583,7 @@ public class UserController
             e.printStackTrace();
             return ResponseUtils.jsonView(500, e.getMessage());
         }
-        return ResponseUtils.jsonView(200, "\u4e0a\u5206\u6210\u529f");
+        return ResponseUtils.jsonView(200, "上分成功");
     }
     
     @AuthPassport
@@ -599,7 +599,7 @@ public class UserController
             e.printStackTrace();
             return ResponseUtils.jsonView(500, e.getMessage());
         }
-        return ResponseUtils.jsonView(200, "\u4e0b\u5206\u6210\u529f");
+        return ResponseUtils.jsonView(200, "下分成功");
     }
     
     @AuthPassport
@@ -651,7 +651,7 @@ public class UserController
             final Integer uid = (Integer) params.get("uid");
             final PubUser u = this.userService.get(PubUser.class, uid);
             if (u == null) {
-                return ResponseUtils.jsonView(500, "\u76ee\u6807\u8d26\u53f7\u4e0d\u5b58\u5728!");
+                return ResponseUtils.jsonView(500, "目标账号不存在!");
             }
             final Map m = (Map)new HashedMap();
             m.put("nickName", u.getNickName());
@@ -672,7 +672,7 @@ public class UserController
             final Integer uid = (Integer) params.get("uid");
             final PubUser u = this.userService.get(PubUser.class, uid);
             if (u == null) {
-                return ResponseUtils.jsonView(500, "\u76ee\u6807\u8d26\u53f7\u4e0d\u5b58\u5728!");
+                return ResponseUtils.jsonView(500, "目标账号不存在!");
             }
             final Map m = (Map)new HashedMap();
             m.put("nickName", u.getNickName());
@@ -701,7 +701,7 @@ public class UserController
             e.printStackTrace();
             return ResponseUtils.jsonView(500, e.getMessage());
         }
-        return ResponseUtils.jsonView(200, "\u5151\u6362\u6210\u529f,\u8bf7\u7b49\u5f85\u7ba1\u7406\u5458\u5904\u7406\u53d1\u8d27!");
+        return ResponseUtils.jsonView(200, "兑换成功,请等待管理员处理发货!");
     }
     
     @AuthPassport
@@ -747,7 +747,7 @@ public class UserController
             final Integer uid = (Integer)WebUtils.getSessionAttribute(request, "$uid");
             final Map<String, Object> conf = this.systemService.getProxyConfig();
             this.userService.proxyApply(uid, conf);
-            return ResponseUtils.jsonView(200, "\u7533\u8bf7\u6210\u529f");
+            return ResponseUtils.jsonView(200, "申请成功");
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -766,7 +766,7 @@ public class UserController
         }
         catch (Exception e) {
             e.printStackTrace();
-            return ResponseUtils.jsonView(500, "\u914d\u7f6e\u83b7\u53d6\u5931\u8d25!");
+            return ResponseUtils.jsonView(500, "配置获取失败!");
         }
     }
     
@@ -832,7 +832,7 @@ public class UserController
             map.put("inoutNum", gcLottery.getInoutNum());
             final Room room = this.roomStore.get(gcLottery.getRoomId());
             if (room != null) {
-                map.put("roomName", (room == null) ? "\u4e0d\u660e" : room.getName());
+                map.put("roomName", (room == null) ? "不明" : room.getName());
                 records.add(map);
             }
         }
@@ -849,7 +849,7 @@ public class UserController
         if (pageSize > 20) {
             pageSize = 20;
         }
-        final List<PcGameLog> list = this.userService.find(PcGameLog.class, new HashMap<String,Object>()/* (Map<String, Object>)ImmutableMap.of("uid", uid)*/, pageSize, pageNo, "betTime desc");
+        final List<PcGameLog> list = this.userService.find(PcGameLog.class,   ImmutableMap.of("uid", uid) , pageSize, pageNo, "betTime desc");
         if (list == null || list.isEmpty()) {
             return ResponseUtils.jsonView(null);
         }
@@ -861,7 +861,7 @@ public class UserController
             map.put("money", gcLottery.getFreeze());
             map.put("luckyNumber", gcLottery.getLuckyNumber());
             if ("num".equals(gcLottery.getBetType())) {
-                map.put("desc1", "\u6570\u5b57" + gcLottery.getBet());
+                map.put("desc1", "数字" + gcLottery.getBet());
             }
             else {
                 map.put("desc1", rates.get(gcLottery.getBet()).getAlias());
@@ -909,7 +909,7 @@ public class UserController
             }
             session.invalidate();
         }
-        return ResponseUtils.jsonView(200, "\u6210\u529f\u9000\u51fa.");
+        return ResponseUtils.jsonView(200, "成功退出.");
     }
     
     @AuthPassport
@@ -958,7 +958,7 @@ public class UserController
         catch (Exception e) {
             return ResponseUtils.jsonView(500, e.getMessage());
         }
-        return ResponseUtils.jsonView(200, "\u63d0\u73b0\u6210\u529f.");
+        return ResponseUtils.jsonView(200, "提现成功.");
     }
     
     @AuthPassport

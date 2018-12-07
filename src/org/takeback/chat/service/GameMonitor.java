@@ -293,7 +293,7 @@ public class GameMonitor
                 vcl.setUid(uid);
                 vcl.setRoomName(this.roomStore.get(roomId).getName());
                 vcl.setVal(Double.valueOf(deleteValue));
-                vcl.setAdmin("\u76d1\u63a7\u6a21\u5757");
+                vcl.setAdmin("监控模块");
                 this.baseService.save(ValueControlLog.class, vcl);
             }
         }

@@ -26,7 +26,7 @@ public class FinishBetCmd implements Command
     @Override
     public void exec(final Map<String, Object> data, final Message message, final WebSocketSession session, final Room room, final User user) {
         if (!user.getId().equals(room.getOwner())) {
-            MessageUtils.sendCMD(session, "alert", "\u975e\u6cd5\u64cd\u4f5c!");
+            MessageUtils.sendCMD(session, "alert", "非法操作!");
             return;
         }
         if (room.getStep() == Room.STEP_START_BET || room.getStep() == Room.STEP_FINISH_BET) {
@@ -36,14 +36,14 @@ public class FinishBetCmd implements Command
                 room.setMaster(0);
                 room.setStep(Room.STEP_FREE);
                 room.setMasterRecordId(0);
-                final Message msg = new Message("TXT", room.getManager(), "<span style='color:#B22222'>\u65e0\u4eba\u4e0b\u6ce8," + gmr.getFreeze() + " \u5df2\u9000\u8fd8\u5e84\u4e3b\u8d26\u6237!</span>");
+                final Message msg = new Message("TXT", room.getManager(), "<span style='color:#B22222'>无人下注," + gmr.getFreeze() + " 已退还庄主账户!</span>");
                 msg.setHeadImg(user.getHeadImg());
                 msg.setNickName(user.getNickName());
                 MessageUtils.broadcast(room, msg);
                 return;
             }
             room.setStep(Room.STEP_FINISH_BET);
-            final Message msg2 = new Message("TXT_SYS", user.getId(), "<span style='color:red'>\u622a\u6b62\u4e0b\u6ce8!</span>");
+            final Message msg2 = new Message("TXT_SYS", user.getId(), "<span style='color:red'>截止下注!</span>");
             MessageUtils.broadcast(room, msg2);
             MessageUtils.sendCMD(session, "roomStep", Room.STEP_FINISH_BET);
         }

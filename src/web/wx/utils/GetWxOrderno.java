@@ -37,7 +37,7 @@ public class GetWxOrderno
     }
     
     public static String getCodeUrl(final String url, final String xmlParam) {
-        System.out.println("xml\u662f:" + xmlParam);
+        System.out.println("xml是:" + xmlParam);
         final DefaultHttpClient client = new DefaultHttpClient();
         client.getParams().setParameter("http.protocol.allow-circular-redirects", true);
         final HttpPost httpost = HttpClientConnectionManager.getPostMethod(url);
@@ -47,7 +47,7 @@ public class GetWxOrderno
             final HttpResponse response = (HttpResponse)GetWxOrderno.httpclient.execute((HttpUriRequest)httpost);
             final String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
             final Map<String, Object> dataMap = new HashMap<String, Object>();
-            System.out.println("json\u662f:" + jsonStr);
+            System.out.println("json是:" + jsonStr);
             if (jsonStr.indexOf("FAIL") != -1) {
                 return "";
             }
@@ -61,7 +61,7 @@ public class GetWxOrderno
     }
     
     public static String getPayNo(final String url, final String xmlParam) {
-        System.out.println("xml\u662f:" + xmlParam);
+        System.out.println("xml是:" + xmlParam);
         final DefaultHttpClient client = new DefaultHttpClient();
         client.getParams().setParameter("http.protocol.allow-circular-redirects", true);
         final HttpPost httpost = HttpClientConnectionManager.getPostMethod(url);
@@ -71,7 +71,7 @@ public class GetWxOrderno
             final HttpResponse response = (HttpResponse)GetWxOrderno.httpclient.execute((HttpUriRequest)httpost);
             final String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
             final Map<String, Object> dataMap = new HashMap<String, Object>();
-            System.out.println("json\u662f:" + jsonStr);
+            System.out.println("json是:" + jsonStr);
             if (jsonStr.indexOf("FAIL") != -1) {
                 return prepay_id;
             }
@@ -86,7 +86,7 @@ public class GetWxOrderno
     }
     
     public static String getMweb_url(final String url, final String xmlParam) {
-        System.out.println("xml\u662f:" + xmlParam);
+        System.out.println("xml是:" + xmlParam);
         final DefaultHttpClient client = new DefaultHttpClient();
         client.getParams().setParameter("http.protocol.allow-circular-redirects", true);
         final HttpPost httpost = HttpClientConnectionManager.getPostMethod(url);
@@ -96,7 +96,7 @@ public class GetWxOrderno
             final HttpResponse response = (HttpResponse)GetWxOrderno.httpclient.execute((HttpUriRequest)httpost);
             final String jsonStr = EntityUtils.toString(response.getEntity(), "UTF-8");
             final Map<String, Object> dataMap = new HashMap<String, Object>();
-            System.out.println("json\u662f:" + jsonStr);
+            System.out.println("json是:" + jsonStr);
             if (jsonStr.indexOf("FAIL") != -1) {
                 return mweb_url;
             }

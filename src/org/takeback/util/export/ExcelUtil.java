@@ -166,7 +166,7 @@ public class ExcelUtil
         headRow.setHeight((short)350);
         final HSSFCell snCell = headRow.createCell(0);
         snCell.setCellStyle(ExcelUtil.headStyle);
-        snCell.setCellValue("\u5e8f\u53f7");
+        snCell.setCellValue("序号");
         for (int num = 1, len = setInfo.getColumnNames().get(sheetNum).length; num <= len; ++num) {
             final HSSFCell headCell = headRow.createCell(num);
             headCell.setCellStyle(ExcelUtil.headStyle);
@@ -254,7 +254,7 @@ public class ExcelUtil
     }
     
     private static void initTitleFont() {
-        ExcelUtil.titleFont.setFontName("\u534e\u6587\u6977\u4f53");
+        ExcelUtil.titleFont.setFontName("华文楷体");
         ExcelUtil.titleFont.setFontHeightInPoints((short)20);
         ExcelUtil.titleFont.setBoldweight((short)700);
         ExcelUtil.titleFont.setCharSet((byte)1);
@@ -262,7 +262,7 @@ public class ExcelUtil
     }
     
     private static void initDateFont() {
-        ExcelUtil.dateFont.setFontName("\u96b6\u4e66");
+        ExcelUtil.dateFont.setFontName("隶书");
         ExcelUtil.dateFont.setFontHeightInPoints((short)10);
         ExcelUtil.dateFont.setBoldweight((short)700);
         ExcelUtil.dateFont.setCharSet((byte)1);
@@ -270,7 +270,7 @@ public class ExcelUtil
     }
     
     private static void initHeadFont() {
-        ExcelUtil.headFont.setFontName("\u5b8b\u4f53");
+        ExcelUtil.headFont.setFontName("宋体");
         ExcelUtil.headFont.setFontHeightInPoints((short)10);
         ExcelUtil.headFont.setBoldweight((short)700);
         ExcelUtil.headFont.setCharSet((byte)1);
@@ -278,7 +278,7 @@ public class ExcelUtil
     }
     
     private static void initContentFont() {
-        ExcelUtil.contentFont.setFontName("\u5b8b\u4f53");
+        ExcelUtil.contentFont.setFontName("宋体");
         ExcelUtil.contentFont.setFontHeightInPoints((short)10);
         ExcelUtil.contentFont.setBoldweight((short)400);
         ExcelUtil.contentFont.setCharSet((byte)1);

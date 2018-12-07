@@ -34,7 +34,7 @@ public class G05 extends DefaultGameListener
         if (this.gameG05Service.checkBet(masterRecordId, uid) || room.getMaster().equals(uid)) {
             return true;
         }
-        throw new GameException("\u672c\u671f\u60a8\u672a\u4e0b\u6ce8,\u65e0\u6cd5\u62a2\u5305!");
+        throw new GameException("本期您未下注,无法抢包!");
     }
     
     @Override
@@ -43,20 +43,20 @@ public class G05 extends DefaultGameListener
         final User opener = this.userStore.get(lotteryDetail.getUid());
         final User sender = this.userStore.get(lottery.getSender());
         if (opener.getId().equals(sender.getId())) {
-            sendNickName = "\u81ea\u5df1";
+            sendNickName = "自己";
         }
         else {
             sendNickName = sender.getNickName();
         }
         if ("1".equals(lottery.getType())) {
             this.lotteryService.saveLotteryDetail(lottery, lotteryDetail);
-            final String msg = opener.getNickName() + " \u9886\u53d6\u4e86" + sendNickName + "\u53d1\u7684\u7ea2\u5305";
+            final String msg = opener.getNickName() + " 领取了" + sendNickName + "发的红包";
             final Message notice = new Message("TXT_SYS", 0, msg);
             MessageUtils.broadcast(this.roomStore.get(lottery.getRoomId()), notice);
         }
         else {
             this.lotteryService.saveLotteryDetail(lottery, lotteryDetail);
-            final String msg = opener.getNickName() + " \u9886\u53d6\u4e86\u7ea2\u5305";
+            final String msg = opener.getNickName() + " 领取了红包";
             final Message notice = new Message("TXT_SYS", 0, msg);
             MessageUtils.broadcast(this.roomStore.get(lottery.getRoomId()), notice);
         }
@@ -67,7 +67,7 @@ public class G05 extends DefaultGameListener
         if ("1".equals(lottery.getType())) {
             final Room room = this.roomStore.get(lottery.getRoomId());
             final User sender = this.userStore.get(lottery.getSender());
-            final String msg = "<span style='color:#F89C4C'>" + sender.getNickName() + "</span> \u7684\u7ea2\u5305\u5df2\u88ab\u9886\u5b8c.";
+            final String msg = "<span style='color:#F89C4C'>" + sender.getNickName() + "</span> 的红包已被领完.";
             final Message notice = new Message("TXT_SYS", 0, msg);
             MessageUtils.broadcast(room, notice);
             return;

@@ -41,12 +41,12 @@ public class Game04Service extends LotteryService
         final Double deposit = lottery.getMoney().doubleValue() / (1.0 - rate);
         gcLotteryDetail.setDeposit(deposit);
         if (userInout > 0.0) {
-            gcLotteryDetail.setDesc1("\u65e0\u96f7");
+            gcLotteryDetail.setDesc1("无雷");
             gcLotteryDetail.setAddback(NumberUtil.round(deposit + userInout));
             gcLotteryDetail.setInoutNum(NumberUtil.round(userInout));
         }
         else if (userInout < 0.0) {
-            gcLotteryDetail.setDesc1("\u4e2d\u96f7");
+            gcLotteryDetail.setDesc1("中雷");
             gcLotteryDetail.setAddback(detail.getCoin().doubleValue());
             gcLotteryDetail.setInoutNum(NumberUtil.round(userInout));
         }
@@ -74,7 +74,7 @@ public class Game04Service extends LotteryService
         final Room r = this.roomStore.get(lottery.getRoomId());
         final Double rate = r.getFeeAdd();
         final Double deposit = lottery.getMoney().doubleValue() / (1.0 - rate);
-        final String raidStr = lottery.getDescription().charAt(lottery.getDescription().indexOf("\u96f7") + 1) + "";
+        final String raidStr = lottery.getDescription().charAt(lottery.getDescription().indexOf("雷") + 1) + "";
         final Integer raidPoint = Integer.valueOf(raidStr);
         Double masterInout = -(deposit - lottery.getRestMoney().doubleValue());
         if (lottery.getRestNumber() == lottery.getNumber()) {

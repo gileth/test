@@ -73,11 +73,11 @@ public class PcEggService extends BaseService
     
     private List<Double> getValues(final String text) {
         final List<Double> res = new ArrayList<Double>();
-        final String pattern = "\u3010[0-9]*\\.*[0-9]+\u3011";
+        final String pattern = "【[0-9]*\\.*[0-9]+】";
         final Pattern p = Pattern.compile(pattern);
         final Matcher m = p.matcher(text);
         while (m.find()) {
-            res.add(Double.valueOf(m.group().replaceAll("[\u3010\u3011]", "")));
+            res.add(Double.valueOf(m.group().replaceAll("[【】]", "")));
         }
         return res;
     }
@@ -105,35 +105,35 @@ public class PcEggService extends BaseService
     @Transactional
     public void bet(final Integer num, final String key, final Double money, final Integer uid, final String roomId) {
         if (PcEggStore.getStore().isClosed(num)) {
-            throw new CodedBaseRuntimeException(num + "\u671f\u5df2\u505c\u6b62\u4e0b\u6ce8!");
+            throw new CodedBaseRuntimeException(num + "期已停止下注!");
         }
         final Map<String, Double> limitConf = this.getLimitConfig();
         final Double min = limitConf.get("l_min");
         final Double max = limitConf.get("l_max");
         if (money < min) {
-            throw new CodedBaseRuntimeException("\u4e0b\u6ce8\u91d1\u989d\u5fc5\u987b\u5927\u4e8e:" + min);
+            throw new CodedBaseRuntimeException("下注金额必须大于:" + min);
         }
         final Double curMax = limitConf.get("l_max_cur");
         final String curSumHql = "select coalesce(sum(freeze),0) from PcGameLog where num=:num";
         final List<Double> curSum = this.dao.findByHql(curSumHql, ImmutableMap.of("num", num));
         if (curSum.get(0) + money > curMax) {
-            throw new CodedBaseRuntimeException("\u672c\u671f\u5168\u7ad9\u53ef\u4e0b\u6ce8\u91d1\u989d:" + (curMax - curSum.get(0)));
+            throw new CodedBaseRuntimeException("本期全站可下注金额:" + (curMax - curSum.get(0)));
         }
         final String sumSql = "select coalesce(sum(freeze),0) from PcGameLog where num=:num and uid = :uid";
         final List<Double> sum = this.dao.findByHql(sumSql, ImmutableMap.of("num", num, "uid", uid));
         if (sum.get(0) + money > max) {
-            throw new CodedBaseRuntimeException("\u672c\u671f\u4e2a\u4eba\u53ef\u4e0b\u6ce8\u91d1\u989d:" + (max - sum.get(0)));
+            throw new CodedBaseRuntimeException("本期个人可下注金额:" + (max - sum.get(0)));
         }
         final Map<String, PcRateConfig> rates = this.getPcRateConfig();
         final PcRateConfig rateConf = rates.get(key);
         if (rateConf == null) {
-            throw new CodedBaseRuntimeException("\u975e\u6cd5\u7684\u4e0b\u6ce8\u503c\uff1a" + key);
+            throw new CodedBaseRuntimeException("非法的下注值：" + key);
         }
         final String betType = rateConf.getCatalog();
         final String moneyHql = "update PubUser set money = COALESCE(money,0) - :money where id=:uid and money>:money";
         final int effected = this.dao.executeUpdate(moneyHql, ImmutableMap.of("money", money, "uid", uid));
         if (effected == 0) {
-            throw new CodedBaseRuntimeException("\u8d26\u6237\u91d1\u989d\u4e0d\u8db3,\u8bf7\u53ca\u65f6\u5145\u503c!");
+            throw new CodedBaseRuntimeException("账户金额不足,请及时充值!");
         }
         final PcGameLog pgl = new PcGameLog();
         pgl.setBet(key);
@@ -150,9 +150,9 @@ public class PcEggService extends BaseService
         this.dao.save(PcGameLog.class, pgl);
         String text = rates.get(key).getAlias();
         if ("num".equals(rateConf.getCatalog())) {
-            text = "\u6570\u5b57" + text;
+            text = "数字" + text;
         }
-        final Lottery lottery = LotteryFactory.getDefaultBuilder(new BigDecimal(money), 1).setExpiredSeconds(1).setType("2").setTitle(text + " " + money + "\u91d1\u5e01").setSender(uid).setDescription(num + "\u671f").build();
+        final Lottery lottery = LotteryFactory.getDefaultBuilder(new BigDecimal(money), 1).setExpiredSeconds(1).setType("2").setTitle(text + " " + money + "金币").setSender(uid).setDescription(num + "期").build();
         try {
             lottery.open(0);
         }
@@ -171,14 +171,14 @@ public class PcEggService extends BaseService
     @Transactional
     public Double cancelBet(final Integer num, final Integer uid) {
         if (PcEggStore.getStore().isClosed(num)) {
-            throw new CodedBaseRuntimeException(num + "\u671f\u5df2\u505c\u6b62\u4e0b\u6ce8!");
+            throw new CodedBaseRuntimeException(num + "期已停止下注!");
         }
         final Map<String, Object> pram = new HashMap<String, Object>();
         pram.put("num", num);
         pram.put("uid", uid);
         final List<PcGameLog> list = this.dao.findByHql("from PcGameLog where status='0' and num =:num and uid =:uid", pram);
         if (list.size() == 0) {
-            throw new CodedBaseRuntimeException("\u672c\u671f\u6ca1\u6709\u60a8\u7684\u4e0b\u6ce8\u8bb0\u5f55!");
+            throw new CodedBaseRuntimeException("本期没有您的下注记录!");
         }
         Double money = 0.0;
         for (final PcGameLog log : list) {

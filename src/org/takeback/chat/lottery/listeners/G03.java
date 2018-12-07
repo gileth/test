@@ -42,12 +42,12 @@ public class G03 extends DefaultGameListener
     public void processStartEvent(final Room room) throws GameException {
         super.processStartEvent(room);
         final Integer number = Integer.valueOf(this.getConifg(room.getId(), "conf_size"));
-        final Lottery lottery = LotteryFactory.getDefaultBuilder(BigDecimal.valueOf(1.0), number).setDescription("\u6e38\u620f\u5f00\u59cb,\u795d\u4f60\u597d\u8fd0!").setSender(0).setType("2").setRoom(room).build();
+        final Lottery lottery = LotteryFactory.getDefaultBuilder(BigDecimal.valueOf(1.0), number).setDescription("游戏开始,祝你好运!").setSender(0).setType("2").setRoom(room).build();
         final GcLottery gcLottery = BeanUtils.map(lottery, GcLottery.class);
         this.lotteryService.save(GcLottery.class, gcLottery);
         final Message message = new Message("RED", 0, lottery);
         message.setHeadImg("img/avatar.png");
-        message.setNickName("\u7cfb\u7edf");
+        message.setNickName("系统");
         MessageUtils.broadcast(room, message);
     }
     

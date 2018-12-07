@@ -155,7 +155,7 @@ public class LotteryService extends BaseService
     @Transactional
     public void test() {
         final List<Double> l = this.dao.findByHql("select sum(money)+(select sum(sumFee) from GcRoom ) from PubUser");
-        System.out.println("\u7ad9\u5185\u603b\u91d1\u989d:" + l.get(0));
+        System.out.println("站内总金额:" + l.get(0));
     }
     
     @Transactional

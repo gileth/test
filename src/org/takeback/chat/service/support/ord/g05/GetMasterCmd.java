@@ -29,7 +29,7 @@ public class GetMasterCmd implements Command
     public void exec(final Map<String, Object> data, final Message message, final WebSocketSession session, final Room room, final User user) {
         final Double freeze = Double.valueOf(data.get("freeze").toString());
         if (freeze < GetMasterCmd.MIN_FREEZE) {
-            MessageUtils.sendCMD(session, "alert", "\u623f\u95f4\u8d77\u6807:" + GetMasterCmd.MIN_FREEZE);
+            MessageUtils.sendCMD(session, "alert", "房间起标:" + GetMasterCmd.MIN_FREEZE);
             return;
         }
         try {
@@ -39,7 +39,7 @@ public class GetMasterCmd implements Command
                     final GcMasterRecord maxRecord = masterRecords.get(0);
                     final Double maxFreeze = maxRecord.getFreeze();
                     if (freeze <= maxFreeze) {
-                        MessageUtils.sendCMD(session, "alert", "\u7ade\u6807\u5fc5\u987b\u5927\u4e8e:" + maxFreeze);
+                        MessageUtils.sendCMD(session, "alert", "竞标必须大于:" + maxFreeze);
                         return;
                     }
                     for (final GcMasterRecord rec : masterRecords) {
@@ -65,7 +65,7 @@ public class GetMasterCmd implements Command
                 room.setStep(Room.STEP_MASTER);
             }
             else {
-                MessageUtils.sendCMD(session, "alert", "\u975e\u7ade\u6807\u65f6\u95f4!");
+                MessageUtils.sendCMD(session, "alert", "非竞标时间!");
             }
         }
         catch (Exception e) {
@@ -74,7 +74,7 @@ public class GetMasterCmd implements Command
     }
     
     private String buildMessage(final Double freeze) {
-        return "<span style='color:orange;font-style:italic;font-weight:bold;font-size:26px;'>" + freeze + "</span> <span style='color:#B22222;'>\u53c2\u4e0e\u7ade\u6807</span>";
+        return "<span style='color:orange;font-style:italic;font-weight:bold;font-size:26px;'>" + freeze + "</span> <span style='color:#B22222;'>参与竞标</span>";
     }
     
     static {

@@ -62,7 +62,7 @@ public class RoomConcactor
     public ModelAndView getRoom(@PathVariable final String id) {
         final Room room = this.roomStore.get(id);
         if (room == null) {
-            return ResponseUtils.jsonView(404, "\u623f\u95f4" + id + "\u4e0d\u5b58\u5728.");
+            return ResponseUtils.jsonView(404, "房间" + id + "不存在.");
         }
         System.out.println("");
         return ResponseUtils.jsonView(200, "success", room);
@@ -74,7 +74,7 @@ public class RoomConcactor
         final String password = params.get("password");
         final Room room = this.roomStore.get(roomId);
         if (room == null) {
-            return ResponseUtils.jsonView(404, "\u623f\u95f4" + roomId + "\u4e0d\u5b58\u5728.");
+            return ResponseUtils.jsonView(404, "房间" + roomId + "不存在.");
         }
         if (!room.isNeedPsw() || password.equals(room.getPsw())) {
             return ResponseUtils.jsonView(200, "success");
@@ -86,7 +86,7 @@ public class RoomConcactor
     public ModelAndView joinIn(@PathVariable final String id, final HttpServletRequest request) {
         final Room room = this.roomStore.get(id);
         if (room == null) {
-            return ResponseUtils.jsonView(404, "\u623f\u95f4" + id + "\u4e0d\u5b58\u5728.");
+            return ResponseUtils.jsonView(404, "房间" + id + "不存在.");
         }
         final String lastRoomId = (String)WebUtils.getSessionAttribute(request, "roomId");
         if (lastRoomId != null) {
@@ -98,7 +98,7 @@ public class RoomConcactor
             try {
                 this.lock.lock();
                 if (room.getPosition() >= room.getLimitNum()) {
-                    return ResponseUtils.jsonView(530, "\u623f\u95f4\u5df2\u6ee1.");
+                    return ResponseUtils.jsonView(530, "房间已满.");
                 }
             }
             finally {
@@ -107,7 +107,7 @@ public class RoomConcactor
         }
         final List<GcRoomKickLog> kickLogs = this.roomService.findByHql("from GcRoomKickLog where kickTime>=:t and  roomId=:roomId and uid =:uid ",ImmutableMap.of("t", DateUtil.getDateBeforeSeconds(RoomService.KICK_TIME), "roomId", id, "uid", uid), 1, 1);
         if (kickLogs.size() > 0) {
-            return ResponseUtils.jsonView(500, "\u7981\u6b62\u8fdb\u5165\u623f\u95f4.");
+            return ResponseUtils.jsonView(500, "禁止进入房间.");
         }
         final Map<Object, Object> body = (Map<Object, Object>)Maps.newHashMap();
         body.put("room", room);
@@ -164,10 +164,10 @@ public class RoomConcactor
         final Integer uid = (Integer)WebUtils.getSessionAttribute(request, "$uid");
         final Room room = this.roomStore.get(roomId);
         if (room == null) {
-            return ResponseUtils.jsonView(404, "\u623f\u95f4" + roomId + "\u4e0d\u5b58\u5728.");
+            return ResponseUtils.jsonView(404, "房间" + roomId + "不存在.");
         }
         if (!room.getOwner().equals(uid)) {
-            return ResponseUtils.jsonView(404, "\u65e0\u6743\u6267\u884c\u8be5\u64cd\u4f5c!");
+            return ResponseUtils.jsonView(404, "无权执行该操作!");
         }
         final Map<String, Object> res = new HashMap<String, Object>();
         res.put("room", this.roomService.get(GcRoom.class, roomId));
@@ -182,10 +182,10 @@ public class RoomConcactor
         final Integer uid = (Integer)WebUtils.getSessionAttribute(request, "$uid");
         final Room room = this.roomStore.get(roomId);
         if (room == null) {
-            return ResponseUtils.jsonView(404, "\u623f\u95f4" + roomId + "\u4e0d\u5b58\u5728.");
+            return ResponseUtils.jsonView(404, "房间" + roomId + "不存在.");
         }
         if (!room.getOwner().equals(uid)) {
-            return ResponseUtils.jsonView(404, "\u65e0\u6743\u6267\u884c\u8be5\u64cd\u4f5c!");
+            return ResponseUtils.jsonView(404, "无权执行该操作!");
         }
         final List<GcRoomMember> ls = null;//this.roomService.findByProperties(GcRoomMember.class, (Map<Object, Object>)ImmutableMap.of("roomId", roomId));
         return ResponseUtils.jsonView(ls);
@@ -199,10 +199,10 @@ public class RoomConcactor
         final String roomId = m.getRoomId();
         final Room room = this.roomStore.get(roomId);
         if (room == null) {
-            return ResponseUtils.jsonView(404, "\u623f\u95f4" + roomId + "\u4e0d\u5b58\u5728.");
+            return ResponseUtils.jsonView(404, "房间" + roomId + "不存在.");
         }
         if (!room.getOwner().equals(uid)) {
-            return ResponseUtils.jsonView(404, "\u65e0\u6743\u6267\u884c\u8be5\u64cd\u4f5c!");
+            return ResponseUtils.jsonView(404, "无权执行该操作!");
         }
         return ResponseUtils.jsonView(m);
     }
@@ -215,10 +215,10 @@ public class RoomConcactor
         final String roomId = m.getRoomId();
         final Room room = this.roomStore.get(roomId);
         if (room == null) {
-            return ResponseUtils.jsonView(404, "\u623f\u95f4" + roomId + "\u4e0d\u5b58\u5728.");
+            return ResponseUtils.jsonView(404, "房间" + roomId + "不存在.");
         }
         if (!room.getOwner().equals(uid)) {
-            return ResponseUtils.jsonView(500, "\u65e0\u6743\u6267\u884c\u8be5\u64cd\u4f5c!");
+            return ResponseUtils.jsonView(500, "无权执行该操作!");
         }
         if (m != null) {
             this.roomService.delete(GcRoomMember.class, m);
@@ -246,10 +246,10 @@ public class RoomConcactor
         final String roomId = m.getRoomId();
         final Room room = this.roomStore.get(roomId);
         if (room == null) {
-            return ResponseUtils.jsonView(404, "\u623f\u95f4" + roomId + "\u4e0d\u5b58\u5728.");
+            return ResponseUtils.jsonView(404, "房间" + roomId + "不存在.");
         }
         if (!room.getOwner().equals(uid)) {
-            return ResponseUtils.jsonView(500, "\u65e0\u6743\u6267\u884c\u8be5\u64cd\u4f5c!");
+            return ResponseUtils.jsonView(500, "无权执行该操作!");
         }
         if (m != null) {
             m.setIsPartner("1");
@@ -266,10 +266,10 @@ public class RoomConcactor
         final String roomId = m.getRoomId();
         final Room room = this.roomStore.get(roomId);
         if (room == null) {
-            return ResponseUtils.jsonView(404, "\u623f\u95f4" + roomId + "\u4e0d\u5b58\u5728.");
+            return ResponseUtils.jsonView(404, "房间" + roomId + "不存在.");
         }
         if (!room.getOwner().equals(uid)) {
-            return ResponseUtils.jsonView(500, "\u65e0\u6743\u6267\u884c\u8be5\u64cd\u4f5c!");
+            return ResponseUtils.jsonView(500, "无权执行该操作!");
         }
         if (m != null) {
             m.setIsPartner("0");
@@ -286,12 +286,12 @@ public class RoomConcactor
         final String roomId = m.getRoomId();
         final Room room = this.roomStore.get(roomId);
         if (room == null) {
-            return ResponseUtils.jsonView(404, "\u623f\u95f4" + roomId + "\u4e0d\u5b58\u5728.");
+            return ResponseUtils.jsonView(404, "房间" + roomId + "不存在.");
         }
         if (!room.getOwner().equals(uid)) {
-            return ResponseUtils.jsonView(500, "\u65e0\u6743\u6267\u884c\u8be5\u64cd\u4f5c!");
+            return ResponseUtils.jsonView(500, "无权执行该操作!");
         }
-        final List<GcRoomMember> ls = null;// this.roomService.findByProperties(GcRoomMember.class, (Map<Object, Object>)ImmutableMap.of("roomId", roomId));
+        final List<GcRoomMember> ls = this.roomService.findByProperties(GcRoomMember.class, ImmutableMap.of("roomId", roomId));
         Double fullRateExceptCurrent = 0.0;
         for (final GcRoomMember mb : ls) {
             if (!mb.getId().equals(m.getId())) {
@@ -300,7 +300,7 @@ public class RoomConcactor
         }
         if (m != null) {
             if (fullRateExceptCurrent + rate > 100.0) {
-                return ResponseUtils.jsonView(500, "\u53ef\u8bbe\u7f6e\u6700\u5927\u80a1\u4efd:" + (100.0 - fullRateExceptCurrent));
+                return ResponseUtils.jsonView(500, "可设置最大股份:" + (100.0 - fullRateExceptCurrent));
             }
             m.setRate(rate);
             this.roomService.update(GcRoomMember.class, m);
@@ -314,7 +314,7 @@ public class RoomConcactor
         final Integer uid = (Integer)WebUtils.getSessionAttribute(request, "$uid");
         final Room r = this.roomStore.get(roomId);
         if (r == null || !r.getOwner().equals(uid)) {
-            return ResponseUtils.jsonView(500, "\u65e0\u6743\u6267\u884c\u8be5\u64cd\u4f5c!");
+            return ResponseUtils.jsonView(500, "无权执行该操作!");
         }
         try {
             this.roomService.modifyRoomInfo(roomId, key, value);

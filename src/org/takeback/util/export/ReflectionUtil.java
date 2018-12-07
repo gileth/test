@@ -55,7 +55,7 @@ public class ReflectionUtil
             result = field.get(object);
         }
         catch (IllegalAccessException e) {
-            ReflectionUtil.logger.error(("\u4e0d\u53ef\u80fd\u629b\u51fa\u7684\u5f02\u5e38{}" + e.getMessage()));
+            ReflectionUtil.logger.error(("不可能抛出的异常{}" + e.getMessage()));
         }
         return result;
     }
@@ -70,7 +70,7 @@ public class ReflectionUtil
             field.set(object, value);
         }
         catch (IllegalAccessException e) {
-            ReflectionUtil.logger.error(("\u4e0d\u53ef\u80fd\u629b\u51fa\u7684\u5f02\u5e38:{}" + e.getMessage()));
+            ReflectionUtil.logger.error(("不可能抛出的异常:{}" + e.getMessage()));
         }
     }
     
@@ -89,7 +89,7 @@ public class ReflectionUtil
     }
     
     protected static Field getDeclaredField(final Object object, final String fieldName) {
-        Assert.notNull(object, "object\u4e0d\u80fd\u4e3a\u7a7a");
+        Assert.notNull(object, "object不能为空");
         Assert.hasText(fieldName, "fieldName");
         Class<?> superClass = object.getClass();
         while (superClass != Object.class) {
@@ -111,7 +111,7 @@ public class ReflectionUtil
     }
     
     protected static Method getDeclaredMethod(final Object object, final String methodName, final Class<?>[] parameterTypes) {
-        Assert.notNull(object, "object\u4e0d\u80fd\u4e3a\u7a7a");
+        Assert.notNull(object, "object不能为空");
         Class<?> superClass = object.getClass();
         while (superClass != Object.class) {
             try {
@@ -208,7 +208,7 @@ public class ReflectionUtil
     public static void copyPorperties(final Object dest, final Object source, final String[] porperties) throws InvocationTargetException, IllegalAccessException {
         for (final String por : porperties) {
             final Object srcObj = invokeGetterMethod(source, por);
-            ReflectionUtil.logger.debug(("\u5c5e\u6027\u540d\uff1a" + por + "------------- \u5c5e\u6027\u503c\uff1a" + srcObj));
+            ReflectionUtil.logger.debug(("属性名：" + por + "------------- 属性值：" + srcObj));
             if (srcObj != null) {
                 try {
                     BeanUtils.setProperty(dest, por, srcObj);

@@ -43,12 +43,12 @@ public class ShopService extends BaseService
     public void doExchage(final Integer uid, final Integer shopId, final String name, final String address, final String mobile) {
         final PubShop s = this.dao.get(PubShop.class, shopId);
         if (s == null) {
-            throw new CodedBaseRuntimeException("\u5546\u54c1\u4fe1\u606f\u4e22\u5931");
+            throw new CodedBaseRuntimeException("商品信息丢失");
         }
         final String hql = "update PubUser set money = coalesce(money,0) - :money where money > :money and id = :uid";
         final int effected = this.dao.executeUpdate(hql,  ImmutableMap.of( "money", s.getMoney(),  "uid",  uid));
         if (effected == 0) {
-            throw new CodedBaseRuntimeException("\u8d26\u6237\u91d1\u989d\u4e0d\u8db3!");
+            throw new CodedBaseRuntimeException("账户金额不足!");
         }
         final PubUser u = this.dao.get(PubUser.class, uid);
         final PubExchangeLog pel = new PubExchangeLog();

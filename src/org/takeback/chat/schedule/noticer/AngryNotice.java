@@ -30,7 +30,7 @@ public class AngryNotice extends Thread
                     TimeUnit.SECONDS.sleep(AngryNotice.TO_SLEEP);
                     final LotteryUtilBean lub = new LotteryUtilBean();
                     final Long timeLeft = lub.getNextOpenRestTime();
-                    final String txt = new StringBuffer("<span style='color:#B22222'>").append(lub.getNextStage()).append("\u671f\u4e0b\u6ce8\u5269\u4f59\u65f6\u95f4\uff1a").append(timeLeft / 60L).append("\u5206").append(timeLeft % 60L).append("\u79d2</span>").toString();
+                    final String txt = new StringBuffer("<span style='color:#B22222'>").append(lub.getNextStage()).append("期下注剩余时间：").append(timeLeft / 60L).append("分").append(timeLeft % 60L).append("秒</span>").toString();
                     final Message msg = new Message("TXT_SYS", 0, txt);
                     for (final String roomId : this.rooms) {
                         final Room r = this.roomStore.get(roomId);

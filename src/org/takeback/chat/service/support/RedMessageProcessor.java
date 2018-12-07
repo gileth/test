@@ -93,7 +93,7 @@ public class RedMessageProcessor extends TxtMessageProcessor
         }
         catch (Exception e) {
             e.printStackTrace();
-            MessageUtils.sendCMD(session, "alert", "\u53d1\u9001\u7ea2\u5305\u5931\u8d25");
+            MessageUtils.sendCMD(session, "alert", "发送红包失败");
             return null;
         }
     }

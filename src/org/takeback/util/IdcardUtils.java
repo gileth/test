@@ -123,7 +123,7 @@ public class IdcardUtils
             return null;
         }
         if (idCard.matches("^[a-zA-Z][0-9]{9}$")) {
-            info[0] = "\u53f0\u6e7e";
+            info[0] = "台湾";
             System.out.println("11111");
             final String char2 = idCard.substring(1, 2);
             if (char2.equals("1")) {
@@ -143,14 +143,14 @@ public class IdcardUtils
             info[2] = (validateTWCard(idCard) ? "true" : "false");
         }
         else if (idCard.matches("^[1|5|7][0-9]{6}\\(?[0-9A-Z]\\)?$")) {
-            info[0] = "\u6fb3\u95e8";
+            info[0] = "澳门";
             info[1] = "N";
         }
         else {
             if (!idCard.matches("^[A-Z]{1,2}[0-9]{6}\\(?[0-9A]\\)?$")) {
                 return null;
             }
-            info[0] = "\u9999\u6e2f";
+            info[0] = "香港";
             info[1] = "N";
             info[2] = (validateHKCard(idCard) ? "true" : "false");
         }
@@ -402,41 +402,41 @@ public class IdcardUtils
         IdcardUtils.cityCodes = new HashMap<String, String>();
         IdcardUtils.twFirstCode = new HashMap<String, Integer>();
         IdcardUtils.hkFirstCode = new HashMap<String, Integer>();
-        IdcardUtils.cityCodes.put("11", "\u5317\u4eac");
-        IdcardUtils.cityCodes.put("12", "\u5929\u6d25");
-        IdcardUtils.cityCodes.put("13", "\u6cb3\u5317");
-        IdcardUtils.cityCodes.put("14", "\u5c71\u897f");
-        IdcardUtils.cityCodes.put("15", "\u5185\u8499\u53e4");
-        IdcardUtils.cityCodes.put("21", "\u8fbd\u5b81");
-        IdcardUtils.cityCodes.put("22", "\u5409\u6797");
-        IdcardUtils.cityCodes.put("23", "\u9ed1\u9f99\u6c5f");
-        IdcardUtils.cityCodes.put("31", "\u4e0a\u6d77");
-        IdcardUtils.cityCodes.put("32", "\u6c5f\u82cf");
-        IdcardUtils.cityCodes.put("33", "\u6d59\u6c5f");
-        IdcardUtils.cityCodes.put("34", "\u5b89\u5fbd");
-        IdcardUtils.cityCodes.put("35", "\u798f\u5efa");
-        IdcardUtils.cityCodes.put("36", "\u6c5f\u897f");
-        IdcardUtils.cityCodes.put("37", "\u5c71\u4e1c");
-        IdcardUtils.cityCodes.put("41", "\u6cb3\u5357");
-        IdcardUtils.cityCodes.put("42", "\u6e56\u5317");
-        IdcardUtils.cityCodes.put("43", "\u6e56\u5357");
-        IdcardUtils.cityCodes.put("44", "\u5e7f\u4e1c");
-        IdcardUtils.cityCodes.put("45", "\u5e7f\u897f");
-        IdcardUtils.cityCodes.put("46", "\u6d77\u5357");
-        IdcardUtils.cityCodes.put("50", "\u91cd\u5e86");
-        IdcardUtils.cityCodes.put("51", "\u56db\u5ddd");
-        IdcardUtils.cityCodes.put("52", "\u8d35\u5dde");
-        IdcardUtils.cityCodes.put("53", "\u4e91\u5357");
-        IdcardUtils.cityCodes.put("54", "\u897f\u85cf");
-        IdcardUtils.cityCodes.put("61", "\u9655\u897f");
-        IdcardUtils.cityCodes.put("62", "\u7518\u8083");
-        IdcardUtils.cityCodes.put("63", "\u9752\u6d77");
-        IdcardUtils.cityCodes.put("64", "\u5b81\u590f");
-        IdcardUtils.cityCodes.put("65", "\u65b0\u7586");
-        IdcardUtils.cityCodes.put("71", "\u53f0\u6e7e");
-        IdcardUtils.cityCodes.put("81", "\u9999\u6e2f");
-        IdcardUtils.cityCodes.put("82", "\u6fb3\u95e8");
-        IdcardUtils.cityCodes.put("91", "\u56fd\u5916");
+        IdcardUtils.cityCodes.put("11", "北京");
+        IdcardUtils.cityCodes.put("12", "天津");
+        IdcardUtils.cityCodes.put("13", "河北");
+        IdcardUtils.cityCodes.put("14", "山西");
+        IdcardUtils.cityCodes.put("15", "内蒙古");
+        IdcardUtils.cityCodes.put("21", "辽宁");
+        IdcardUtils.cityCodes.put("22", "吉林");
+        IdcardUtils.cityCodes.put("23", "黑龙江");
+        IdcardUtils.cityCodes.put("31", "上海");
+        IdcardUtils.cityCodes.put("32", "江苏");
+        IdcardUtils.cityCodes.put("33", "浙江");
+        IdcardUtils.cityCodes.put("34", "安徽");
+        IdcardUtils.cityCodes.put("35", "福建");
+        IdcardUtils.cityCodes.put("36", "江西");
+        IdcardUtils.cityCodes.put("37", "山东");
+        IdcardUtils.cityCodes.put("41", "河南");
+        IdcardUtils.cityCodes.put("42", "湖北");
+        IdcardUtils.cityCodes.put("43", "湖南");
+        IdcardUtils.cityCodes.put("44", "广东");
+        IdcardUtils.cityCodes.put("45", "广西");
+        IdcardUtils.cityCodes.put("46", "海南");
+        IdcardUtils.cityCodes.put("50", "重庆");
+        IdcardUtils.cityCodes.put("51", "四川");
+        IdcardUtils.cityCodes.put("52", "贵州");
+        IdcardUtils.cityCodes.put("53", "云南");
+        IdcardUtils.cityCodes.put("54", "西藏");
+        IdcardUtils.cityCodes.put("61", "陕西");
+        IdcardUtils.cityCodes.put("62", "甘肃");
+        IdcardUtils.cityCodes.put("63", "青海");
+        IdcardUtils.cityCodes.put("64", "宁夏");
+        IdcardUtils.cityCodes.put("65", "新疆");
+        IdcardUtils.cityCodes.put("71", "台湾");
+        IdcardUtils.cityCodes.put("81", "香港");
+        IdcardUtils.cityCodes.put("82", "澳门");
+        IdcardUtils.cityCodes.put("91", "国外");
         IdcardUtils.twFirstCode.put("A", 10);
         IdcardUtils.twFirstCode.put("B", 11);
         IdcardUtils.twFirstCode.put("C", 12);

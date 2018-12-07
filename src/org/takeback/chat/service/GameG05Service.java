@@ -32,7 +32,7 @@ import org.takeback.service.BaseService;
 @Service("gameG05Service")
 public class GameG05Service extends BaseService
 {
-    public static final String GET_MASTER_TEXT = "\u5f00\u59cb\u62a2\u5e84,\u8c01\u5927\u8c01\u5e84!";
+    public static final String GET_MASTER_TEXT = "开始抢庄,谁大谁庄!";
     public static final String[] NAMES;
     public static final String[] TUORA;
     public static final String[] GODEN;
@@ -43,30 +43,30 @@ public class GameG05Service extends BaseService
     
     public static String suggestNext(final Integer currentStep) {
         if (Room.STEP_FREE.equals(currentStep)) {
-            return "\u5f53\u524d\u72b6\u6001:" + currentStep + ",\u5efa\u8bae\u6267\u884c'\u5f00\u59cb\u6807\u6869'";
+            return "当前状态:" + currentStep + ",建议执行'开始标桩'";
         }
         if (Room.STEP_MASTER.equals(currentStep)) {
-            return "\u5f53\u524d\u72b6\u6001:" + currentStep + ",\u5efa\u8bae\u6267\u884c'\u6807\u6869\u786e\u8ba4'";
+            return "当前状态:" + currentStep + ",建议执行'标桩确认'";
         }
         if (Room.STEP_CHECK1.equals(currentStep)) {
-            return "\u5f53\u524d\u72b6\u6001:" + currentStep + ",\u5efa\u8bae\u6267\u884c'\u6807\u6869\u786e\u8ba4'";
+            return "当前状态:" + currentStep + ",建议执行'标桩确认'";
         }
         if (Room.STEP_CHECK2.equals(currentStep)) {
-            return "\u5f53\u524d\u72b6\u6001:" + currentStep + ",\u5efa\u8bae\u6267\u884c'\u6807\u6869\u786e\u8ba4'";
+            return "当前状态:" + currentStep + ",建议执行'标桩确认'";
         }
         if (Room.STEP_CHECK3.equals(currentStep)) {
-            return "\u5f53\u524d\u72b6\u6001:" + currentStep + ",\u5efa\u8bae\u6267\u884c'\u5f00\u59cb\u4e0b\u6ce8'";
+            return "当前状态:" + currentStep + ",建议执行'开始下注'";
         }
         if (Room.STEP_START_BET.equals(currentStep)) {
-            return "\u5f53\u524d\u72b6\u6001:" + currentStep + ",\u5efa\u8bae\u6267\u884c'\u7ed3\u675f\u4e0b\u6ce8'";
+            return "当前状态:" + currentStep + ",建议执行'结束下注'";
         }
         if (Room.STEP_FINISH_BET.equals(currentStep)) {
-            return "\u5f53\u524d\u72b6\u6001:" + currentStep + ",\u5efa\u8bae\u6267\u884c'\u53d1\u5305'";
+            return "当前状态:" + currentStep + ",建议执行'发包'";
         }
         if (Room.STEP_PLAY_FINISHED.equals(currentStep)) {
-            return "\u5f53\u524d\u72b6\u6001:" + currentStep + ",\u5efa\u8bae\u6267\u884c'\u4e0b\u5e84\u6216\u5f00\u59cb\u4e0b\u6ce8'";
+            return "当前状态:" + currentStep + ",建议执行'下庄或开始下注'";
         }
-        return "\u5f53\u524d\u547d\u4ee4:" + currentStep;
+        return "当前命令:" + currentStep;
     }
     
     @Transactional
@@ -96,7 +96,7 @@ public class GameG05Service extends BaseService
             final Integer playerId = r.getUid();
             final User player = this.userStore.get(playerId);
             final LotteryDetail playerDetail = lottery.getDetail().get(r.getUid());
-            msg = msg + "<tr><td>\u3016\u95f2\u3017</td><td class='g021-nick-name'>" + player.getNickName() + "</td><td>(" + playerDetail.getCoin() + ")</td>";
+            msg = msg + "<tr><td>〖闲〗</td><td class='g021-nick-name'>" + player.getNickName() + "</td><td>(" + playerDetail.getCoin() + ")</td>";
             final Integer playerPoint = NumberUtil.getDecimalPartSum4G22(playerDetail.getCoin());
             Double playerInout = 0.0;
             if ("2".equals(r.getBetType())) {
@@ -139,7 +139,7 @@ public class GameG05Service extends BaseService
             }
             this.dao.executeUpdate("update GcLotteryDetail a set  a.addback =:addback,a.inoutNum = :inoutNum where a.lotteryid = :lotteryid and a.uid =:uid", ImmutableMap.of( "addback",  playerAddBack,  "inoutNum",  playerInout, "lotteryid",  lottery.getId(),  "uid",  playerId));
         }
-        msg = msg + "<tr><td  style='color:#B22222'>\u3010\u5e84\u3011</td><td class='g021-nick-name'>" + master.getNickName() + "</td><td>(" + masterDetail.getCoin() + ")</td>";
+        msg = msg + "<tr><td  style='color:#B22222'>【庄】</td><td class='g021-nick-name'>" + master.getNickName() + "</td><td>(" + masterDetail.getCoin() + ")</td>";
         if (masterInout > 0.0) {
             msg = msg + "<td style='color:red'>" + GameG05Service.NAMES[masterPoint] + "+" + NumberUtil.format(masterInout) + "</td></tr></table>";
         }
@@ -147,7 +147,7 @@ public class GameG05Service extends BaseService
             msg = msg + "<td style='color:green'>" + GameG05Service.NAMES[masterPoint] + " -" + NumberUtil.format(Math.abs(masterInout)) + "</td></tr></table>";
         }
         else {
-            msg = msg + "<td style='color:gray'>" + GameG05Service.NAMES[masterPoint] + "��\u5e73\u5e84</td></tr></table>";
+            msg = msg + "<td style='color:gray'>" + GameG05Service.NAMES[masterPoint] + "��平庄</td></tr></table>";
         }
         if (masterInout != 0.0) {
             this.dao.executeUpdate("update GcMasterRecord set freeze = coalesce(freeze,0) + :freeze , restBetable = coalesce(restBetable,0) + :freeze where id = :id",  ImmutableMap.of( "freeze",  masterInout,  "id",  masterRecordId));
@@ -170,7 +170,7 @@ public class GameG05Service extends BaseService
         final User master = this.userStore.get(masterId);
         final Double maxTypes = Double.valueOf(room.getProperties().get("conf_n15").toString());
         final Double betable = NumberUtil.round(gmr.getRestBetable() / maxTypes);
-        final String txt = "<table><tr><td colspan=2 align='center'><span style='color:red;font-weight:bold;font-size:22px;'>\u5e84\u5bb6\u91d1\u5e01</span></td></tr><tr><td style='color:#B22222;font-style:italic'>" + master.getNickName() + "</td><td style='color:orange;font-size:18px;font-weight:bold'>" + gmr.getFreeze() + " </td></tr><tr><td style='color:#B22222;'>\u6700\u4f4e\u4e0b\u6ce8</td><td style='color:green;'>" + 20 + "</td></tr><tr><td style='color:#B22222;'>\u6700\u9ad8\u4e0b\u6ce8</td><td style='color:yellow;'>" + 100 + "</td></tr><tr><td style='color:#B22222;'>\u53ef\u62bc\u6ce8\u91d1\u989d</td><td style='color:red;'>" + betable + "</td></tr></table>";
+        final String txt = "<table><tr><td colspan=2 align='center'><span style='color:red;font-weight:bold;font-size:22px;'>庄家金币</span></td></tr><tr><td style='color:#B22222;font-style:italic'>" + master.getNickName() + "</td><td style='color:orange;font-size:18px;font-weight:bold'>" + gmr.getFreeze() + " </td></tr><tr><td style='color:#B22222;'>最低下注</td><td style='color:green;'>" + 20 + "</td></tr><tr><td style='color:#B22222;'>最高下注</td><td style='color:yellow;'>" + 100 + "</td></tr><tr><td style='color:#B22222;'>可押注金额</td><td style='color:red;'>" + betable + "</td></tr></table>";
         return txt;
     }
     
@@ -188,11 +188,11 @@ public class GameG05Service extends BaseService
     public void bet(final Room room, final User user, final Double money, final Double freeze, final Integer masterRecordId, final String betType) {
         final int effected = this.dao.executeUpdate("update GcMasterRecord  set restBetable = coalesce(restBetable,0) - :freeze where id=:id and restBetable>=:freeze", ImmutableMap.of( "freeze",  freeze,  "id",  masterRecordId));
         if (effected == 0) {
-            throw new CodedBaseRuntimeException("\u53ef\u4e0b\u91d1\u989d\u4e0d\u8db3!");
+            throw new CodedBaseRuntimeException("可下金额不足!");
         }
         final int userEffeted = this.dao.executeUpdate("update PubUser a set money = coalesce(money,0) - :money where id=:uid and money>=:money",  ImmutableMap.of( "money", freeze, "uid", user.getId()));
         if (userEffeted == 0) {
-            throw new CodedBaseRuntimeException("\u8d26\u6237\u4f59\u989d\u4e0d\u8db3!");
+            throw new CodedBaseRuntimeException("账户余额不足!");
         }
         final GcBetRecord gbr = new GcBetRecord();
         gbr.setMoney(money);
@@ -230,7 +230,7 @@ public class GameG05Service extends BaseService
     public GcMasterRecord checkMasterRecord(final Room room) {
         final List<GcMasterRecord> list = this.getMasterRecrods(room.getId());
         if (list.size() == 0) {
-            throw new CodedBaseRuntimeException("\u65e0\u7ade\u6807\u8bb0\u5f55!");
+            throw new CodedBaseRuntimeException("无竞标记录!");
         }
         for (int i = 1; i < list.size(); ++i) {
             final GcMasterRecord r = list.get(i);
@@ -249,7 +249,7 @@ public class GameG05Service extends BaseService
     public void addMasterFreeze(final User user, final Integer masterRecordId, final Double addedFreeze) {
         final int userEffeted = this.dao.executeUpdate("update PubUser a set a.money = coalesce(a.money,0) - :money where a.id=:uid and a.money>=:money",  ImmutableMap.of( "money",  addedFreeze,  "uid",  user.getId()));
         if (userEffeted == 0) {
-            throw new CodedBaseRuntimeException("\u8d26\u6237\u4f59\u989d\u4e0d\u8db3!");
+            throw new CodedBaseRuntimeException("账户余额不足!");
         }
         this.dao.executeUpdate("update GcMasterRecord  set freeze = coalesce(freeze,0) + :freeze, restBetable = coalesce(restBetable,0) + :freeze where id=:id",  ImmutableMap.of( "freeze", addedFreeze, "id", masterRecordId));
     }
@@ -258,7 +258,7 @@ public class GameG05Service extends BaseService
     public GcMasterRecord newMasterRecord(final User user, final Room room, final Double freeze) {
         final int userEffeted = this.dao.executeUpdate("update PubUser  set money = coalesce(money,0) - :money,exp=coalesce(exp,0)+:exp where id=:uid and money>=:money",  ImmutableMap.of( "money",  freeze,  "exp", freeze,  "uid",  user.getId()));
         if (userEffeted == 0) {
-            throw new CodedBaseRuntimeException("\u8d26\u6237\u4f59\u989d\u4e0d\u8db3!");
+            throw new CodedBaseRuntimeException("账户余额不足!");
         }
         final GcMasterRecord gmr = new GcMasterRecord();
         gmr.setUid(user.getId());
@@ -279,7 +279,7 @@ public class GameG05Service extends BaseService
     }
     
     static {
-        NAMES = new String[] { "\u725b\u725b", "\u725b\u2460", "\u725b\u2461", "\u725b\u2462", "\u725b\u2463", "\u725b\u2464", "\u725b\u2465", "\u725b\u2466", "\u725b\u2467", "\u725b\u2468", "\u725b\u725b", "\u91d1\u725b", "\u5bf9\u5b50", "\u987a\u5b50", "\u6ee1\u725b", "\u8c79\u5b50" };
+        NAMES = new String[] { "牛牛", "牛①", "牛②", "牛③", "牛④", "牛⑤", "牛⑥", "牛⑦", "牛⑧", "牛⑨", "牛牛", "金牛", "对子", "顺子", "满牛", "豹子" };
         TUORA = new String[] { "0.12", "1.23", "2.34", "3.45", "4.56", "5.67", "6.78", "7.89" };
         GODEN = new String[] { "0.10", "0.20", "0.30", "0.40", "0.50", "0.60", "0.70", "0.80", "0.90" };
     }

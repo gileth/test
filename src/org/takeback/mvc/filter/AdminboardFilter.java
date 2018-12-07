@@ -24,12 +24,12 @@ public class AdminboardFilter extends OncePerRequestFilter
             final PrintWriter pw = response.getWriter();
             pw.println("<html>");
             pw.println("<body>");
-            pw.println("<h2 align='center'>\u521d\u59cb\u5316</h2>");
+            pw.println("<h2 align='center'>初始化</h2>");
             pw.println("<form action=initSystem method=post>");
-            pw.println("\u7ba1\u7406\u5458\u5e10\u53f7:<input type=text name=username><br>");
-            pw.println("\u7ba1\u7406\u5458\u5bc6\u7801:<input type=password name=passwd><br>");
-            pw.println("\u91cd\u590d\u5bc6\u7801:<input type=password name=repasswd><br>");
-            pw.println("<input type=submit value=\u786e\u5b9a><br>");
+            pw.println("管理员帐号:<input type=text name=username><br>");
+            pw.println("管理员密码:<input type=password name=passwd><br>");
+            pw.println("重复密码:<input type=password name=repasswd><br>");
+            pw.println("<input type=submit value=确定><br>");
             pw.println("</form>");
             pw.println("<body/>");
             pw.println("<html/>");

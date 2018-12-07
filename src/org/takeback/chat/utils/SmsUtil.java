@@ -104,7 +104,7 @@ public class SmsUtil
         SmsUtil.url = "http://sms.253.com/msg/";
         SmsUtil.un = "N3360826";
         SmsUtil.pw = "cQEm9uVayYad6e";
-        SmsUtil.sign = "\u3010\u767e\u57ce\u7f51\u3011";
-        SmsUtil.codeTpl = "\u60a8\u7684\u9a8c\u8bc1\u7801\u4e3a:${code}";
+        SmsUtil.sign = "【百城网】";
+        SmsUtil.codeTpl = "您的验证码为:${code}";
     }
 }

@@ -22,7 +22,7 @@ public class IdcardUtils
         final String[] Wi = { "7", "9", "10", "5", "8", "4", "2", "1", "6", "3", "7", "9", "10", "5", "8", "4", "2" };
         String Ai = "";
         if (IDStr.length() != 15 && IDStr.length() != 18) {
-            errorInfo = "\u8eab\u4efd\u8bc1\u53f7\u7801\u957f\u5ea6\u5e94\u8be5\u4e3a15\u4f4d\u621618\u4f4d\u3002";
+            errorInfo = "身份证号码长度应该为15位或18位。";
             System.out.println("IDStr " + errorInfo);
             return false;
         }
@@ -33,7 +33,7 @@ public class IdcardUtils
             Ai = IDStr.substring(0, 6) + "19" + IDStr.substring(6, 15);
         }
         if (!isNumeric(Ai)) {
-            errorInfo = "\u8eab\u4efd\u8bc115\u4f4d\u53f7\u7801\u90fd\u5e94\u4e3a\u6570\u5b57 ; 18\u4f4d\u53f7\u7801\u9664\u6700\u540e\u4e00\u4f4d\u5916\uff0c\u90fd\u5e94\u4e3a\u6570\u5b57\u3002";
+            errorInfo = "身份证15位号码都应为数字 ; 18位号码除最后一位外，都应为数字。";
             System.out.println("IDStr " + errorInfo);
             return false;
         }
@@ -41,7 +41,7 @@ public class IdcardUtils
         final String strMonth = Ai.substring(10, 12);
         final String strDay = Ai.substring(12, 14);
         if (!isDate(strYear + "-" + strMonth + "-" + strDay)) {
-            errorInfo = "\u8eab\u4efd\u8bc1\u751f\u65e5\u65e0\u6548\u3002";
+            errorInfo = "身份证生日无效。";
             System.out.println("IDStr " + errorInfo);
             return false;
         }
@@ -49,7 +49,7 @@ public class IdcardUtils
         final SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
         try {
             if (gc.get(1) - Integer.parseInt(strYear) > 150 || gc.getTime().getTime() - s.parse(strYear + "-" + strMonth + "-" + strDay).getTime() < 0L) {
-                errorInfo = "\u8eab\u4efd\u8bc1\u751f\u65e5\u4e0d\u5728\u6709\u6548\u8303\u56f4\u3002";
+                errorInfo = "身份证生日不在有效范围。";
                 System.out.println("IDStr " + errorInfo);
                 return false;
             }
@@ -61,18 +61,18 @@ public class IdcardUtils
             e2.printStackTrace();
         }
         if (Integer.parseInt(strMonth) > 12 || Integer.parseInt(strMonth) == 0) {
-            errorInfo = "\u8eab\u4efd\u8bc1\u6708\u4efd\u65e0\u6548";
+            errorInfo = "身份证月份无效";
             System.out.println("IDStr " + errorInfo);
             return false;
         }
         if (Integer.parseInt(strDay) > 31 || Integer.parseInt(strDay) == 0) {
-            errorInfo = "\u8eab\u4efd\u8bc1\u65e5\u671f\u65e0\u6548";
+            errorInfo = "身份证日期无效";
             System.out.println("IDStr " + errorInfo);
             return false;
         }
         final Hashtable h = GetAreaCode();
         if (h.get(Ai.substring(0, 2)) == null) {
-            errorInfo = "\u8eab\u4efd\u8bc1\u5730\u533a\u7f16\u7801\u9519\u8bef\u3002";
+            errorInfo = "身份证地区编码错误。";
             System.out.println("IDStr " + errorInfo);
             return false;
         }
@@ -87,7 +87,7 @@ public class IdcardUtils
             return true;
         }
         if (!Ai.equals(IDStr)) {
-            errorInfo = "\u8eab\u4efd\u8bc1\u65e0\u6548\uff0c\u4e0d\u662f\u5408\u6cd5\u7684\u8eab\u4efd\u8bc1\u53f7\u7801";
+            errorInfo = "身份证无效，不是合法的身份证号码";
             System.out.println("IDStr " + errorInfo);
             return false;
         }
@@ -96,41 +96,41 @@ public class IdcardUtils
     
     private static Hashtable GetAreaCode() {
         final Hashtable hashtable = new Hashtable();
-        hashtable.put("11", "\u5317\u4eac");
-        hashtable.put("12", "\u5929\u6d25");
-        hashtable.put("13", "\u6cb3\u5317");
-        hashtable.put("14", "\u5c71\u897f");
-        hashtable.put("15", "\u5185\u8499\u53e4");
-        hashtable.put("21", "\u8fbd\u5b81");
-        hashtable.put("22", "\u5409\u6797");
-        hashtable.put("23", "\u9ed1\u9f99\u6c5f");
-        hashtable.put("31", "\u4e0a\u6d77");
-        hashtable.put("32", "\u6c5f\u82cf");
-        hashtable.put("33", "\u6d59\u6c5f");
-        hashtable.put("34", "\u5b89\u5fbd");
-        hashtable.put("35", "\u798f\u5efa");
-        hashtable.put("36", "\u6c5f\u897f");
-        hashtable.put("37", "\u5c71\u4e1c");
-        hashtable.put("41", "\u6cb3\u5357");
-        hashtable.put("42", "\u6e56\u5317");
-        hashtable.put("43", "\u6e56\u5357");
-        hashtable.put("44", "\u5e7f\u4e1c");
-        hashtable.put("45", "\u5e7f\u897f");
-        hashtable.put("46", "\u6d77\u5357");
-        hashtable.put("50", "\u91cd\u5e86");
-        hashtable.put("51", "\u56db\u5ddd");
-        hashtable.put("52", "\u8d35\u5dde");
-        hashtable.put("53", "\u4e91\u5357");
-        hashtable.put("54", "\u897f\u85cf");
-        hashtable.put("61", "\u9655\u897f");
-        hashtable.put("62", "\u7518\u8083");
-        hashtable.put("63", "\u9752\u6d77");
-        hashtable.put("64", "\u5b81\u590f");
-        hashtable.put("65", "\u65b0\u7586");
-        hashtable.put("71", "\u53f0\u6e7e");
-        hashtable.put("81", "\u9999\u6e2f");
-        hashtable.put("82", "\u6fb3\u95e8");
-        hashtable.put("91", "\u56fd\u5916");
+        hashtable.put("11", "北京");
+        hashtable.put("12", "天津");
+        hashtable.put("13", "河北");
+        hashtable.put("14", "山西");
+        hashtable.put("15", "内蒙古");
+        hashtable.put("21", "辽宁");
+        hashtable.put("22", "吉林");
+        hashtable.put("23", "黑龙江");
+        hashtable.put("31", "上海");
+        hashtable.put("32", "江苏");
+        hashtable.put("33", "浙江");
+        hashtable.put("34", "安徽");
+        hashtable.put("35", "福建");
+        hashtable.put("36", "江西");
+        hashtable.put("37", "山东");
+        hashtable.put("41", "河南");
+        hashtable.put("42", "湖北");
+        hashtable.put("43", "湖南");
+        hashtable.put("44", "广东");
+        hashtable.put("45", "广西");
+        hashtable.put("46", "海南");
+        hashtable.put("50", "重庆");
+        hashtable.put("51", "四川");
+        hashtable.put("52", "贵州");
+        hashtable.put("53", "云南");
+        hashtable.put("54", "西藏");
+        hashtable.put("61", "陕西");
+        hashtable.put("62", "甘肃");
+        hashtable.put("63", "青海");
+        hashtable.put("64", "宁夏");
+        hashtable.put("65", "新疆");
+        hashtable.put("71", "台湾");
+        hashtable.put("81", "香港");
+        hashtable.put("82", "澳门");
+        hashtable.put("91", "国外");
         return hashtable;
     }
     

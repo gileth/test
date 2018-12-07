@@ -19,7 +19,7 @@ public class ResetGameCmd implements Command
     @Override
     public void exec(final Map<String, Object> data, final Message message, final WebSocketSession session, final Room room, final User user) {
         room.setStep(Room.STEP_FREE);
-        final Message msg = new Message("TXT_SYS", user.getId(), "<span style='color:red'>\u6e38\u620f\u91cd\u7f6e!</span>");
+        final Message msg = new Message("TXT_SYS", user.getId(), "<span style='color:red'>游戏重置!</span>");
         MessageUtils.broadcast(room, msg);
         MessageUtils.sendCMD(session, "roomStep", Room.STEP_FREE);
     }

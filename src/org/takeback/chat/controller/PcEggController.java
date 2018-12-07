@@ -62,7 +62,7 @@ public class PcEggController
         final String roomId = (String)WebUtils.getSessionAttribute(request, "roomId");
         try {
             this.eggService.bet(num, key, money, uid, roomId);
-            return ResponseUtils.jsonView(200, num + "\u671f\u6210\u529f\u6295\u6ce8,\u795d\u541b\u597d\u8fd0!");
+            return ResponseUtils.jsonView(200, num + "期成功投注,祝君好运!");
         }
         catch (Exception e) {
             return ResponseUtils.jsonView(500, e.getMessage());
@@ -76,7 +76,7 @@ public class PcEggController
         final Integer uid = (Integer)WebUtils.getSessionAttribute(request, "$uid");
         try {
             final double money = this.eggService.cancelBet(num, uid);
-            return ResponseUtils.jsonView(200, "\u4f60\u5df2\u53d6\u6d88\u672c\u671f\u6240\u6709\u4e0b\u6ce8\uff1a" + money + "\u91d1\u5e01\uff0c\u8bf7\u6838\u5bf9\u8d26\u6237\u4f59\u989d\uff0c\u5982\u6709\u7591\u95ee\u8bf7\u7b2c\u4e00\u65f6\u95f4\u8054\u7cfb\u6211\u4eec\uff01");
+            return ResponseUtils.jsonView(200, "你已取消本期所有下注：" + money + "金币，请核对账户余额，如有疑问请第一时间联系我们！");
         }
         catch (Exception e) {
             return ResponseUtils.jsonView(500, e.getMessage());
@@ -90,7 +90,7 @@ public class PcEggController
         final String lucky = "14";
         try {
             this.eggService.open(num, exp, lucky);
-            return ResponseUtils.jsonView(200, "\u5f00\u5956\u6210\u529f!");
+            return ResponseUtils.jsonView(200, "开奖成功!");
         }
         catch (Exception e) {
             e.printStackTrace();

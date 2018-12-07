@@ -95,7 +95,7 @@ public class MessageLisnener implements MessageReceiveListener
     protected boolean isSigned(final WebSocketSession session) {
         final Integer uid = UserListener.getUid(session);
         if (uid == null) {
-            MessageUtils.sendCMD(session, "notLogin", "\u6ce8\u518c\u7528\u6237\u624d\u53ef\u4ee5\u53d1\u8a00\u548c\u53c2\u4e0e\u6e38\u620f");
+            MessageUtils.sendCMD(session, "notLogin", "注册用户才可以发言和参与游戏");
             return false;
         }
         return true;
@@ -105,7 +105,7 @@ public class MessageLisnener implements MessageReceiveListener
         this.systemService.getProxyConfig();
         final String confTalk = SystemConfigService.getInstance().getValue("conf_talk");
         if ("0".equals(confTalk)) {
-            MessageUtils.sendCMD(session, "alert", "\u7981\u6b62\u53d1\u8a00");
+            MessageUtils.sendCMD(session, "alert", "禁止发言");
             return true;
         }
         return false;

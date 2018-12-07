@@ -27,7 +27,7 @@ public class ExchangeAdminService extends MyListServiceInt
         final Integer id = Integer.valueOf(data.get("id").toString());
         final PubExchangeLog log = (PubExchangeLog) this.dao.findByHql(hql, ImmutableMap.of( "id",  id) ).get(0);
         if (!status.equals(log.getStatus()) && !"1".equals(log.getStatus())) {
-            throw new CodedBaseRuntimeException(500, "\u5904\u7406\u72b6\u6001\u5df2\u66f4\u65b0\uff0c\u4e0d\u80fd\u91cd\u590d\u4fee\u6539");
+            throw new CodedBaseRuntimeException(500, "处理状态已更新，不能重复修改");
         }
         if ("2".equals(status) && !"2".equals(log.getStatus())) {
             final Integer uid = Integer.valueOf(data.get("uid").toString());

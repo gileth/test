@@ -103,11 +103,11 @@ public class RoomService extends BaseService
     public void addMoney(final String roomId, final Integer uid, final int money) {
         final List<GcRoomMoney> ls = this.dao.findByProperty(GcRoomMoney.class, "roomId", roomId);
         if (ls.size() <= 0) {
-            throw new CodedBaseRuntimeException("\u623f\u95f4\u4e0d\u5b58\u5728!");
+            throw new CodedBaseRuntimeException("房间不存在!");
         }
         final int effected = this.dao.executeUpdate("update PubUser set money =money -:money where id = :uid and  money > :money",  ImmutableMap.of( "money",  (money + 0.0),  "uid", uid));
         if (effected == 0) {
-            throw new CodedBaseRuntimeException("\u8d26\u6237\u91d1\u5e01\u4e0d\u8db3,\u8bf7\u53ca\u65f6\u5145\u503c!");
+            throw new CodedBaseRuntimeException("账户金币不足,请及时充值!");
         }
         this.dao.executeUpdate("update GcRoomMoney set totalMoney=totalMoney+:money , restMoney = restMoney+:money where roomId = :roomId",  ImmutableMap.of( "money",  (money + 0.0),  "roomId", roomId));
     }
@@ -117,10 +117,10 @@ public class RoomService extends BaseService
         Double restMoney = 0.0;
         final Room room = this.roomStore.get(roomId);
         if (room == null) {
-            throw new CodedBaseRuntimeException("\u623f\u95f4\u4e0d\u5b58\u5728!");
+            throw new CodedBaseRuntimeException("房间不存在!");
         }
         if (!room.getOwner().equals(uid)) {
-            throw new CodedBaseRuntimeException("\u65e0\u6743\u89e3\u6563\u623f\u95f4!");
+            throw new CodedBaseRuntimeException("无权解散房间!");
         }
         final List<GcRoomMoney> ls = this.dao.findByProperty(GcRoomMoney.class, "roomId", roomId);
         if (ls.size() > 0) {
@@ -141,22 +141,22 @@ public class RoomService extends BaseService
     public void modifyRoomInfo(final String roomId, final String key, final String value) {
         if (key.equals("name")) {
             if (value.length() > 10) {
-                throw new CodedBaseRuntimeException("\u623f\u95f4\u540d\u4e0d\u80fd\u8d85\u8fc710\u4e2a\u5b57\u7b26!");
+                throw new CodedBaseRuntimeException("房间名不能超过10个字符!");
             }
             final List<GcRoom> ls = this.dao.findByProperty(GcRoom.class, "name", value);
             if (ls.size() > 0 && !ls.get(0).getId().equals(roomId)) {
-                throw new CodedBaseRuntimeException("\u623f\u95f4\u540d\u5df2\u7ecf\u5b58\u5728!");
+                throw new CodedBaseRuntimeException("房间名已经存在!");
             }
             this.dao.executeUpdate("update GcRoom set name = :name where id=:id",  ImmutableMap.of( "name",  value,  "id", roomId));
             this.roomStore.reload(roomId);
         }
         else if (key.equals("id")) {
             if (value.length() > 10) {
-                throw new CodedBaseRuntimeException("\u623f\u95f4ID\u4e0d\u80fd\u8d85\u8fc710\u4e2a\u5b57\u7b26!");
+                throw new CodedBaseRuntimeException("房间ID不能超过10个字符!");
             }
             final GcRoom r = this.dao.get(GcRoom.class, value);
             if (r != null && !r.getId().equals(roomId)) {
-                throw new CodedBaseRuntimeException("\u623f\u95f4ID\u5df2\u7ecf\u5b58\u5728!");
+                throw new CodedBaseRuntimeException("房间ID已经存在!");
             }
             this.dao.executeUpdate("update GcRoom set id = :newId where id=:id", ImmutableMap.of( "newId", value,  "id",  roomId));
             this.dao.executeUpdate("update GcRoomProperty set roomId = :newId where roomId=:id",  ImmutableMap.of( "newId",  value, "id", roomId));
@@ -167,7 +167,7 @@ public class RoomService extends BaseService
         }
         else if (key.equals("psw")) {
             if (value.length() > 6) {
-                throw new CodedBaseRuntimeException("\u5bc6\u7801\u4e0d\u80fd\u8d85\u8fc76\u4e2a\u5b57\u7b26!");
+                throw new CodedBaseRuntimeException("密码不能超过6个字符!");
             }
             this.dao.executeUpdate("update GcRoom set psw = :psw where id=:id",  ImmutableMap.of( "psw",  value,  "id", roomId));
             this.roomStore.reload(roomId);
@@ -178,23 +178,23 @@ public class RoomService extends BaseService
                 v = Integer.valueOf(value);
             }
             catch (Exception e) {
-                throw new CodedBaseRuntimeException("\u5fc5\u987b\u662f\u6574\u6570\u6570\u5b57!");
+                throw new CodedBaseRuntimeException("必须是整数数字!");
             }
             if (v < 1) {
-                throw new CodedBaseRuntimeException("\u8bf7\u586b\u5199\u5927\u4e8e0\u7684\u6574\u6570!");
+                throw new CodedBaseRuntimeException("请填写大于0的整数!");
             }
             final Room r2 = this.roomStore.get(roomId);
             if (key.startsWith("conf_n") && !"conf_n15".equals(key)) {
                 final Double d = Double.valueOf(r2.getProperties().get("conf_n15").toString());
                 if (v > d) {
-                    throw new CodedBaseRuntimeException("\u4efb\u4f55\u725b\u725b\u70b9\u6570\u8d54\u7387\u4e0d\u80fd\u8d85\u8fc7\u8c79\u5b50\u8d54\u7387!");
+                    throw new CodedBaseRuntimeException("任何牛牛点数赔率不能超过豹子赔率!");
                 }
             }
             else if ("conf_n15".equals(key)) {
                 for (int i = 1; i < 15; ++i) {
                     final Double d2 = Double.valueOf(r2.getProperties().get("conf_n" + i).toString());
                     if (v < d2) {
-                        throw new CodedBaseRuntimeException("\u8c79\u5b50\u8d54\u7387\u5fc5\u987b\u5927\u4e8e\u5176\u4ed6\u70b9\u6570\u8d54\u7387!");
+                        throw new CodedBaseRuntimeException("豹子赔率必须大于其他点数赔率!");
                     }
                 }
             }

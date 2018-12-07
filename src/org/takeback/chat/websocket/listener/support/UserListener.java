@@ -112,7 +112,7 @@ public class UserListener implements ConnectListener, DisconnectListener, Transp
                     if (senderId == null || senderId == 0) {
                         lotteryMsg = new Message("RED_SYS", 0, lottery);
                         lotteryMsg.setHeadImg("img/avatar.png");
-                        lotteryMsg.setNickName("\u7cfb\u7edf");
+                        lotteryMsg.setNickName("系统");
                     }
                     else {
                         final User sender = this.userStore.get(senderId);
@@ -153,7 +153,7 @@ public class UserListener implements ConnectListener, DisconnectListener, Transp
         room.left(user);
         UserListener.log.info("user {} left the room {}", user.getUserId(), room.getId());
         if (broadcast) {
-            final List<FailedResult> results = MessageUtils.broadcast(room, new Message("TXT_SYS", user.getId(), user.getNickName() + " \u79bb\u5f00\u4e86\u623f\u95f4."));
+            final List<FailedResult> results = MessageUtils.broadcast(room, new Message("TXT_SYS", user.getId(), user.getNickName() + " 离开了房间."));
             if (results.size() > 0) {}
         }
     }

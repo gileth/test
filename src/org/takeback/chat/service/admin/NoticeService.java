@@ -29,7 +29,7 @@ public class NoticeService extends MyListServiceInt
         final Map<String, Object> data = (Map<String, Object>) req.get("data");
         System.out.println(data);
         final String content = (String) data.get("content");
-        final String meg = "<span style='color:#B22222'>\u7cfb\u7edf\u6d88\u606f\uff1a" + content + " </span>";
+        final String meg = "<span style='color:#B22222'>系统消息：" + content + " </span>";
         final List<Room> rms = this.roomStore.getByCatalog(null);
         for (final Room r : rms) {
             final Message msg = new Message("TXT_SYS", 0, meg);

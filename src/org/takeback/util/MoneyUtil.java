@@ -33,7 +33,7 @@ public class MoneyUtil
             }
         }
         if (integerStr.length() > MoneyUtil.IUNIT.length) {
-            System.out.println(str + ":\u8d85\u51fa\u5904\u7406\u80fd\u529b");
+            System.out.println(str + ":超出处理能力");
             return str;
         }
         final int[] integers = toArray(integerStr);
@@ -100,8 +100,8 @@ public class MoneyUtil
     }
     
     static {
-        NUMBERS = new String[] { "\u96f6", "\u58f9", "\u8d30", "\u53c1", "\u8086", "\u4f0d", "\u9646", "\u67d2", "\u634c", "\u7396" };
-        IUNIT = new String[] { "\u5143", "\u62fe", "\u4f70", "\u4edf", "\u4e07", "\u62fe", "\u4f70", "\u4edf", "\u4ebf", "\u62fe", "\u4f70", "\u4edf", "\u4e07", "\u62fe", "\u4f70", "\u4edf" };
-        DUNIT = new String[] { "\u89d2", "\u5206", "\u5398" };
+        NUMBERS = new String[] { "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖" };
+        IUNIT = new String[] { "元", "拾", "佰", "仟", "万", "拾", "佰", "仟", "亿", "拾", "佰", "仟", "万", "拾", "佰", "仟" };
+        DUNIT = new String[] { "角", "分", "厘" };
     }
 }

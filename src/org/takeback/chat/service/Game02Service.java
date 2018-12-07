@@ -50,7 +50,7 @@ public class Game02Service extends LotteryService
         while (itr.hasNext()) {
             final Integer uid = (Integer) itr.next();
             sb.append(uid).append(",");
-            this.dao.executeUpdate("update GcLotteryDetail a set  a.addback =:addback,desc1='\u62a2\u5e84' where a.lotteryid = :lotteryid and a.uid =:uid",  ImmutableMap.of( "addback",  deposit,  "lotteryid", lottery.getId(),  "uid",  uid));
+            this.dao.executeUpdate("update GcLotteryDetail a set  a.addback =:addback,desc1='抢庄' where a.lotteryid = :lotteryid and a.uid =:uid",  ImmutableMap.of( "addback",  deposit,  "lotteryid", lottery.getId(),  "uid",  uid));
         }
         if (sb.length() > 0) {
             sb = sb.deleteCharAt(sb.length() - 1);
@@ -63,7 +63,7 @@ public class Game02Service extends LotteryService
     public void open(final Lottery lottery, final Integer uid, final Double money) {
         final int effected = this.dao.executeUpdate("update PubUser a set a.money = coalesce(a.money,0) - :money,a.exp=coalesce(exp,0)+:exp where a.id=:uid and a.money>=:money",  ImmutableMap.of( "money",  money, "exp",  money,  "uid",  uid));
         if (effected == 0) {
-            throw new CodedBaseRuntimeException("\u91d1\u5e01\u4e0d\u80fd\u5c11\u4e8e" + money + ",\u8bf7\u53ca\u65f6\u5145\u503c!");
+            throw new CodedBaseRuntimeException("金币不能少于" + money + ",请及时充值!");
         }
         final Room room = this.roomStore.get(lottery.getRoomId());
         final GcLotteryDetail gcLotteryDetail = new GcLotteryDetail();
@@ -92,7 +92,7 @@ public class Game02Service extends LotteryService
         gcLotteryDetail.setLotteryid(lottery.getId());
         gcLotteryDetail.setGameType(gameType);
         gcLotteryDetail.setDeposit(deposit);
-        gcLotteryDetail.setDesc1("\u725b" + NumberUtil.getPoint(detail.getCoin()));
+        gcLotteryDetail.setDesc1("牛" + NumberUtil.getPoint(detail.getCoin()));
         gcLotteryDetail.setRoomId(lottery.getRoomId());
         gcLotteryDetail.setMasterId(lottery.getSender());
         this.dao.save(GcLotteryDetail.class, gcLotteryDetail);
@@ -115,7 +115,7 @@ public class Game02Service extends LotteryService
             }
         }
         if (maxMan.equals(0)) {
-            final String str = "<span style='color:#B22222'>\u65e0\u4eba\u53c2\u4e0e\u62a2\u5e84,\u62a2\u5e84\u7ed3\u675f.";
+            final String str = "<span style='color:#B22222'>无人参与抢庄,抢庄结束.";
             final Message msg = new Message("TXT_SYS", 0, str);
             final Room room = this.roomStore.get(lottery.getRoomId());
             room.setStatus("0");
@@ -128,10 +128,10 @@ public class Game02Service extends LotteryService
         room2.setMaster(maxMan);
         room2.setMasterTimes(1);
         room2.setMasterStamp(System.currentTimeMillis());
-        final String str2 = "<span style='color:#F89C4C'>" + master.getNickName() + "</span> \u5750\u4e0a\u5e84\u4e3b\u5b9d\u5ea7,\u50b2\u89c6\u7fa4\u96c4\uff01";
+        final String str2 = "<span style='color:#F89C4C'>" + master.getNickName() + "</span> 坐上庄主宝座,傲视群雄！";
         final Message msg2 = new Message("TXT_SYS", 0, str2);
         MessageUtils.broadcast(room2, msg2);
-        final String str3 = "<span style='color:#B22222'>\u4f60\u5df2\u6210\u4e3a\u5e84\u4e3b,\u53d1\u7ea2\u5305\u5f00\u59cb\u5750\u5e84!</span>";
+        final String str3 = "<span style='color:#B22222'>你已成为庄主,发红包开始坐庄!</span>";
         final Message msg3 = new Message("TXT_SYS", 0, str3);
         MessageUtils.send(master.getId(), room2, msg3);
     }
@@ -156,7 +156,7 @@ public class Game02Service extends LotteryService
             final User player = this.userStore.get(ld.getUid());
             final Integer playerPoint = NumberUtil.getDecimalPartSum4G22(ld.getCoin());
             final Integer losePoint = Integer.valueOf(this.getConifg(room.getId(), "conf_lose"));
-            msg.append("<tr><td>\u3016\u95f2\u3017</td><td class='g021-nick-name'>").append(player.getNickName()).append("</td><td>(").append(ld.getCoin()).append(")</td>");
+            msg.append("<tr><td>〖闲〗</td><td class='g021-nick-name'>").append(player.getNickName()).append("</td><td>(").append(ld.getCoin()).append(")</td>");
             if (masterPoint > playerPoint || playerPoint <= losePoint) {
                 final BigDecimal inout = this.getInout(room, masterPoint);
                 this.monitor.setData(lottery.getRoomId(), player.getId(), -inout.doubleValue());
@@ -207,7 +207,7 @@ public class Game02Service extends LotteryService
             }
             msg.append("</tr>");
         }
-        msg.append("<tr><td  style='color:#B22222'>\u3010\u5e84\u3011</td><td class='g021-nick-name'>").append(master.getNickName()).append("</td><td>(").append(masterDetail.getCoin()).append(")</td>");
+        msg.append("<tr><td  style='color:#B22222'>【庄】</td><td class='g021-nick-name'>").append(master.getNickName()).append("</td><td>(").append(masterDetail.getCoin()).append(")</td>");
         if (masterInout.compareTo(new BigDecimal(0)) > 0) {
             msg.append("<td style='color:red'>").append(G02.NAMES[masterPoint]).append("+").append(NumberUtil.format(masterInout)).append("</td>");
         }
@@ -215,7 +215,7 @@ public class Game02Service extends LotteryService
             msg.append("<td style='color:green'>").append(G02.NAMES[masterPoint]).append(" -").append(NumberUtil.format(Math.abs(masterInout.doubleValue()))).append("</td></tr>");
         }
         else {
-            msg.append("<td style='color:gray'>").append(G02.NAMES[masterPoint]).append("��\u5e73\u5e84</td></tr>");
+            msg.append("<td style='color:gray'>").append(G02.NAMES[masterPoint]).append("��平庄</td></tr>");
         }
         if (masterInout.doubleValue() > 0.0 && !"9".equals(master.getUserType())) {
             final BigDecimal subWater2 = masterInout.multiply(rate);
@@ -268,6 +268,6 @@ public class Game02Service extends LotteryService
         if (properties.containsKey(key)) {
             return properties.get(key).toString();
         }
-        throw new GameException(500, "\u7f3a\u5c11\u914d\u7f6e\u9879[" + key + "]");
+        throw new GameException(500, "缺少配置项[" + key + "]");
     }
 }

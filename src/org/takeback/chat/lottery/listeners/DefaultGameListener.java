@@ -39,7 +39,7 @@ public class DefaultGameListener implements RoomAndLotteryListener
         if (!"2".equals(builder.getType())) {
             final int affected = this.lotteryService.moneyDown(builder.getSender(), builder.getMoney().doubleValue());
             if (affected == 0) {
-                throw new GameException(500, "\u4f59\u989d\u4e0d\u8db3!");
+                throw new GameException(500, "余额不足!");
             }
         }
         return true;
@@ -62,7 +62,7 @@ public class DefaultGameListener implements RoomAndLotteryListener
         if ("1".equals(lottery.getType())) {
             final Room room = this.roomStore.get(lottery.getRoomId());
             final User sender = this.userStore.get(lottery.getSender());
-            final String msg = "<span style='color:#B22222'>" + sender.getNickName() + " \u7684\u7ea2\u5305\u5df2\u88ab\u9886\u5b8c.</span>";
+            final String msg = "<span style='color:#B22222'>" + sender.getNickName() + "的红包已被领完.</span>";
             final Message notice = new Message("TXT_SYS", 0, msg);
             MessageUtils.broadcast(room, notice);
         }
@@ -99,7 +99,7 @@ public class DefaultGameListener implements RoomAndLotteryListener
         }
         if ("1".equals(lottery.getType())) {
             final BigDecimal bd = this.lotteryService.giftLotteryExpired(lottery);
-            final Message msg = new Message("TXT_SYS", 0, "<span style='color:#B22222'>\u60a8\u53d1\u51fa\u7684\u7ea2\u5305\u672a\u88ab\u62a2\u5b8c," + bd + "\u91d1\u989d\u5df2\u7ecf\u9000\u5230\u60a8\u7684\u8d26\u6237!<span>");
+            final Message msg = new Message("TXT_SYS", 0, "<span style='color:#B22222'>您发出的红包未被抢完," + bd + "金额已经退到您的账户!<span>");
             MessageUtils.send(lottery.getSender(), this.roomStore.get(lottery.getRoomId()), msg);
             return false;
         }
@@ -153,18 +153,18 @@ public class DefaultGameListener implements RoomAndLotteryListener
             String sendNickName = null;
             final User opener = this.userStore.get(lotteryDetail.getUid());
             if (0 == lottery.getSender()) {
-                sendNickName = "\u7cfb\u7edf";
+                sendNickName = "系统";
             }
             else {
                 final User sender = this.userStore.get(lottery.getSender());
                 if (opener.getId().equals(sender.getId())) {
-                    sendNickName = "\u81ea\u5df1";
+                    sendNickName = "自己";
                 }
                 else {
                     sendNickName = sender.getNickName();
                 }
             }
-            final String msg = opener.getNickName() + " \u9886\u53d6\u4e86" + sendNickName + "\u53d1\u7684\u7ea2\u5305";
+            final String msg = opener.getNickName() + "领取了" + sendNickName + "发的红包";
             final Message notice = new Message("TXT_SYS", 0, msg);
             MessageUtils.broadcast(this.roomStore.get(lottery.getRoomId()), notice);
         }
@@ -176,6 +176,6 @@ public class DefaultGameListener implements RoomAndLotteryListener
         if (properties.containsKey(key)) {
             return properties.get(key).toString();
         }
-        throw new GameException(500, "\u7f3a\u5c11\u914d\u7f6e\u9879[" + key + "]");
+        throw new GameException(500, "缺少配置项[" + key + "]");
     }
 }

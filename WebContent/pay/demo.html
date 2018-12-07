@@ -1,19 +1,9 @@
-﻿<?php
-/** 充值测试页面2
- */
-require_once("codepay_config.php"); //导入配置文件
-require_once("lib/codepay_core.function.php"); //导入所需函数库
-require_once("lib/codepay_md5.function.php"); //导入MD5函数库
-//session_start(); //开启session
-//$_SESSION["uuid"] = guid();//生成UUID 添加到网页表单 防止使用部分软件恶意提交订单
-//$salt = md5($_SESSION["uuid"]);
-?>
-<html>
+﻿<html>
 <head>
     <meta name="keywords" content="">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $codepay_config['chart'] ?>">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>
         充值
     </title>
@@ -119,7 +109,7 @@ require_once("lib/codepay_md5.function.php"); //导入MD5函数库
     </style>
 </head>
 <body>
-<form name="form1" id="form1" method="post" action="codepay.php">
+<form name="form1" id="form1" method="post" action="pay.html">
     <div>
         <table width="550" border="0" align="center" cellpadding="8" cellspacing="1" bgcolor="#ffffff">
             <tbody>

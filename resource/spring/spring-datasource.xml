@@ -8,7 +8,7 @@
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
 		<property name="url" value="jdbc:mysql://127.0.0.1:3306/gamechat?useUnicode=true&amp;characterEncoding=UTF-8" />
 		<property name="username" value="root" />
-		<property name="password" value="1234" />
+		<property name="password" value="" />
 		<property name="filters" value="stat" />
 		<property name="maxActive" value="200" />
 		<property name="initialSize" value="5" />

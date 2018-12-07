@@ -22,16 +22,16 @@ import java.util.Random;
 
 public class VerifyCodeUtils
 {
-    public static final String VERIFY_CODES = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+    public static final String VERIFY_CODES = "123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
     private static Random random;
     
     public static String generateVerifyCode(final int verifySize) {
-        return generateVerifyCode(verifySize, "23456789ABCDEFGHJKLMNPQRSTUVWXYZ");
+        return generateVerifyCode(verifySize, VERIFY_CODES);
     }
     
     public static String generateVerifyCode(final int verifySize, String sources) {
         if (sources == null || sources.length() == 0) {
-            sources = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+            sources = VERIFY_CODES;
         }
         final int codesLen = sources.length();
         final Random rand = new Random(System.currentTimeMillis());
@@ -155,10 +155,10 @@ public class VerifyCodeUtils
     }
     
     private static void shearX(final Graphics g, final int w1, final int h1, final Color color) {
-        final int period = VerifyCodeUtils.random.nextInt(2);
+        final int period = VerifyCodeUtils.random.nextInt(2)+1;
         final boolean borderGap = true;
         final int frames = 1;
-        final int phase = VerifyCodeUtils.random.nextInt(2);
+        final int phase = VerifyCodeUtils.random.nextInt(2)+1;
         for (int i = 0; i < h1; ++i) {
             final double d = (period >> 1) * Math.sin(i / period + 6.283185307179586 * phase / frames);
             g.copyArea(0, i, w1, 1, (int)d, 0);

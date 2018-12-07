@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.takeback.util.SerializeUtil;
 import org.takeback.util.cache.redis.assist.Config_SingleJedisCache;
 import org.takeback.util.cache.redis.assist.JedisCacheHelper;
 
@@ -51,6 +52,24 @@ public class MasterSingleServerJedisCache {
 		this.jedisPool = jedisPool;
 	}
 
+	
+	public <T> T get(String key,Class<T> t){
+		if (get(key.getBytes()) != null) {
+			Object obj = SerializeUtil.unserialize(get(key.getBytes()));
+			return t.cast(obj);
+		} else {
+			return null;
+		}
+	}
+	
+	
+	public boolean set(String key,Object obj) {
+		logger.info("key:"+key);
+		if(key==null||obj==null){return false;}
+		boolean isok =set(key.getBytes(), SerializeUtil.serialize(obj));
+		return isok;
+	}
+	
 	/* ==========================Jedis链接池的管理====================== */
 	/**
 	 * 同步从池中获取Jedis

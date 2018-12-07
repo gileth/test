@@ -6,6 +6,10 @@ package org.takeback.mvc.listener;
 
 import com.google.common.collect.Maps;
 import org.slf4j.LoggerFactory;
+import org.takeback.util.SerializeUtil;
+import org.takeback.util.cache.redis.JRedisUtil;
+import org.takeback.util.cache.redis.MasterSingleServerJedisCache;
+
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionBindingEvent;
 import com.google.common.collect.Lists;
@@ -23,33 +27,47 @@ import javax.servlet.http.HttpSessionListener;
 public class SessionListener implements HttpSessionListener, HttpSessionAttributeListener
 {
     private static final Logger log;
-    private static Map<Integer, List<String>> users;
     
-    public static Map<Integer, List<String>> getUsers() {
+    private  static   MasterSingleServerJedisCache sessions = JRedisUtil.getMasterSingleServerJedisCache();
+    
+    private static  int  OnlineNumber = 0;
+    
+   // private static Map<Integer, List<String>> users;
+    
+/*    public static Map<Integer, List<String>> getUsers() {
+     
         return Collections.unmodifiableMap((Map<? extends Integer, ? extends List<String>>)SessionListener.users);
     }
-    
+    */
     public static List<String> getUser(final int uid) {
-        return getUsers().get(uid);
+        //return getUsers().get(uid);
+    	return sessions.get(String.valueOf(uid), List.class);
     }
     
     public static int getOnlineNumber() {
-        int c = 0;
+     /*   int c = 0;
         for (final List<String> sids : SessionListener.users.values()) {
             c += sids.size();
-        }
-        return c;
+        }*/
+        return OnlineNumber;
     }
     
     public static boolean isOnline(final Integer uid) {
-        return SessionListener.users.get(uid) != null;
+        //return SessionListener.users.get(uid) != null;
+    	return sessions.get(String.valueOf(uid), List.class) !=null;
     }
     
     private void login(final int uid, final String sid) {
-        List<String> sids = SessionListener.users.get(uid);
+        //List<String> sids = SessionListener.users.get(uid);
+    	List<String> sids = sessions.get(String.valueOf(uid),List.class);
         if (sids == null) {
             sids = new CopyOnWriteArrayList<String>();
-            SessionListener.users.put(uid, sids);
+           // SessionListener.users.put(uid, sids);
+            sessions.set(String.valueOf(uid),sids);
+            OnlineNumber++;
+        }else {
+        	
+        	OnlineNumber ++;
         }
         if (!sids.contains(sid)) {
             sids.add(sid);
@@ -58,14 +76,16 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
     }
     
     private void logout(final int uid, final String sid) {
-        final List<String> sids = SessionListener.users.get(uid);
+        final List<String> sids = sessions.get(String.valueOf(uid), List.class) ;//SessionListener.users.get(uid);
         if (sids != null) {
             sids.remove(sid);
             if (sids.size() == 0) {
-                SessionListener.users.remove(uid);
+               // SessionListener.users.remove(uid);
+            	sessions.del(String.valueOf(uid));
             }
+            OnlineNumber --;
         }
-        SessionListener.log.info("user {} left, online users is {} now", (Object)uid, (Object)getOnlineNumber());
+        SessionListener.log.info("user {} left, online users is {} now",uid, getOnlineNumber());
     }
     
     public void attributeAdded(final HttpSessionBindingEvent se) {
@@ -93,9 +113,10 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
             this.logout(uid, sid);
         }
     }
-    
+     
     static {
-        log = LoggerFactory.getLogger((Class)SessionListener.class);
-        SessionListener.users = new ConcurrentHashMap<Integer, List<String>>();
+        log = LoggerFactory.getLogger(SessionListener.class);
+        
+        //SessionListener.users = new ConcurrentHashMap<Integer, List<String>>();
     }
 }

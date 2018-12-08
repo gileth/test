@@ -157,6 +157,6 @@ public class PayOrderFactory implements InitializingBean
     }
     
     static {
-        LOGGER = LoggerFactory.getLogger((Class)PayOrderFactory.class);
+        LOGGER = LoggerFactory.getLogger(PayOrderFactory.class);
     }
 }

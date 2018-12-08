@@ -17,6 +17,8 @@ import org.takeback.core.app.Application;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+
 import org.takeback.core.role.Role;
 import com.google.common.collect.Maps;
 import org.takeback.core.app.ApplicationController;
@@ -26,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.takeback.core.organ.Organization;
 import java.util.Collection;
 import org.joda.time.DateTime;
+import org.newtake.dao.CtLogDao;
+import org.newtake.model.CtLog;
 import org.takeback.core.user.User;
 import org.takeback.mvc.ServletUtils;
 import java.sql.Timestamp;
@@ -55,6 +59,8 @@ public class LogonManager
     private BaseService baseService;
     @Autowired
     private InitializeService initializeService;
+    @Autowired
+    private CtLogDao ctLogDao;
     
     @RequestMapping(value = { "/logon/loadRoles" }, method = { RequestMethod.POST })
     public Map<String, Object> logon(@RequestBody final Map<String, String> req, final HttpServletRequest request) {
@@ -103,7 +109,29 @@ public class LogonManager
         WebUtils.setSessionAttribute(request, "$uid", user.getId());
         WebUtils.setSessionAttribute(request, "$urt", urt.getId());
         LogonManager.log.info(uid + " logon with role " + urt.getRoleid() + " at " + new DateTime().toString("yyyy-MM-dd HH:mm:ss") + ",IP:" + ServletUtils.getClientIP(request));
+        doTest();//TODO 待删
         return ResponseUtils.createBody(urtMap);
+    }
+    
+    private void doTest()
+    {
+    	CtLog record = new CtLog();
+        record.setCatchTime(new Date());
+        record.setDateline("11111111");
+        record.setGame100("record");
+        record.setGame300("record");
+        record.setGroupNum("record");
+        record.setId(UUID.randomUUID().toString().replaceAll("-", "").substring(10));
+        record.setLuckyNumber("212222");
+        record.setResult300("sddsd");
+        record.setSpecial("dfdf");
+		ctLogDao.saveLog(record);
+		
+		CtLog record1 = ctLogDao.find("212222");
+		log.info("======================================record1:"+record1);
+		
+		List<CtLog> list = ctLogDao.getListByGame100("record");
+		log.info("====================================list:"+list);
     }
     
     @RequestMapping(value = { "/logon/loadApps" }, method = { RequestMethod.POST })

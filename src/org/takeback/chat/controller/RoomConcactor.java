@@ -187,7 +187,7 @@ public class RoomConcactor
         if (!room.getOwner().equals(uid)) {
             return ResponseUtils.jsonView(404, "无权执行该操作!");
         }
-        final List<GcRoomMember> ls = null;//this.roomService.findByProperties(GcRoomMember.class, (Map<Object, Object>)ImmutableMap.of("roomId", roomId));
+        final List<GcRoomMember> ls =  this.roomService.findByProperties(GcRoomMember.class,  ImmutableMap.of("roomId", roomId));
         return ResponseUtils.jsonView(ls);
     }
     

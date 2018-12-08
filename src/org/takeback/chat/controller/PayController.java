@@ -43,6 +43,7 @@ import org.takeback.chat.service.PubRechargeService;
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 
 @Controller
 @RequestMapping({ "/pay" })
@@ -59,7 +60,7 @@ public class PayController
     private static String date;
     
     static {
-        LOGGER = LoggerFactory.getLogger((Class)PayController.class);
+        LOGGER = LoggerFactory.getLogger(PayController.class);
         PayController.orderNum = 0L;
     }
     
@@ -74,6 +75,43 @@ public class PayController
             e.printStackTrace();
             return null;
         }
+    }
+    
+    
+//    @AuthPassport
+    @RequestMapping(value = { "pay.html" })
+    public ModelAndView pay(HttpServletRequest request) {
+    	ModelAndView mv = new ModelAndView();
+    	//支付类型
+    	final Map<String, String> result = new HashMap<String, String>();
+    	int payType;
+		double payMoney;
+		try {
+			payType = Integer.parseInt(request.getParameter("type"));
+			payMoney = Double.parseDouble(request.getParameter("price"));
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			result.put("msg", "充值参数错误！");
+			return new ModelAndView("pay/pay", (Map)new HashMap<String, Integer>() {
+				{
+					this.put("code", 500);
+				}
+			});
+		}
+		
+		String payName = "支付宝";
+		if(payType == 3) {
+			payName = "微信";
+		}
+    	mv.getModel().put("payType",payType);
+    	mv.getModel().put("payMoney",payMoney);
+    	mv.getModel().put("payName", payName);
+    	mv.getModel().put("mkey", "d8we7hS51gQfk");
+    	mv.getModel().put("pkey","MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdosAwYWf7eWs6B2Uu5zs6yWr1zL5CMwdZXcuciqXf0C5rZ5IPf3VWKzNPZyojT8L0eFDGMtcA4yzt6psZrbqX44gKZIU4EYhuH667YdlUwoPGSxjtSpFuMcbRlBIdMif37PkVyLMvPFsIqCR+RsG0uZvuYOCRtaXXte2BegezjwIDAQAB");
+    	mv.getModel().put("skey", "0vSFv^7fwUaUQtieUQPTtzfSAoE19VPn");
+    	mv.setViewName("pay/pay");
+    	return mv;
     }
     
     @AuthPassport

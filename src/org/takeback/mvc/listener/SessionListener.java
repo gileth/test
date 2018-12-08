@@ -28,7 +28,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
 {
     private static final Logger log;
     
-    private  static   MasterSingleServerJedisCache sessions = JRedisUtil.getMasterSingleServerJedisCache();
+    private  static  MasterSingleServerJedisCache sessions = JRedisUtil.getMasterSingleServerJedisCache();
     
     private static  int  OnlineNumber = 0;
     

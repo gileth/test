@@ -30,7 +30,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter
         if (!handler.getClass().isAssignableFrom(HandlerMethod.class)) {
             return true;
         }
-        final AuthPassport authPassport = (AuthPassport)((HandlerMethod)handler).getMethodAnnotation((Class)AuthPassport.class);
+        final AuthPassport authPassport = (AuthPassport)((HandlerMethod)handler).getMethodAnnotation(AuthPassport.class);
         if (authPassport == null || !authPassport.value()) {
             return true;
         }
@@ -75,6 +75,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter
     }
     
     static {
-        LOGGER = LoggerFactory.getLogger((Class)AuthInterceptor.class);
+        LOGGER = LoggerFactory.getLogger(AuthInterceptor.class);
     }
 }

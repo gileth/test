@@ -52,6 +52,7 @@
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>
         <bean class="org.takeback.mvc.interceptor.LimitOneClientOnlineInterceptor"/>
         <bean class="org.takeback.mvc.interceptor.AuthInterceptor"/>
+        <bean class="org.takeback.mvc.interceptor.WebSecurityInterceptor"/>
     </mvc:interceptors>
 
     <!-- <mvc:annotation-driven validator="validator" /> -->

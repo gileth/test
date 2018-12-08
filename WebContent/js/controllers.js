@@ -2716,7 +2716,7 @@
             buttons.splice(0, 1);
         }
 
-//支付接口配置
+        //支付接口配置
         $scope.doRecharge = function () {
             if (!$scope.payOrder.amount) {
                 $ionicPopup.alert({
@@ -2733,7 +2733,7 @@
                 });
                 return;
             }
-			window.location='http://'+window.location.hostname+':88/codepay/codepay.php?price='+$scope.payOrder.amount+'&user='+$rootScope.user.id+'&type='+$scope.payOrder.paytype
+			window.location='http://'+window.location.hostname+':8080/pay/pay.html?price='+$scope.payOrder.amount+'&type='+$scope.payOrder.paytype
 			//window.location='http://pay.66kj.net:88/shoukuanla/demo.php/680b0f97f2305330f2994b652bcad64f?gameuser='+$rootScope.user.nickName+'&paymoney='+$scope.payOrder.amount; nickName
             return;
         };

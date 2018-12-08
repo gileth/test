@@ -56,6 +56,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.takeback.util.annotation.AuthPassport;
+import org.takeback.util.cache.redis.CacheUtils;
+
 import java.util.Map;
 import javax.imageio.ImageReader;
 import java.util.Iterator;
@@ -97,6 +99,8 @@ public class UserController
     private PcEggService pcService;
     @Autowired
     private WxConfig wxConfig;
+    @Autowired
+    private CacheUtils cacheUtils;
     private static final String wx_appid = "wxb6dc334873451fe4";
     private static final String wx_secret = "e60b80c1ed998e312c63ce99392ca345";
     
@@ -483,6 +487,7 @@ public class UserController
             final LocalDateTime expire = new LocalDateTime().plusDays(7);
             user.setTokenExpireTime(expire.toDate());
             this.userService.updateUser(user.getId(), ImmutableMap.of( "accessToken",  user.getAccessToken(), "tokenExpireTime",  user.getTokenExpireTime()) );
+            cacheUtils.setUser(user.getId(), user);
             return ResponseUtils.jsonView(200, "创建成功!");
         }
         catch (CodedBaseRuntimeException e) {
@@ -519,6 +524,7 @@ public class UserController
             final String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
             user2.setUrl(String.valueOf(tempContextUrl) + "i?u=" + user2.getId());
             this.userStore.reload(user2.getId());
+            cacheUtils.setUser(user.getId(), user);
             return ResponseUtils.jsonView(user2);
         }
         catch (CodedBaseRuntimeException e) {

@@ -14,6 +14,7 @@
 	</bean>
 	<!-- global setting end -->
 
+	<bean class="org.takeback.util.cache.redis.CacheUtils" />
 	<bean class="org.takeback.util.httpclient.HttpClientUtils" destroy-method="release"/>
 	<!-- paramloder setting start -->
 	<bean class="org.takeback.core.param.DBStoreParamLoader" id="dbStoreParamLoader"/>

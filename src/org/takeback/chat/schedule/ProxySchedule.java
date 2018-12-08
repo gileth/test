@@ -31,6 +31,7 @@ import org.takeback.chat.service.UserService;
 import org.takeback.chat.entity.GcRoomMoney;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.takeback.dao.BaseDAO;
+import org.takeback.util.cache.redis.CacheUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,6 +39,9 @@ public class ProxySchedule
 {
     @Autowired
     BaseDAO dao;
+    
+    @Autowired
+    private CacheUtils cacheUtils;
     
     @Transactional
     public void work() {
@@ -51,6 +55,7 @@ public class ProxySchedule
                     final GcRoom rm = this.dao.get(GcRoom.class, grm.getRoomId());
                     final Integer uid = rm.getOwner();
                     this.dao.executeUpdate("update PubUser set money = money +:money  where id =:uid",  ImmutableMap.of("money",grm.getRestMoney(), "uid", uid));
+                    cacheUtils.updateUser(uid, this.dao.get(PubUser.class, uid));
                 }
                 this.dao.executeUpdate("delete from GcRoom where id=:roomId", ImmutableMap.of("roomId", grm.getRoomId()));
                 this.dao.executeUpdate("delete from GcRoomProperty where roomId=:roomId",   ImmutableMap.of("roomId", grm.getRoomId()));
@@ -84,6 +89,7 @@ public class ProxySchedule
                 if (handRate > 0.0) {
                     System.out.println(u2.getId() + "->" + u2.getParent() + ":" + sum3 + ">>" + sum3 * handRate);
                     this.dao.executeUpdate("update PubUser set money = money +:water where id =:uid",  ImmutableMap.of( "water",  (sum3 * handRate),  "uid",  u2.getParent()) );
+                    cacheUtils.updateUser(u2.getParent(), this.dao.get(PubUser.class, u2.getParent()));
                 }
             }
             final PubConfig pc = this.dao.getUnique(PubConfig.class, "param", "water");
@@ -109,6 +115,7 @@ public class ProxySchedule
                             backRecord.setUserId(u2.getUserId());
                             this.dao.save(PcBackRecord.class, backRecord);
                             this.dao.executeUpdate("update PubUser set money = money +:water where id =:uid",ImmutableMap.of("water", water, "uid",u2.getId()));
+                            cacheUtils.updateUser(u2.getParent(), this.dao.get(PubUser.class, u2.getParent()));
                         }
                     }
                 }
@@ -132,6 +139,7 @@ public class ProxySchedule
                 v.setTotal(teamWater);
                 final String addHql = "update PubUser set money=coalesce(money,0) + :vote where id =:uid";
                 this.dao.executeUpdate(addHql, ImmutableMap.of( "vote",  backNum,  "uid",  u2.getId()));
+                cacheUtils.updateUser(u2.getParent(), this.dao.get(PubUser.class, u2.getParent()));
                 this.dao.save(ProxyVote.class, v);
             }
         }

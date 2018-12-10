@@ -27,4 +27,8 @@ public class Const
     public static final String CONF_N13 = "conf_n13";
     public static final String BONUS_X = "b_";
     public static final String PROP_RAID = "raid";
+    
+    public static final String USER_CACHE_KEY_PREFIX = "user_cache_";
+    
+    
 }

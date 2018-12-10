@@ -12,6 +12,8 @@ import org.takeback.chat.entity.PubRoomApply;
 import org.takeback.chat.entity.LoginLog;
 import org.takeback.util.encrypt.CryptoUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.takeback.chat.entity.PubExchangeLog;
 import org.takeback.chat.entity.PubShop;
 import org.takeback.util.identity.UUIDGenerator;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Iterator;
 import java.util.List;
 import org.takeback.util.BeanUtils;
+import org.takeback.util.cache.redis.CacheUtils;
 import org.takeback.chat.entity.GcRoomProperty;
 import org.takeback.chat.utils.RoomTemplate;
 import org.takeback.chat.entity.GcRoomMoney;
@@ -33,14 +36,21 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 import org.takeback.util.exception.CodedBaseRuntimeException;
 import org.takeback.chat.service.admin.SystemConfigService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.takeback.service.BaseService;
 
 @Service
 public class UserService extends BaseService
 {
-    public static Double ROOM_FEE;
+	private static final Logger log =  LoggerFactory.getLogger(UserService.class);
+	
+	public static Double ROOM_FEE;
     
+	@Autowired
+    private CacheUtils cacheUtils;
+	
+	
     @Transactional(rollbackFor = { Throwable.class })
     public void createRoom(final int uid) {
         final Double price = Double.valueOf(SystemConfigService.getInstance().getValue("conf_room_money").toString());
@@ -95,6 +105,7 @@ public class UserService extends BaseService
             }
             BeanUtils.copy(params, pubUser);
             this.dao.update(PubUser.class, pubUser);
+            cacheUtils.updateUser(uid, pubUser);
         }
         return null;
     }
@@ -117,6 +128,8 @@ public class UserService extends BaseService
         }
         this.dao.executeUpdate("update PubUser set money=money +:money where id=:uid",  ImmutableMap.of( "money",  (money + 0.0),  "uid",  target.getId()));
         final PubUser fromUser = this.dao.get(PubUser.class, uid);
+        cacheUtils.updateUser(uid, fromUser);
+        cacheUtils.updateUser(account, this.dao.get(PubUser.class, account));
         final TransferLog tl = new TransferLog();
         tl.setFromUid(uid);
         tl.setFromNickName(fromUser.getUserId());
@@ -150,6 +163,8 @@ public class UserService extends BaseService
             throw new CodedBaseRuntimeException("金额不足!");
         }
         this.dao.executeUpdate("update PubUser set money=money +:money where  id=:uid", ImmutableMap.of( "money",  (money + 0.0),  "uid", target.getId()));
+        cacheUtils.updateUser(uid, this.dao.get(PubUser.class, uid));
+        cacheUtils.updateUser(account, this.dao.get(PubUser.class, account));
         final PubRecharge pubRecharge = new PubRecharge();
         pubRecharge.setStatus("1");
         pubRecharge.setDescpt("上分");
@@ -188,6 +203,8 @@ public class UserService extends BaseService
             throw new CodedBaseRuntimeException("金额不足!");
         }
         this.dao.executeUpdate("update PubUser set money=money+:money where  id=:uid", ImmutableMap.of( "money",  (money + 0.0), "uid",  uid));
+        cacheUtils.updateUser(uid, this.dao.get(PubUser.class, uid));
+        cacheUtils.updateUser(account, this.dao.get(PubUser.class, account));
         final PubRecharge pubRecharge = new PubRecharge();
         pubRecharge.setStatus("1");
         pubRecharge.setDescpt("下分");
@@ -214,6 +231,7 @@ public class UserService extends BaseService
         if (effected < 1) {
             throw new CodedBaseRuntimeException("账户金币不足!");
         }
+        cacheUtils.updateUser(uid, this.dao.get(PubUser.class, uid));
         final PubExchangeLog pel = new PubExchangeLog();
         pel.setStatus("0");
         pel.setAddress(address);
@@ -230,6 +248,7 @@ public class UserService extends BaseService
     @Transactional(rollbackFor = { Throwable.class })
     public void bindMobile(final int uid, final String mobile) {
         this.dao.executeUpdate("update PubUser set mobile=:mobile where id=:uid",  ImmutableMap.of( "mobile", mobile,  "uid", uid));
+        cacheUtils.updateUser(uid, this.dao.get(PubUser.class, uid));
     }
     
     @Transactional(rollbackFor = { Throwable.class })
@@ -240,6 +259,7 @@ public class UserService extends BaseService
     @Transactional(rollbackFor = { Throwable.class })
     public void updateHeadImg(final int uid, final String headImg) {
         this.dao.executeUpdate("update PubUser set headImg=:headImg where id=:uid", ImmutableMap.of( "headImg", headImg, "uid",  uid));
+        cacheUtils.updateUser(uid, this.dao.get(PubUser.class, uid));
     }
     
     @Transactional(readOnly = true)
@@ -393,6 +413,7 @@ public class UserService extends BaseService
         if (effect == 0) {
             throw new CodedBaseRuntimeException("金额不足");
         }
+        cacheUtils.updateUser(uid, this.dao.get(PubUser.class, uid));
         final PubWithdraw pw = new PubWithdraw();
         pw.setAccount(account);
         pw.setBankName(bankName);

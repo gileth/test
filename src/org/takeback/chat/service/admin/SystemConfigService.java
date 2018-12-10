@@ -61,6 +61,6 @@ public class SystemConfigService extends MyListServiceInt implements Application
     }
     
     public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
-        SystemConfigService.instance = (SystemConfigService)applicationContext.getBean((Class)SystemConfigService.class);
+        SystemConfigService.instance = (SystemConfigService)applicationContext.getBean(SystemConfigService.class);
     }
 }

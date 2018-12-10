@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.takeback.chat.service.UserService;
 import org.springframework.stereotype.Controller;
 
-@Controller
+//@Controller
 public class RobotUserController
 {
     @Autowired

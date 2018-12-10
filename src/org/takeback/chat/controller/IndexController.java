@@ -40,7 +40,7 @@ public class IndexController
         return ResponseUtils.jsonView(200, "ok", count);
     }
     
-    @RequestMapping({ "/test" })
+   // @RequestMapping({ "/test" })
     public ModelAndView test(final HttpServletRequest request) {
         this.ps.work();
         return new ModelAndView();

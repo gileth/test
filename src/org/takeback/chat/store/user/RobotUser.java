@@ -54,6 +54,7 @@ public class RobotUser extends User implements Runnable
     public void run() {
         try {
             while (!Thread.interrupted()) {
+            	System.out.println("############################");
                 final Long random = Math.round(10.0 * Math.random());
                 TimeUnit.SECONDS.sleep(random + RobotUser.level);
                 if (this.room.getType().startsWith("G01")) {

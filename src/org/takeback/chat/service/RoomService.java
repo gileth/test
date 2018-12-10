@@ -66,7 +66,7 @@ public class RoomService extends BaseService
     
     @Transactional
     public void initRoomStatus() {
-        this.dao.executeUpdate("update GcRoom set status ='0' ", (Map<String, Object>)new HashedMap());
+        //this.dao.executeUpdate("update GcRoom set status ='0' ", (Map<String, Object>)new HashedMap());
         final List<GcRoom> list = this.dao.findByHql("from GcRoom");
         for (final GcRoom rm : list) {
             this.roomStore.reload(rm.getId());

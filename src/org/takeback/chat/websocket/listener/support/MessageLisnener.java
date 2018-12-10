@@ -65,6 +65,7 @@ public class MessageLisnener implements MessageReceiveListener
             message.setHeadImg(user.getHeadImg());
         }
         MessageLisnener.log.info("receive msg {}", JSONUtils.toString(message));
+        MessageLisnener.log.info("msg messageType {} uid {}",messageType,uid);
         final String s = messageType;
         switch (s) {
             case "TXT": {
@@ -76,6 +77,8 @@ public class MessageLisnener implements MessageReceiveListener
                 break;
             }
             case "CMD":
+            	System.out.println("messageType CMD");
+            	break;  
             case "ORD": {
                 this.ordMessageProcessor.process(message, session, room, user);
                 break;

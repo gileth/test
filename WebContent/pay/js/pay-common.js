@@ -1,7 +1,7 @@
 var PAY_BASE_PATH = BASE_PATH + "recharge/";
-var ALIPAY_URL = PAY_BASE_PATH + "alipay_face";
+var ALIPAY_URL = PAY_BASE_PATH + "ali_h5_pay";
 var VC_URL = PAY_BASE_PATH + "virtual_pay";
-var WXPAY_URL = PAY_BASE_PATH + "fm_wx_pay";
+var WXPAY_URL = PAY_BASE_PATH + "wx_h5_pay";
 var QRCODE_URL = PAY_BASE_PATH + "qrcode";
 var QUERY_URL = PAY_BASE_PATH + "result";
 var QUERY_URL2 = PAY_BASE_PATH + "aliresult";
@@ -27,9 +27,6 @@ var $payCommon = {
         if ($param.pkey) {
             rctype = $param.rtype;
             $qrcode = $param.qrcodeObj;
-            if (rctype != '3') {
-                $qrcode.show().prop("src", $qrcode.attr("data-src"));
-            }
             // 获取渠道
             var chl = 0;
             // 获取ip
@@ -45,7 +42,7 @@ var $payCommon = {
                 psid = 0,
                 etype = 0,
                 cflag = false,
-                data = $.trim($param.racc) + "|" + $param.pid + "|" + $param.num,
+                data = $.trim($param.account) + "|" + $param.pid + "|" + $param.num,
                 rsa = new JSEncrypt();
             rsa.setPublicKey($param.pkey);
             var akey = rsa.encrypt(data, $param.pkey);
@@ -114,15 +111,15 @@ var $payCommon = {
 					type: "post",
 					url: url + "?v=" + new Date().getTime(),
 					data: param,
-					async: false,
-					cache:false,
+//					async: false,
+//					cache:false,
 					success: function ($dt) {
 						if ($dt.status == 'success') {
 							var orderid = $dt.data;
 							qrnum = 0;
 							that.setOrderParam(orderid, param, $param);
 							if (rctype != '3') {
-								that.getQrcode(orderid, url, $param);
+								 that.getQrcode(orderid, url, $param);
 							} else {
 								if (orderids.length >= 10) {
 									var firstId = orderids[0];
@@ -169,7 +166,6 @@ var $payCommon = {
             return;
         }
         var that = this;
-        $qrcode.show().prop("src", $qrcode.attr("data-src"));
         $.ajax({
             dataType : "json",
             type: "post",
@@ -197,61 +193,24 @@ var $payCommon = {
                             url : url
                         };
                         orderids.push($data);
-                        that.showQrcode($dt.qrcode, $data);
+                        show_order($dat,$dt.qrcode)
                     } else {
                         callbackCode = setTimeout(function(){
                             if (qrnum <= 20) {
                                 that.getQrcode($data, url, $param);
                                 qrnum ++;
                             } else {
-                                that.refreshQrcode($data, url, $param);
+                                that.createOrder($param);
                             }
                         },1000);
                     }
                 } else {
-                    that.refreshQrcode($data, url, $param);
+                	//that.getQrcode($data, url, $param);
                 }
             },
             error: function() {
-                that.refreshQrcode($data, url, $param);
+            	//that.createOrder($param);
             }
-        });
-    },
-    // 展示二维码
-    showQrcode : function(code, orderid) {
-        // if (rctype == '2') {
-            var that = this,
-                // mb = that.myBrowser(),
-                // render = "canvas";
-                render = "table";
-            // $qrcode.next().hide();
-            // $qrcode.show();
-            // if (mb == "IE") {
-            //     render = "table";
-            // }
-            // $qrcode.empty().qrcode({
-            //     render: render,
-            //     text: code,
-            //     width: 175,
-            //     height: 175
-            // });
-        $qrcode.show().prop("src",CREATE_QRCODE_URL + "?qrCodeUrl=" + encodeURIComponent(code) + "&v=" + new Date().getTime());
-        // }
-    },
-    // 刷新二维码
-    refreshQrcode : function ($data, url, $param) {
-        var that = this;
-        // $qrcode.next().hide();
-        // $qrcode.show();
-        $qrcode.show().prop("src", $qrcode.attr("data-src"));
-        clearTimeout(callbackCode);
-        $qrcode.hide();
-        $qrcode.next().html('<a href="javascript:;" class="refresh">支付码获取失败，点击获取</a>');
-        $qrcode.next().find('.refresh').on('click', function () {
-            qrnum = 0;
-            clearTimeout(callbackCode);
-            // that.getQrcode($data, url);
-            that.createOrder($param);
         });
     },
     checkUsable : function($orderid) {
@@ -398,3 +357,21 @@ var $payCommon = {
         }
     }
 };
+
+show_order = function($dt,url){
+	var data = {"pay_id":PubUserName,"money":price,"order_id":$dt.orderid};
+	show_desc(data);
+	$("payBtn").find("a").attr("href",url);
+	$("payBtn").show();
+}
+
+show_desc = function (data) { //商品描述
+    var html = '';
+    html += getDescMode('账号', data.pay_id);
+    html += getDescMode('金额', "￥" + data.money);
+    html += getDescMode('金币', data.money*1);
+    html += getDescMode('云端单号', data.order_id);
+    html += getDescMode('创建时间', getNowFormatDate());
+//    html += getDescMode('过期时间', myDate("y-m-d h:m:s", data.endTime));
+    $("#desc").html(html);
+}

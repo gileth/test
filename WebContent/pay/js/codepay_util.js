@@ -100,22 +100,12 @@ function getDescMode(key, value) {
     var reslut = value ? '<dt>' + key + '</dt><dd>' + value + '</dd>' : '';
     return reslut;
 }
-show_desc = function (data) { //商品描述
-    var html = '';
-    html += getDescMode('账号', data.pay_id);
-    html += getDescMode('金额', "￥" + data.money);
-    html += getDescMode('金币', data.money*1);
-    html += getDescMode('云端单号', data.order_id);
-    html += getDescMode('创建时间', getNowFormatDate());
-    html += getDescMode('过期时间', myDate("y-m-d h:m:s", data.endTime));
-    $("#desc").html(html);
-}
 $(document).ready(function () {
     $(function () {
         timer(360);
     });
     //创建临时订单
-    createCodeAndPay();
+   // createCodeAndPay();
     $('#orderDetail .arrow').click(function (event) {
         if ($('#orderDetail').hasClass('detail-open')) {
             $('#orderDetail .detail-ct').slideUp(500, function () {
@@ -134,7 +124,7 @@ function createCodeAndPay(){
 	var param = {
 		account : account, // 用户平台账号
 		pid : 1, // 产品id
-		num : price, // 充值数量
+		num : price*1, // 充值数量
 		gaid : 0, // 游戏大区id
 		gsid : 0, // 游戏区服id
 		etype : 0, // 游戏充值类型
@@ -145,7 +135,6 @@ function createCodeAndPay(){
 		pkey : PKEY, // RSA加密公钥
 		ip : $('#page-name').attr("data-ip"), // 充值ip
 		mkey : MKEY, // 充值签名MD5加密key
-		qrcodeObj : $("#show_qrcode"), //二维码图片位置所在div
 		pname : "金币", // 产品名称
 		totalMoney : $payCommon.multiply(1,price) // 订单总金额
 	};

@@ -13,8 +13,9 @@
     <title><%=request.getAttribute("payName")%>扫码支付 - 码支付</title>
     <link href="./css/wechat_pay.css" rel="stylesheet" media="screen">
     <script>
-    	var BASE_PATH = "";
+    	var BASE_PATH = '<%=request.getAttribute("basePath")%>';
     	var account = '<%=request.getAttribute("account")%>';
+    	var PubUserName = '<%=request.getAttribute("pubUserName")%>';
     	var price = <%=request.getAttribute("payMoney")%>;
     	<% 
     		int type = 1; 
@@ -43,9 +44,24 @@
         <div class="order">
         </div>
         <div class="amount" id="money">￥<%=request.getAttribute("payMoney")%></div>
-		<div class="detail detail-open" id="orderDetail">
-            <dl class="detail-ct" id="desc" style="display: block;">
-            </dl>
+       <div class="qrcode-img-wrapper" data-role="qrPayImgWrapper">
+            <div data-role="qrPayImg" class="qrcode-img-area">
+                <div class="ui-loading qrcode-loading" data-role="qrPayImgLoading" style="display: none;">加载中</div>
+                 <div style="position: relative;display: inline-block;">
+                    <img id='show_qrcode' alt="加载中..." src="./img/xxx_<%=request.getAttribute("payType")%>.png" width="210" height="210" style="display: block;">
+                    <img onclick="$('#use').hide()" id="use"
+                         src='./img/use_<%=request.getAttribute("payType")%>.png'
+                         style="position: absolute;top: 50%;left: 50%;width:32px;height:32px;margin-left: -21px;margin-top: -21px">
+                </div>
+            </div>
+        </div>
+        
+        <div class="tip">
+            <div class="ico-scan"></div>
+            <div class="tip-text">
+                <p>请使用<%=request.getAttribute("payName")%>扫一扫</p>
+                <p>扫描二维码完成支付</p>
+            </div>
         </div>
         <div class="time-item" id="msg">
             <h1>订单过期时间</h1>
@@ -53,9 +69,13 @@
             <strong id="minute_show">0分</strong>
             <strong id="second_show">0秒</strong>
         </div>
+		<div class="detail detail-open" id="orderDetail">
+            <dl class="detail-ct" id="desc" style="display: block;">
+            </dl>
+        </div>
 		<h1>
 			<div class="tps_btn" style="padding-top: 10px;">
-			<a href="HTTPS://QR.ALIPAY.COM/FKX07990KMFUZWHE6ZXHA2" target="_blank" style="color: #fff;text-decoration: none;
+			<a href="" id="payBtn" target="_blank" style="color: #fff;text-decoration: none;
 			 text-align: center;padding: .55rem 0; display: inline-block; width: 88%; border-radius: .3rem; 
 			 font-size: 14px;background-color: #428bca; border: 1px solid #428bca;letter-spacing:normal;
 			 font-weight: normal">立即开启<%=request.getAttribute("payName")%>支付</a></div>
@@ -74,9 +94,8 @@
 <script src="./js/codepay_util.js"></script>
 <script>
     setTimeout(function () {
-        $('#use').hide()
+        //$('#use').hide()
     },1000)
-    show_desc({"pay_id":"admin","money":"<%=request.getAttribute("payMoney")%>","order_id":"130661043916"});
 </script>
 </body>
 </html>

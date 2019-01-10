@@ -11,7 +11,7 @@ import org.takeback.util.sc.BrowserUtils;
 
 public class WebSecurityInterceptor implements HandlerInterceptor {
 
-	private static final String HOST = "http://yzion.com";
+	private static final String HOST = "http://qip.ichenonline.com";
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(WebSecurityInterceptor.class);
 

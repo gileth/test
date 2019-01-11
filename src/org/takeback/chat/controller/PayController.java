@@ -71,7 +71,7 @@ public class PayController {
 	@Autowired
 	private XinTongConfig xinTongConfig;
 
-	private final String PAY_URL = "http://120.24.164.77/recharge/wsf_wx_h5_pay";
+	private final String PAY_URI = "/recharge/wsf_wx_h5_pay";
 
 	private static long orderNum;
 	private static String date;
@@ -99,6 +99,8 @@ public class PayController {
 	public void pay(HttpServletRequest request, HttpServletResponse response) {
 		int payType = 1;
 		Double payMoney = null;
+		StringBuffer requestUrl = request.getRequestURL();
+		String host = requestUrl.delete(requestUrl.length() - request.getRequestURI().length(), requestUrl.length()).append("/").toString();
 		try {
 			final Integer uid = (Integer) WebUtils.getSessionAttribute(request, "$uid");
 			if (uid == null) {
@@ -142,7 +144,7 @@ public class PayController {
 			System.out.println("==>"+waitSign);
 			waitSign = URLEncoder.encode(waitSign, "UTF-8");
 			sign = MD5.sign(waitSign, "d8we7hS51gQfk", "UTF-8");
-			url = PAY_URL + "?akey=" + s + "&aid=" + aid + "&bal=" + bal + "&etype=" + etype + "&gtype=" + gtype
+			url = host + PAY_URI + "?akey=" + s + "&aid=" + aid + "&bal=" + bal + "&etype=" + etype + "&gtype=" + gtype
 					+ "&mprice=" + price + "&reqip=" + reqip + "&sid=" + sid + "&uacc=" + uacc + "&chl=" + chl
 					+ "&sign=" + sign + "&type=" + type;// &reqno=U155NM31523948054744911USWO
 			System.out.println("url : " + url);

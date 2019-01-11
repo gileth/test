@@ -11,8 +11,6 @@ import org.takeback.util.sc.BrowserUtils;
 
 public class WebSecurityInterceptor implements HandlerInterceptor {
 
-	private static final String HOST = "http://qip.ichenonline.com";
-
 	public static final Logger LOGGER = LoggerFactory.getLogger(WebSecurityInterceptor.class);
 
 	@Override
@@ -33,12 +31,14 @@ public class WebSecurityInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2) throws Exception {
 		// TODO Auto-generated method stub
-		LOGGER.info("请求路径========>" + arg0.getRequestURI());
+		LOGGER.info("请求路径========>" + arg0.getRequestURL().toString());
+		StringBuffer url = arg0.getRequestURL();
+		String host = url.delete(url.length() - arg0.getRequestURI().length(), url.length()).append("/").toString();
 		String uri = arg0.getRequestURI();
 		// 判断是否是微信浏览器
 		if (BrowserUtils.isWechat(arg0) && !uri.startsWith("/Jump.html") && !uri.endsWith(".png")) {
-			LOGGER.info("微信浏览器跳转========>" + "/Jump.html?bc=" + HOST + arg0.getRequestURI());
-			arg1.sendRedirect("/Jump.html?bc=" + HOST + arg0.getRequestURI());
+			LOGGER.info("微信浏览器跳转========>" + "/Jump.html?bc=" + host + arg0.getRequestURI());
+			arg1.sendRedirect("/Jump.html?bc=" + host + arg0.getRequestURI());
 			return false;
 		}
 		return true;

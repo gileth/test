@@ -6,6 +6,7 @@ package org.takeback.chat.utils;
 
 import java.io.InputStream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.takeback.util.JSONUtils;
 
 import java.io.Reader;
@@ -29,6 +30,9 @@ public class IPUtil
         }
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
+        }
+        if (StringUtils.isNotBlank(ip) && ip.contains(",")) {
+        	ip = ip.substring(0, ip.indexOf(","));
         }
         return ip.equals("0:0:0:0:0:0:0:1") ? "127.0.0.1" : ip;
     }

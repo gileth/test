@@ -4,6 +4,7 @@
 
 package org.takeback.mvc;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.util.WebUtils;
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,6 +22,9 @@ public class ServletUtils
         }
         if (ip == null || ip.length() == 0 || ip.equalsIgnoreCase("unknown")) {
             ip = request.getRemoteAddr();
+        }
+        if (StringUtils.isNotBlank(ip) && ip.contains(",")) {
+        	ip = ip.substring(0, ip.indexOf(","));
         }
         return ip;
     }

@@ -16,6 +16,6 @@ img {
 </style>
 </head>
 <body>
-	<img src="http://yzion.com/img/bg.png"/>
+	<img src="http://qip.ichenonline.com/img/bg.png"/>
 </body>
 </html>

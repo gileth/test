@@ -32,6 +32,7 @@ public class WebSecurityInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2) throws Exception {
 		// TODO Auto-generated method stub
 		LOGGER.info("请求路径========>" + arg0.getRequestURL().toString());
+		LOGGER.info("upgrade======>"+arg0.getHeader("Upgrade"));
 		StringBuffer url = arg0.getRequestURL();
 		String host = url.delete(url.length() - arg0.getRequestURI().length(), url.length()).append("/").toString();
 		String uri = arg0.getRequestURI();

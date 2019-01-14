@@ -523,7 +523,10 @@ public class RoomThread implements Runnable
     }
     
     private void playG03() {
-        final PcEggLog log = PcEggStore.getStore().getLastest();
+    	PcEggStore pcEggStore = PcEggStore.getStore();
+    	if (pcEggStore == null) return;
+    	
+        final PcEggLog log = pcEggStore.getLastest();
         final Calendar c = Calendar.getInstance();
         c.setTime(log.getExpireTime());
         c.add(13, -30);
